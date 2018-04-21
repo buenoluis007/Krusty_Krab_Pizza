@@ -21,7 +21,7 @@ CREATE TABLE PaymentInfo(
     userID INT PRIMARY KEY,
     creditNum INT,
     ccv INT,
-    experation DATETIME,
+    experation DATE,
     FOREIGN KEY(userID) REFERENCES Users(id)
 );
 
