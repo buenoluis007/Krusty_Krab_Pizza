@@ -12,7 +12,7 @@ CREATE TABLE RegisteredAccts(
     address VARCHAR(255) NOT NULL,
     f_name VARCHAR(50) NOT NULL,
     l_name VARCHAR(50) NOT NULL,
-    vip_status BOOLEAN,
+    vip_status BOOLEAN DEFAULT FALSE,
     rating DECIMAL(2,1),
     FOREIGN KEY(userID) REFERENCES Users(id)
 );
