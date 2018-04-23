@@ -48,7 +48,7 @@ CREATE TABLE Menu(
     foodID INT,
     price DECIMAL(4,2),
     FOREIGN KEY(restaurantID) REFERENCES Restaurants(id),
-    FOREIGN KEY(foodID) REFERENCES Food(id),
+    FOREIGN KEY(foodID) REFERENCES Food(id)
 );
 
 CREATE TABLE Food(
@@ -57,15 +57,19 @@ CREATE TABLE Food(
 );
 
 CREATE TABLE Cook(
-    userID INT REFERENCES Users(id),
-    restID INT REFERENCES Restaurants(id),
+    userID INT ,
+    restID INT ,
     stikes INT DEFAULT 0
+    FOREIGN KEY(userID) REFERENCES Users(id),
+    FOREIGN KEY(restID) REFERENCES Restaurants(id)
 );
 
 CREATE TABLE Favorites(
     id INT PRIMARY KEY,
-    userID INT REFERENCES Users(id),
-    restID INT REFERENCES Restaurants(id)
+    userID INT,
+    restID INT,
+    FOREIGN KEY(userID) REFERENCES Users(id),
+    FOREIGN KEY(restID) REFERENCES Restaurants(id)
 );
 
 CREATE TABLE FoodInFavorites(
