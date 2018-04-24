@@ -36,7 +36,7 @@ CREATE TABLE Managers(
     userID INT PRIMARY KEY,
     restaurantID INT,
     FOREIGN KEY(userID) REFERENCES Users(userID),
-    FOREIGN KEY(restaurantID) REFERENCES Restaurnats(restaurantID)
+    FOREIGN KEY(restaurantID) REFERENCES Restaurants(restaurantID)
 );
 
 DROP TABLE Cooks;
