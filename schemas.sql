@@ -15,9 +15,9 @@ CREATE TABLE RegisteredAccts(
     f_name VARCHAR(50) NOT NULL,
     l_name VARCHAR(50) NOT NULL,
     status INT DEFAULT 1, /*0 = blacklisted, 1 = regular, 2 = VIP*/
-    rateNum INT,
-    rateSum DECIMAL(2,1),
-    rating DECIMAL(2,1),
+    rateNum INT DEFAULT 0,
+    rateSum DECIMAL DEFAULT 0.0,
+    rating DECIMAL(2,1) DEFAULT 0.0,
     FOREIGN KEY(userID) REFERENCES Users(userID)
 );
 
@@ -52,9 +52,9 @@ DROP TABLE DeliveryPerson;
 CREATE TABLE DeliveryPerson(
     userID INT,
     restaurantID INT ,
-    rateNum INT,
-    rateSum DECIMAL(2,1),
-    rating DECIMAL(2,1),
+    rateNum INT DEFAULT 0,
+    rateSum DECIMAL DEFAULT 0.0,
+    rating DECIMAL(2,1) DEFAULT 0.0,
     FOREIGN KEY(userID) REFERENCES Users(id),
     FOREIGN KEY(restaurantID) REFERENCES Restaurants(restaurantID)
 );
@@ -65,9 +65,9 @@ CREATE TABLE Restaurants(
     name VARCHAR(255),
     address VARCHAR(255),
     phoneNum VARCHAR(15),
-    rateNum INT,
-    rateSum DECIMAL(2,1),
-    rating DECIMAL(2,1)
+    rateNum INT DEFAULT 0,
+    rateSum DECIMAL DEFAULT 0.0,
+    rating DECIMAL(2,1) DEFAULT 0.0
 );
 
 DROP TABLE Menu;
@@ -112,7 +112,7 @@ CREATE TABLE Favorites(
 DROP TABLE FoodInFavorites;
 CREATE TABLE FoodInFavorites(
     favoriteID INT,
-    foodName INT,
+    foodName VARCHAR(255),
     FOREIGN KEY(favoriteID) REFERENCES Favorites(favoriteID),
     FOREIGN KEY(foodName) REFERENCES Menu(foodName)
 );
@@ -123,6 +123,7 @@ CREATE TABLE Complaints(
     restaurantID INT,
     foodName VARCHAR(255),
     complaint VARCHAR(500),
+    rating DECIMAL(2,1),
     FOREIGN KEY(userID) REFERENCES Users(userID),
     FOREIGN KEY(restaurantID) REFERENCES Restaurants(restaurantID),
     FOREIGN KEY(foodName) REFERENCES Menu(foodName)
