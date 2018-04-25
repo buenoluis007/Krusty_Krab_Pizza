@@ -1,0 +1,8 @@
+
+
+1. download all of the folders and files
+2. put them in one folder
+3. run npm install
+4. have two terminals open, one for react and one for node
+5. in one, run node server.js
+6. the other, run npm start
