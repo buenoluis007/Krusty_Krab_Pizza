@@ -94,8 +94,9 @@ CREATE TABLE Orders(
 
 DROP TABLE FoodInOrder;
 CREATE TABLE FoodInOrder(
-    orderID INT,
-    foodName VARCHAR(255),
+    orderID INT PRIMARY KEY,
+    foodName VARCHAR(255) PRIMARY KEY,
+    qty INT,
     FOREIGN KEY(orderID) REFERENCES Orders(orderID),
     FOREIGN KEY(foodName) REFERENCES Menu(foodName)
 );
@@ -111,14 +112,16 @@ CREATE TABLE Favorites(
 
 DROP TABLE FoodInFavorites;
 CREATE TABLE FoodInFavorites(
-    favoriteID INT,
-    foodName VARCHAR(255),
+    favoriteID INT PRIMARY KEY,
+    foodName VARCHAR(255) PRIMARY KEY,
+    qty INT,
     FOREIGN KEY(favoriteID) REFERENCES Favorites(favoriteID),
     FOREIGN KEY(foodName) REFERENCES Menu(foodName)
 );
 
 DROP TABLE Complaints;
 CREATE TABLE Complaints(
+    complaintID INT PRIMARY KEY AUTO_INCREMENT,
     userID INT,
     restaurantID INT,
     foodName VARCHAR(255),
