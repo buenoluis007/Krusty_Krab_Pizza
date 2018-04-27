@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css?family=Lobster');
+
+.home {
+  padding-top: 7%;
+}
+
+.welcome {
+  font-size: 70px;
+  margin: auto;
+  font-family: Lobster;
+}
+
+#slogan {
+  font-size: 40px;
+}

@@ -1,0 +1,28 @@
+.Routes ul {
+    list-style: none;
+    margin: auto;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+    float: right;
+    background-color: rgba(216, 216, 216, .8);
+    border-bottom: 1px solid rgba(216, 216, 216, .8);
+}
+
+.Routes li {
+    display: inline-block;
+    margin: 20px;
+    font-size: 25px;
+    float: right;
+}
+
+.Routes a {
+    text-decoration: none;
+    color: black;
+    float: right;
+}
+
+.Routes a:hover,
+.Routes a:active {
+    color: rgb(255, 255, 255);
+}
