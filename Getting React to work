@@ -1,9 +1,11 @@
 Getting React to Work:
 
 1. download all of the folders and files
-2. put them in one folder
-3. run npm install
-4. put in DB info in the server.js
-5. have two terminals open, one for react and one for node
-6. in one, run node server.js
-7. the other, run npm start
+2. put all contents into one folder
+3. extract 'build.zip' into the same folder
+4. run 'npm install' in terminal (w/o quotes) in the directory of this folder
+    OPTIONAL: run 'npm prune' after step 4 in case unessessary packages install
+5. put in DB info in the server.js
+6. have two terminals open, one for react and one for node
+7. in one, run 'node server.js'
+8. the other, run 'npm start'
