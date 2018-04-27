@@ -19,11 +19,11 @@ let signedInUser = {
 
 // Establish connection with database
 var connection = mysql.createConnection({
-  host: '',
-  port: ,
-  user: '',
-  password: '',
-  database: ''
+  host: 'sl-us-south-1-portal.20.dblayer.com',
+  port: 40397,
+  user: 'admin',
+  password: 'SFXQRQVBQVYQFGUC',
+  database: 'compose'
 });
 
 // Check if database is properly connected to
