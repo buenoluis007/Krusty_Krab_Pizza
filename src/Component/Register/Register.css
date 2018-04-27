@@ -1,0 +1,44 @@
+h1 {
+  margin: 0;
+  font-size: 35px;
+  line-height: 50px;
+}
+
+.signUp {
+  border: 1px solid rgba(252, 250, 250, 0.5);
+  border-radius: 15px;
+  margin: 2% auto;
+  padding: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  height: 100%;
+  background-color: rgba(252, 250, 250, 0.6);
+  display: inline-block;
+  font-size: 20px;
+}
+
+.signUp p {
+  margin-bottom: 5px;
+  line-height: 5px;
+}
+
+.signUp input {
+  font-size: 18px;
+  margin-top: 3px;
+  padding-left: 5px;
+  border-radius: 2px;
+}
+
+.signUpButton {
+  margin: 15px auto;
+  font-size: 30px;
+  width: 260px;
+  background-color: rgba(252, 250, 250, 0.7);
+  border-radius: 4px;
+  color: rgb(58, 58, 58);
+  cursor: pointer;
+}
+
+.signUpButton:hover{
+  background-color: rgba(201, 201, 201, .5);
+}
