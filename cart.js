@@ -1,21 +1,23 @@
 var cart = function(){
-  //var discountpct = 0.0;
+  var discountpct = 0.0;
   var discount = 0.0;
   var subtotal = 0.0;
+  var taxpct = 0.08875;
   var tax = 0.0;
   var total = 0.0;
   var restaurantID = null;
   var restaurantName = "";
   var items = [];
-  var receipt = {'restaurantName':restaurantName,
-                 'items':items,
-                 'subtotal':subtotal,
-                 'discount':discount,
-                 'tax':tax,
-                 'total':total};
 
   this.getReceipt = function(){
-    return receipt;
+    return {'restaurantName':restaurantName,
+                   'items':items,
+                   'subtotal':subtotal,
+                   'discountpct':discountpct,
+                   'discount':discount,
+                   'taxpct':taxpct,
+                   'tax':tax,
+                   'total':total};
   }
 
   this.getItems = function(){
@@ -49,6 +51,10 @@ var cart = function(){
     items.splice(i,1);
   };
 
+  this.clearCart = function(){
+    items.splice(i,1);
+  };
+
   this.updateQty = function(i, qty){
     items[i].qty = qty;
   };
@@ -68,7 +74,7 @@ var cart = function(){
     });
     discount = discountpct * sum;
     subtotal = sum - discount;
-    tax = subtotal * .08875;
+    tax = subtotal * taxpct;
     total = subtotal + tax;
   }
 }

@@ -20,8 +20,8 @@ let signedInUser = {
 // Establish connection with database
 var connection = mysql.createConnection({
   host: '',
-  port: ,
-  user: '',
+  port: 40397,
+  user: 'admin',
   password: '',
   database: ''
 });
@@ -43,12 +43,11 @@ connection.connect(function(error) {
 
 app.get('/users', function(req, res) {
   console.log("Hello there");
-  console.log(signedInUser);
   var q = "SELECT * FROM Users";
   connection.query(q, function(err, results) {
     if(!err){
       res.send(JSON.stringify(signedInUser));
-      console.log(results);
+      console.log(signedInUser);
       signedInUser.failed = false
     } else {
       console.log("Nope no good");
@@ -66,6 +65,70 @@ app.get('/users', function(req, res) {
 //         res.render("/login");
 //     }
 // });
+
+var cart = require('./cart');
+var shoppingCart = new cart();
+
+app.get('/restaurantInfo', function(req,res){
+  console.log('request restaurantInfo ');
+  var q = "select * from Restaurants where restaurantID = "+req.query.id+";";
+  connection.query(q,function(err,data){
+    if (err) return console.error("Restaurant Not Found" + err);
+    res.send(JSON.stringify(data[0]));
+    console.log('restaurantInfo sent');
+  });
+});
+
+app.get('/menuInfo',function(req,res){
+  console.log('request menuInfo ');
+  var q = "select * from Menu where restaurantID = " + req.query.id + ";";
+  connection.query(q,function(err,data){
+    if (err) return console.error("Restaurant Not Found" + err);
+    res.send(JSON.stringify(data));
+    console.log('menuInfo sent');
+  });
+});
+
+app.get('/receipt',function(req,res){
+  console.log('request receipt ');
+  res.send(JSON.stringify(shoppingCart.getReceipt()));
+});
+
+app.get('/shoppingCart',function(req,res){
+  console.log('request shoppingCartInfo ');
+  res.send(JSON.stringify(shoppingCart.getItems()));
+});
+
+app.post('/addItem',function(req,res){
+  shoppingCart.addItem(req.body.foodName,req.body.qty,req.body.price);
+  shoppingCart.updatePrice();
+  console.log(req.body.foodName + ' added');
+  res.end();
+});
+
+app.post('/removeItem',function(req,res){
+  shoppingCart.removeItem(req.body.index);
+  shoppingCart.updatePrice();
+  res.end();
+});
+
+app.post('/increaseQty',function(req,res){
+  shoppingCart.increaseQty(req.body.index);
+  shoppingCart.updatePrice();
+  res.end();
+});
+
+app.post('/decreaseQty',function(req,res){
+  shoppingCart.decreaseQty(req.body.index);
+  shoppingCart.updatePrice();
+  res.end();
+});
+
+app.post('/clearCart',function(req,res){
+  shoppingCart.clearCart();
+  shoppingCart.updatePrice();
+  res.end();
+});
 
 app.post('/logincheck', function(req, res) {
     var email = req.body.email;
