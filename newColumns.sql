@@ -1,3 +1,5 @@
+-- Stuff needed for google maps
+
 ALTER TABLE Restaurants
 ADD COLUMN longitude VARCHAR(15) AFTER address;
 
