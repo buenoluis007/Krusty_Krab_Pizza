@@ -7,11 +7,15 @@
     "body-parser": "^1.18.2",
     "ejs": "^2.5.9",
     "express": "^4.16.3",
+    "lodash": "^4.17.10",
     "mysql": "^2.15.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
+    "react-geocode": "0.0.7",
+    "react-google-maps": "^9.4.5",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.4"
+    "react-scripts": "1.1.4",
+    "recompose": "^0.27.0"
   },
   "scripts": {
     "start": "react-scripts start",

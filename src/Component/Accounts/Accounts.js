@@ -11,10 +11,11 @@ class Accounts extends Component {
     }
 
     componentDidMount() {
-      fetch('/users')
+      fetch('/user')
         .then(res => res.json())
         .then(user => this.setState({ Users: user }))
     }
+
 
   render() {
     return (
@@ -22,7 +23,7 @@ class Accounts extends Component {
           <h1>Your Email: {this.state.Users.email}</h1>
           <h1>Account Type: {this.state.Users.type}</h1>
       </div>
-    )
+    );
   }
 }
 

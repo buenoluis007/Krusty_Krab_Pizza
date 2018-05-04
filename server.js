@@ -13,10 +13,15 @@ app.use(bodyParser.urlencoded({extended: true})); // Needed for post requests ie
 let signedInUser = {
     email: "",
     type: "",
-    status: false,
+    loggedIn: false,
     failed: false
 };
 
+let restaurant = {
+  name: '',
+  address: '',
+  phoneNum: ''
+};
 // Establish connection with database
 var connection = mysql.createConnection({
   host: 'sl-us-south-1-portal.20.dblayer.com',
@@ -41,14 +46,14 @@ connection.connect(function(error) {
 //   console.log(signedInUser);
 // })
 
-app.get('/users', function(req, res) {
-  console.log("Hello there");
+app.get('/user', function(req, res) {
+  console.log("Hello there from server");
   console.log(signedInUser);
   var q = "SELECT * FROM Users";
   connection.query(q, function(err, results) {
     if(!err){
       res.send(JSON.stringify(signedInUser));
-      console.log(results);
+      console.log(signedInUser);
       signedInUser.failed = false
     } else {
       console.log("Nope no good");
@@ -56,6 +61,23 @@ app.get('/users', function(req, res) {
   });
 });
 
+app.get('/restaurant', function(req, res) {
+  console.log("Fuck me in the ass3");
+  var id = req.query.id;
+  var q = "SELECT * FROM Restaurants WHERE restaurantID=" + id;
+  connection.query(q, function(err, results) {
+      if(err) throw err;
+      // console.log(results);
+      if(results[0]) {
+          console.log("Fuck me in the ass2");
+          restaurant.name = results[0].name;
+          restaurant.address = results[0].address;
+          restaurant.phoneNum = results[0].phoneNum;
+      }
+  console.log(restaurant);
+  res.send(JSON.stringify(restaurant));
+  })
+});
 
 // // Login Page
 // app.post('/login', function(req, res) {
@@ -66,6 +88,37 @@ app.get('/users', function(req, res) {
 //         res.render("/login");
 //     }
 // });
+// app.post('/checkRest', function(req, res) {
+//   var restID = req.body.link;
+//   console.log("the restid is:" + restID);
+//   q = "SELECT * FROM Restaurants WHERE restaurantID = '" + restID + "'";
+//   connect.query(q, function(err, results) {
+//     if(err) throw err;
+//     if(results[0]) {
+//       restaurant.name = results[0].name;
+//       restaurant.address = results[0].address;
+//       restaurant.phoneNum = results[0].phoneNum;
+//       console.log("res:" + restaurant);
+//     }
+//   })
+// });
+
+app.post('/checkRest', function(req, res) {
+    console.log("Fuck me in the ass");
+    var id = req.body.linkbtn;
+    var q = "SELECT * FROM Restaurants WHERE restaurantID=" + id;
+    connection.query(q, function(err, results) {
+        if(err) throw err;
+        // console.log(results);
+        if(results[0]) {
+            console.log("Fuck me in the ass2");
+            restaurant.name = results[0].name;
+            restaurant.address = results[0].address;
+            restaurant.phoneNum = results[0].phoneNum;
+            console.log("ass" + restaurant);
+        }
+    });
+});
 
 app.post('/logincheck', function(req, res) {
     var email = req.body.email;
@@ -80,7 +133,7 @@ app.post('/logincheck', function(req, res) {
             console.log("The email and password are correct!");
             signedInUser.email = results[0].email;
             signedInUser.type = results[0].acctType;
-            signedInUser.status = true;
+            signedInUser.loggedIn = true;
             signedInUser.failed = false;
             console.log(signedInUser);
             res.redirect('/');
@@ -152,7 +205,7 @@ app.post('/registercheck', function(req, res) {
 app.post('/signout', function(req, res) {
     signedInUser.email = "";
     signedInUser.type = "";
-    signedInUser.status = false;
+    signedInUser.loggedIn = false;
     res.redirect('/');
 });
 
