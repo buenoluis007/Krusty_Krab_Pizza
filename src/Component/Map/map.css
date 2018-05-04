@@ -1,0 +1,9 @@
+li {
+  background-color: white;
+}
+
+GoogleMap{
+  margin: 0;
+  width: 600px;
+  float: left;
+}
