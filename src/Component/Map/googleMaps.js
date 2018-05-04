@@ -141,9 +141,9 @@ const MapComponent = compose(
           </GoogleMap>
             {props.places && props.places.map((place, resID) =>
                   <Link to={'/restaurant/' + resID} name='linkbtn' key={resID} value={resID}>
-                    <li>{place.name} at {place.formatted_address}</li>
-                    <li>lat:{place.geometry.location.lat()}</li>
-                    <li>long:{place.geometry.location.lng()}</li>
+                    <li className='pizzerias'>{place.name} at {place.formatted_address}</li>
+                    <li className='pizzerias'>lat:{place.geometry.location.lat()}</li>
+                    <li className='pizzerias'>long:{place.geometry.location.lng()}</li>
                   </Link>)}
         </div>
     )
