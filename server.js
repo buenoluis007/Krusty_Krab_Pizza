@@ -229,10 +229,10 @@ app.get('/restaurant/:resName/manager', function(req, res) {
     var orders = [];
     var complaints = [];
     if(signedInUser.type === "Manager") {
-        var q = "SELECT id FROM Restaurants WHERE name = '" + restaurantName + "'";
+        var q = "SELECT restaurantID FROM Restaurants WHERE name = '" + restaurantName + "'";
         connection.query(q, function(err, results) {
             if(err) throw err;
-            var resID = results[0].id;
+            var resID = results[0].restaurantID;
             // View Cooks from their restaurant
             q = "SELECT Cooks.userID, Cooks.salery, CONCAT(f_name, " ", l_name) AS name FROM Cooks JOIN Users ON Cooks.userID = Users.userID WHERE Cooks.restaurantID = " + resID;
             connection.query(q, function(err, results){
