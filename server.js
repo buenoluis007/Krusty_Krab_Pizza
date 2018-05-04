@@ -24,19 +24,11 @@ let restaurant = {
 };
 // Establish connection with database
 var connection = mysql.createConnection({
-<<<<<<< HEAD
-  host: 'sl-us-south-1-portal.20.dblayer.com',
-  port: 40397,
-  user: 'admin',
-  password: 'SFXQRQVBQVYQFGUC',
-  database: 'compose'
-=======
   host: '',
   port: 40397,
   user: 'admin',
   password: '',
   database: ''
->>>>>>> 6dd4a8972a39755c7d1195ae146b7fc45a21b0b0
 });
 
 // Check if database is properly connected to
@@ -54,14 +46,9 @@ connection.connect(function(error) {
 //   console.log(signedInUser);
 // })
 
-<<<<<<< HEAD
 app.get('/user', function(req, res) {
   console.log("Hello there from server");
   console.log(signedInUser);
-=======
-app.get('/users', function(req, res) {
-  console.log("Hello there");
->>>>>>> 6dd4a8972a39755c7d1195ae146b7fc45a21b0b0
   var q = "SELECT * FROM Users";
   connection.query(q, function(err, results) {
     if(!err){
@@ -115,14 +102,12 @@ app.get('/restaurant', function(req, res) {
 // });
 
 app.post('/checkRest', function(req, res) {
-    console.log("Fuck me in the ass");
     var id = req.body.linkbtn;
     var q = "SELECT * FROM Restaurants WHERE restaurantID=" + id;
     connection.query(q, function(err, results) {
         if(err) throw err;
         // console.log(results);
         if(results[0]) {
-            console.log("Fuck me in the ass2");
             restaurant.name = results[0].name;
             restaurant.address = results[0].address;
             restaurant.phoneNum = results[0].phoneNum;
