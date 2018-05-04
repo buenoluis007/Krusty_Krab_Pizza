@@ -221,7 +221,7 @@ app.post('/signout', function(req, res) {
 
 
 // Manager page
-app.get('/:resName/manager', function(req, res) {
+app.get('/restaurant/:resName/manager', function(req, res) {
     var restaurantName = req.params.resName;
     var pendingUsers = []; // Currently no good way to display pending users linked to the restaurant with given data
     var users = []; // Currently no good way to display users linked to the restaurant with given data
@@ -234,14 +234,14 @@ app.get('/:resName/manager', function(req, res) {
             if(err) throw err;
             var resID = results[0].id;
             // View Cooks from their restaurant
-            q = "SELECT Cooks.userID, CONCAT(f_name, " ", l_name) AS name FROM Cooks JOIN Users ON Cooks.userID = Users.userID WHERE Cooks.restaurantID = " + resID;
+            q = "SELECT Cooks.userID, Cooks.salery, CONCAT(f_name, " ", l_name) AS name FROM Cooks JOIN Users ON Cooks.userID = Users.userID WHERE Cooks.restaurantID = " + resID;
             connection.query(q, function(err, results){
                 if(err) throw err;
                 // Every cook comes back as an array of objects
                 workers.push(results); // workers[0][i].name to access specific cook
             });
             // View DeliveryPerson from their restaurant
-            q = "SELECT DeliveryPerson.userID, CONCAT(f_name, " ", l_name) AS name FROM DeliveryPerson JOIN Users ON DeliveryPerson.userID = Users.userID WHERE DeliveryPerson.restaurantID = " + resID;
+            q = "SELECT DeliveryPerson.userID, DeliveryPerson.salery CONCAT(f_name, " ", l_name) AS name FROM DeliveryPerson JOIN Users ON DeliveryPerson.userID = Users.userID WHERE DeliveryPerson.restaurantID = " + resID;
             connection.query(q, function(err, results){
                 if(err) throw err;
                 // Every cook comes back as an array of objects
@@ -288,7 +288,7 @@ app.get('/:resName/manager', function(req, res) {
 
 // Apoint Devlivery Person to an order
 // Some form that you can appoint a delivery person to an order (a drop down can appear for the orders next to a delivery person)
-app.post('/:resName/manager/delivery', function(req, res) {
+app.post('/restaurant/:resName/manager/delivery', function(req, res) {
     var restaurantName = req.params.resName;
     var order = req.body.orderID;
     var deliPersonID = req.body.delID;
@@ -297,14 +297,14 @@ app.post('/:resName/manager/delivery', function(req, res) {
         if(err) throw err;
         console.log("delivery person successfully appointed to this order");
     });
-    res.redirect("/" + restaurantName + "/manager");
+    res.redirect("/restaurant/" + restaurantName + "/manager");
 });
 
 // Fire Worker (some form with a fire button next to a worker)
-app.post('/:resName/manager/fire', function(req, res) {
+app.post('/restaurant/:resName/manager/fire', function(req, res) {
     var restaurantName = req.params.resName;
     var workerID = req.body.workerID;
-    var workerType = req.body.workerType; // "Cook" or "DeliveryPerson"
+    var workerType = req.body.workerType; // "Cooks" or "DeliveryPerson"
     var q = "DELETE FROM " + workerType + " WHERE userID = " + workerID;
     connection.query(q, function(err, results) {
         if(err) throw err;
@@ -314,24 +314,25 @@ app.post('/:resName/manager/fire', function(req, res) {
             console.log("user successfully fired");
         });
     });
-    res.redirect("/" + restaurantName + "/manager");
+    res.redirect("/restaurant/" + restaurantName + "/manager");
 });
 
 // Change wages of workers (currently have no wages attribute in any table), but an input form next to the worker
-app.post('/:resName/manager/changeWage', function(req, res) {
+app.post('/restaurant/:resName/manager/changeWage', function(req, res) {
     var restaurantName = req.params.resName;
     var workerID = req.body.workerID;
+    var workerType = req.body.workerType; // "Cook" or "DeliveryPerson"
     var newWage = req.body.wage;
-    var q = "UPDATE Users SET salery = " + newWage + " WHERE userID = " + workerID; // Query will not work b/c no attribute 'salery' exists yet
+    var q = "UPDATE '" + workerType + "' SET salery = " + newWage + " WHERE userID = " + workerID; // Query will not work b/c no attribute 'salery' exists yet
     connection.query(q, function(err, results) {
         if(err) throw err;
-        console.log("salery successfully updated");
+        console.log("salery successfully updated for " + workerID);
     });
-    res.redirect("/" + restaurantName + "/manager");
+    res.redirect("/restaurant/" + restaurantName + "/manager");
 });
 
 // Manage Complaints
-app.post('/:resName/manager/complaints', function(req,res){
+app.post('/restaurant/:resName/manager/complaints', function(req,res){
     var restaurantName = req.params.resName;
     // var userID = req.body.userID;
     // var resID = req.body.restaurantID;
@@ -346,7 +347,7 @@ app.post('/:resName/manager/complaints', function(req,res){
 
 // Accept User request to join restaurant (accept/reject form)
 // Currently Database is insufficient to handle this request
-app.post('/:resName/manager/changeUserStatus', function(req, res) {
+app.post('/restaurant/:resName/manager/changeUserStatus', function(req, res) {
     var restaurantName = req.params.resName;
     var restaurantID = req.body.redID;
     var userID = req.body.userID;
@@ -374,7 +375,7 @@ app.post('/:resName/manager/changeUserStatus', function(req, res) {
             console.log("request denied");
         });
     }
-    res.redirect("/" + restaurantName + "/manager");
+    res.redirect("/restaurant/" + restaurantName + "/manager");
 });
 
 app.get('*', function(req, res) {
