@@ -13,15 +13,20 @@ app.use(bodyParser.urlencoded({extended: true})); // Needed for post requests ie
 let signedInUser = {
     email: "",
     type: "",
-    status: false,
+    loggedIn: false,
     failed: false
 };
 
+let restaurant = {
+  name: '',
+  address: '',
+  phoneNum: ''
+};
 // Establish connection with database
 var connection = mysql.createConnection({
   host: '',
-  port: ,
-  user: '',
+  port: 40397,
+  user: 'admin',
   password: '',
   database: ''
 });
@@ -41,14 +46,14 @@ connection.connect(function(error) {
 //   console.log(signedInUser);
 // })
 
-app.get('/users', function(req, res) {
-  console.log("Hello there");
+app.get('/user', function(req, res) {
+  console.log("Hello there from server");
   console.log(signedInUser);
   var q = "SELECT * FROM Users";
   connection.query(q, function(err, results) {
     if(!err){
       res.send(JSON.stringify(signedInUser));
-      console.log(results);
+      console.log(signedInUser);
       signedInUser.failed = false
     } else {
       console.log("Nope no good");
@@ -56,6 +61,21 @@ app.get('/users', function(req, res) {
   });
 });
 
+app.get('/restaurant', function(req, res) {
+  var id = req.query.id;
+  var q = "SELECT * FROM Restaurants WHERE restaurantID=" + id;
+  connection.query(q, function(err, results) {
+      if(err) throw err;
+      // console.log(results);
+      if(results[0]) {
+          restaurant.name = results[0].name;
+          restaurant.address = results[0].address;
+          restaurant.phoneNum = results[0].phoneNum;
+      }
+  console.log(restaurant);
+  res.send(JSON.stringify(restaurant));
+  })
+});
 
 // // Login Page
 // app.post('/login', function(req, res) {
@@ -66,6 +86,99 @@ app.get('/users', function(req, res) {
 //         res.render("/login");
 //     }
 // });
+// app.post('/checkRest', function(req, res) {
+//   var restID = req.body.link;
+//   console.log("the restid is:" + restID);
+//   q = "SELECT * FROM Restaurants WHERE restaurantID = '" + restID + "'";
+//   connect.query(q, function(err, results) {
+//     if(err) throw err;
+//     if(results[0]) {
+//       restaurant.name = results[0].name;
+//       restaurant.address = results[0].address;
+//       restaurant.phoneNum = results[0].phoneNum;
+//       console.log("res:" + restaurant);
+//     }
+//   })
+// });
+
+app.post('/checkRest', function(req, res) {
+    var id = req.body.linkbtn;
+    var q = "SELECT * FROM Restaurants WHERE restaurantID=" + id;
+    connection.query(q, function(err, results) {
+        if(err) throw err;
+        // console.log(results);
+        if(results[0]) {
+            restaurant.name = results[0].name;
+            restaurant.address = results[0].address;
+            restaurant.phoneNum = results[0].phoneNum;
+            console.log("ass" + restaurant);
+        }
+    });
+});
+
+var cart = require('./cart');
+var shoppingCart = new cart();
+
+app.get('/restaurantInfo', function(req,res){
+  console.log('request restaurantInfo ');
+  var q = "select * from Restaurants where restaurantID = "+req.query.id+";";
+  connection.query(q,function(err,data){
+    if (err) return console.error("Restaurant Not Found" + err);
+    res.send(JSON.stringify(data[0]));
+    console.log('restaurantInfo sent');
+  });
+});
+
+app.get('/menuInfo',function(req,res){
+  console.log('request menuInfo ');
+  var q = "select * from Menu where restaurantID = " + req.query.id + ";";
+  connection.query(q,function(err,data){
+    if (err) return console.error("Restaurant Not Found" + err);
+    res.send(JSON.stringify(data));
+    console.log('menuInfo sent');
+  });
+});
+
+app.get('/receipt',function(req,res){
+  console.log('request receipt ');
+  res.send(JSON.stringify(shoppingCart.getReceipt()));
+});
+
+app.get('/shoppingCart',function(req,res){
+  console.log('request shoppingCartInfo ');
+  res.send(JSON.stringify(shoppingCart.getItems()));
+});
+
+app.post('/addItem',function(req,res){
+  shoppingCart.addItem(req.body.foodName,req.body.qty,req.body.price);
+  shoppingCart.updatePrice();
+  console.log(req.body.foodName + ' added');
+  res.end();
+});
+
+app.post('/removeItem',function(req,res){
+  shoppingCart.removeItem(req.body.index);
+  shoppingCart.updatePrice();
+  res.end();
+});
+
+app.post('/increaseQty',function(req,res){
+  shoppingCart.increaseQty(req.body.index);
+  shoppingCart.updatePrice();
+  res.end();
+});
+
+app.post('/decreaseQty',function(req,res){
+  shoppingCart.decreaseQty(req.body.index);
+  shoppingCart.updatePrice();
+  res.end();
+});
+
+app.post('/clearCart',function(req,res){
+  shoppingCart.clearCart();
+  shoppingCart.updatePrice();
+  res.end();
+});
 
 app.post('/logincheck', function(req, res) {
     var email = req.body.email;
@@ -80,7 +193,7 @@ app.post('/logincheck', function(req, res) {
             console.log("The email and password are correct!");
             signedInUser.email = results[0].email;
             signedInUser.type = results[0].acctType;
-            signedInUser.status = true;
+            signedInUser.loggedIn = true;
             signedInUser.failed = false;
             console.log(signedInUser);
             res.redirect('/');
@@ -152,7 +265,7 @@ app.post('/registercheck', function(req, res) {
 app.post('/signout', function(req, res) {
     signedInUser.email = "";
     signedInUser.type = "";
-    signedInUser.status = false;
+    signedInUser.loggedIn = false;
     res.redirect('/');
 });
 

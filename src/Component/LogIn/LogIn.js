@@ -13,7 +13,7 @@ class LogIn extends Component {
 
     // fetch the user's info from express
     componentDidMount() {
-      fetch('/users')
+      fetch('/user')
         .then(res => res.json())
         .then(user => this.setState({ Users: user }))
     }
