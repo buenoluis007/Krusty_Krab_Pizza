@@ -62,14 +62,12 @@ app.get('/user', function(req, res) {
 });
 
 app.get('/restaurant', function(req, res) {
-  console.log("Fuck me in the ass3");
   var id = req.query.id;
   var q = "SELECT * FROM Restaurants WHERE restaurantID=" + id;
   connection.query(q, function(err, results) {
       if(err) throw err;
       // console.log(results);
       if(results[0]) {
-          console.log("Fuck me in the ass2");
           restaurant.name = results[0].name;
           restaurant.address = results[0].address;
           restaurant.phoneNum = results[0].phoneNum;
