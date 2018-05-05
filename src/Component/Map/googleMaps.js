@@ -31,53 +31,49 @@ const MapComponent = compose(
                 searchBox: undefined,
             }
             return {
-
                 onMapMounted: () => (ref) => {
-                    refs.map = ref
+                  refs.map = ref
                 },
                 onSearchBoxMounted: () => (ref) => {
-                    refs.searchBox = ref;
+                  refs.searchBox = ref;
                 },
-                onBoundsChanged: () => {
+                onBoundsChanged: () => () => {
                   this.setState({
                     bounds: refs.map.getBounds(),
                     center: refs.map.getCenter(),
                   })
                 },
-                onPlacesChanged: () => {
+                onPlacesChanged: () => () => {
                   const places = refs.searchBox.getPlaces();
                   const bounds = new window.google.maps.LatLngBounds();
 
                   places.forEach(place => {
-                    if (place.geometry.viewport) {
-                      bounds.union(place.geometry.viewport)
-                    } else {
-                      bounds.extend(place.geometry.location)
-                    }
+                      if (place.geometry.viewport) {
+                        bounds.union(place.geometry.viewport)
+                      } else {
+                        bounds.extend(place.geometry.location)
+                      }
                   });
                   const nextMarkers = places.map(place => ({
-                    position: place.geometry.location,
-                    placeId: place
-                  }));
+                      position: place.geometry.location,
+                      placeId: place
+                    }));
+                    console.log(nextMarkers.position);
                   const nextCenter = _.get(nextMarkers, '0.position', refs.map.getCenter());
-
-
                   refs.map.fitBounds(bounds);
                 },
 
                 fetchPlaces: ({ updatePlaces }) => () => {
                     let places;
-                    //const bounds = window.google.maps.LatLngBounds();
-                    // const location = refs.map.getCenter();
-                    console.log('from fetchPlaces');
                     const service = new window.google.maps.places.PlacesService(refs.map.context.__SECRET_MAP_DO_NOT_USE_OR_YOU_WILL_BE_FIRED);
-                const request = {
-                    location: refs.map.getCenter(),
-                    radius: '25',
-                    query: 'pizza',
-                };
-                service.textSearch(request, (results, status) => {
-                  window.google.maps.places.RankBy.Distance;
+                    const request = {
+                      location: refs.map.getCenter(),
+                      radius: '450',
+                      keyword: 'pizza',
+                      name: 'pizza',
+                      type: 'restaurant',
+                    };
+                service.nearbySearch(request, (results, status) => {
                     if (status === window.google.maps.places.PlacesServiceStatus.OK) {
                         console.log(results);
                         updatePlaces(results);
@@ -99,13 +95,13 @@ const MapComponent = compose(
               onTilesLoaded={props.fetchPlaces}
               ref={props.onMapMounted}
               defaultZoom={14}
-              defaultCenter={{ lat: 40.758896, lng: -73.985130 }}
-          >
+              defaultCenter={{ lat: 40.758896, lng: -73.985130 }} >
+
               <SearchBox
                 ref={props.onSearchBoxMounted}
                 controlPosition={google.maps.ControlPosition.TOP_LEFT}
-                onPlacesChanged={props.onPlacesChanged}
-              >
+                onPlacesChanged={props.onPlacesChanged} >
+
                 <input
                   type="text"
                   placeholder="Search Pizza To Find The One"
@@ -121,30 +117,40 @@ const MapComponent = compose(
                     fontSize: `14px`,
                     outline: `none`,
                     textOverflow: `ellipses`,
-                  }}
-                />
-              </SearchBox>
+                  }} />
 
-              {props.places && props.places.map((place, i) =>
+            </SearchBox>
 
-                  <Marker onClick={() => props.onToggleOpen(i)} key={i} position={{ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }}>
-                      {props.selectedPlace === i && <InfoWindow onCloseClick={props.onToggleOpen}>
-                          <div>
-                              {props.places[props.selectedPlace].name}
-                              <br/>
-                              {props.places[props.selectedPlace].formatted_address}
-                          </div>
-                      </InfoWindow>}
-                  </Marker>
+            {props.places && props.places.map((place, i) =>
+                <Marker
+                  onClick={() => props.onToggleOpen(i)}
+                  key={i}
+                  position={{ lat: place.geometry.location.lat(),
+                              lng: place.geometry.location.lng() }} >
 
-              )}
+               {props.selectedPlace === i && <InfoWindow onCloseClick={props.onToggleOpen}>
+                    <div>
+                        {props.places[props.selectedPlace].name}
+                        <br/>
+                        {props.places[props.selectedPlace].formatted_address}
+                      </div>
+                  </InfoWindow>
+               }
+                </Marker>
+            )}
+
+
+
           </GoogleMap>
-            {props.places && props.places.map((place, resID) =>
-                  <Link to={'/restaurant/' + resID} name='linkbtn' key={resID} value={resID}>
-                    <li className='pizzerias'>{place.name} at {place.formatted_address}</li>
-                    <li className='pizzerias'>lat:{place.geometry.location.lat()}</li>
-                    <li className='pizzerias'>long:{place.geometry.location.lng()}</li>
-                  </Link>)}
+
+          {props.places && props.places.map((place, resID) =>
+                <Link to={'/restaurant/' + resID} name='linkbtn' key={resID} value={resID}>
+                  <div className='pizzerias'>{place.name} at {place.formatted_address}</div>
+                  <div className='pizzerias'>
+                    lat:{place.geometry.location.lat()}
+                    and long:{place.geometry.location.lng()}</div>
+                </Link>
+          )}
         </div>
     )
 })
