@@ -24,11 +24,11 @@ let restaurant = {
 };
 // Establish connection with database
 var connection = mysql.createConnection({
-  host: '',
+  host: 'sl-us-south-1-portal.20.dblayer.com',
   port: 40397,
   user: 'admin',
-  password: '',
-  database: ''
+  password: 'SFXQRQVBQVYQFGUC',
+  database: 'compose'
 });
 
 // Check if database is properly connected to
@@ -314,7 +314,7 @@ app.post("/restaurant/:resName/cook/menu/removeFood",function(req,res){
             if(err) throw err;
         });
     });
-});   
+});
 
 /*
 // Manager Part of Website
