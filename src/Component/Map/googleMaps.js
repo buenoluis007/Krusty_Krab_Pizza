@@ -3,8 +3,7 @@
 import React from "react"
 import { compose, withProps, withHandlers, withState } from "recompose"
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow} from "react-google-maps";
-import { Route, Link } from 'react-router-dom';
-import Geocode from 'react-geocode';
+import { Link } from 'react-router-dom';
 
 import Restaurant from '../Restaurant/Restaurant';
 import './map.css';
