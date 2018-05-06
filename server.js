@@ -482,4 +482,4 @@ app.get('*', function(req, res) {
 // Setup port
 app.listen(8080, function() {
     console.log("Server running on 8080");
-}
+});
