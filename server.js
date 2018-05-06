@@ -314,7 +314,7 @@ app.post("/restaurant/:resName/cook/menu/removeFood",function(req,res){
             if(err) throw err;
         });
     });
-});   
+});
 
 /*
 // Manager Part of Website
