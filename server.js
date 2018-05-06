@@ -331,14 +331,14 @@ app.get('/restaurant/:resName/manager', function(req, res) {
             if(err) throw err;
             var resID = results[0].restaurantID;
             // View Cooks from their restaurant
-            q = "SELECT Cooks.userID, Cooks.salery, CONCAT(f_name, " ", l_name) AS name FROM Cooks JOIN Users ON Cooks.userID = Users.userID WHERE Cooks.restaurantID = " + resID;
+            q = `SELECT Cooks.userID, Cooks.salery, CONCAT(f_name, ' ', l_name) AS name FROM Cooks JOIN Users ON Cooks.userID = Users.userID JOIN RegisteredAccts ON Users.userID = RegisteredAccts.userID WHERE Cooks.restaurantID = ${resID}`;
             connection.query(q, function(err, results){
                 if(err) throw err;
                 // Every cook comes back as an array of objects
                 workers.push(results); // workers[0][i].name to access specific cook
             });
             // View DeliveryPerson from their restaurant
-            q = "SELECT DeliveryPerson.userID, DeliveryPerson.salery CONCAT(f_name, " ", l_name) AS name FROM DeliveryPerson JOIN Users ON DeliveryPerson.userID = Users.userID WHERE DeliveryPerson.restaurantID = " + resID;
+            q = `SELECT DeliveryPerson.userID, DeliveryPerson.salery, CONCAT(f_name, ' ', l_name) AS name FROM DeliveryPerson JOIN Users ON DeliveryPerson.userID = Users.userID JOIN RegisteredAccts ON Users.userID = RegisteredAccts.userID WHERE DeliveryPerson.restaurantID = ${resID}`;
             connection.query(q, function(err, results){
                 if(err) throw err;
                 // Every cook comes back as an array of objects
