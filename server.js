@@ -269,8 +269,55 @@ app.post('/signout', function(req, res) {
     res.redirect('/');
 });
 
+//Cook section of the site.
+
+// Add the new button to the Menu
+app.post("/restaurant/:resName/cook/menu/addfood", function(req,res){
+  var foodName = req.body.foodName;
+  var description = req.body.foodDesc;
+  var price = req.body.foodPrice;
+  var restaurantID = 8;
+  var resName = req.params.resName;
+  var Food = {
+    restaurantID: restaurantID,
+    foodName : foodName,
+    description: description,
+    price : price,
+  };
+  console.log(Food.price);
+
+//  Adds the new food item to the Menu table in the database.
+  connection.query("INSERT INTO Menu SET ?", Food, function(err, results) {
+      if(err) throw err;
+  });
+
+  res.redirect("/"+ resName +"/cook/menu");
+
+});
+
+//post request that removes food from menu.
+app.post("/restaurant/:resName/cook/menu/removeFood",function(req,res){
+
+    var foodName = req.body.foodName;
+    var resName = req.params.resName;
+
+
+    //retrieves the specific restaurantID using the restaurant name.
+    var q = "SELECT restaurantID FROM Restaurants WHERE name = '" + resName+"'";
+    connection.query(q, function(err, results) {
+        if(err) throw err;
+        var restaurantID = results[0].restaurantID;
+
+        //Removes food from menu.
+        var k = "DELETE FROM Menu WHERE restaurantID =" + restaurantID + " AND foodName = '" + foodName +"'";
+        connection.query(k, function(err, results) {
+            if(err) throw err;
+        });
+    });
+});   
+
 /*
-// Manager page
+// Manager Part of Website
 app.get('/restaurant/:resName/manager', function(req, res) {
     var restaurantName = req.params.resName;
     var pendingUsers = []; // Currently no good way to display pending users linked to the restaurant with given data
@@ -435,4 +482,4 @@ app.get('*', function(req, res) {
 // Setup port
 app.listen(8080, function() {
     console.log("Server running on 8080");
-});
+}
