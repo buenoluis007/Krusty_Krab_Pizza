@@ -79,6 +79,7 @@ class Routes extends Component {
 
         return (
             <div>
+            <div class='navbar'>
               <header className='Routes'>
                     <nav>
                       <ul>
@@ -89,7 +90,8 @@ class Routes extends Component {
                       </ul>
                   </nav>
               </header>
-
+              </div>
+              <div class='main'>
               <Route path="/" exact component={ Home } />
               <Route path="/user" exact component={ Accounts } />
               <Route path="/register" exact component={ Register } />
@@ -100,6 +102,7 @@ class Routes extends Component {
                 <Menu
                 cart={this.state.Cart}
                 onAddItem={this.handleAddItem}/>)}} />
+                </div>
             </div>
         );
     }
