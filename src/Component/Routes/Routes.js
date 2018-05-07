@@ -10,6 +10,7 @@ import Home from '../Home/Home';
 import Accounts from '../Accounts/Accounts';
 import Restaurant from '../Restaurant/Restaurant';
 import Menu from '../Menu/Menu';
+import CheckOut from '../CheckOut/CheckOut';
 
 class Routes extends Component {
   constructor() {
@@ -23,6 +24,7 @@ class Routes extends Component {
       this.handleAddItem = this.handleAddItem.bind(this);
       this.handleUpdateItem = this.handleUpdateItem.bind(this);
       this.handleRemoveItem = this.handleRemoveItem.bind(this);
+      this.handleResInfo = this.handleResInfo.bind(this);
       this.handleUpdateDiscount = this.handleUpdateDiscount.bind(this);
     }
 
@@ -40,7 +42,7 @@ class Routes extends Component {
         .then(user => this.setState({ Users: user }))
     }
 
-    componentWillUpdate(){
+    componentDidUpdate(){
       sessionStorage.setItem('savedState', JSON.stringify(this.state.Cart.getItems()));
     }
 
@@ -65,11 +67,18 @@ class Routes extends Component {
        this.setState({Cart:cart});
     }
 
+    handleResInfo(restaurant){
+      console.log(restaurant);
+      let cart = this.state.Cart;
+      cart.setRestaurant(restaurant)
+      this.setState({Cart: cart});
+    }
+
     handleUpdateDiscount(pct){
-        let cart = this.state.Cart;
-        cart.setDiscountPct(pct);
-        cart.updatePrice();
-        this.setState({Cart: cart});
+      let cart = this.state.Cart;
+      cart.setDiscountPct(pct);
+      cart.updatePrice();
+      this.setState({Cart: cart});
     }
 
     render () {
@@ -115,21 +124,24 @@ class Routes extends Component {
               </header>
               </div>
               <div class='main'>
-              <Route path="/" exact component={ Home } />
-              <Route path="/user" exact component={ Accounts } />
-              <Route path="/register" exact component={ Register } />
-              <Route path="/login" exact component={ LogIn } />
-              <Route path="/SignOut" exact component={ SignOut } />
-              <Route path="/restaurant/:resID" exact component={ Restaurant }/>
-              <Route path="/menu" render={() =>{return(
-                <Menu
-                user={this.state.User}
-                cart={this.state.Cart}
-                onAddItem={this.handleAddItem}
-                onUpdateItem={this.handleUpdateItem}
-                onRemoveItem={this.handleRemoveItem}
-                onUpdateDiscount={this.handleUpdateDiscount}/>)}} />
-                </div>
+                <Route path="/" exact component={ Home } />
+                <Route path="/user" exact component={ Accounts } />
+                <Route path="/register" exact component={ Register } />
+                <Route path="/login" exact component={ LogIn } />
+                <Route path="/SignOut" exact component={ SignOut } />
+                <Route path="/restaurant/:resID" exact component={ Restaurant }/>
+                <Route path="/menu/:resID" render={(props) =>{return(
+                  <Menu
+                  {...props}
+                  user={this.state.User}
+                  cart={this.state.Cart}
+                  onResInfo={this.handleResInfo}
+                  onAddItem={this.handleAddItem}
+                  onUpdateItem={this.handleUpdateItem}
+                  onRemoveItem={this.handleRemoveItem}
+                  onUpdateDiscount={this.handleUpdateDiscount}/>)}} />
+                <Route path="/checkout" exact component={ CheckOut } />
+              </div>
             </div>
         );
     }

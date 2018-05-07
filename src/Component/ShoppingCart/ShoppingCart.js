@@ -4,7 +4,7 @@ import './ShoppingCart.css'
 
 class CartHeading extends Component{
   render(){
-    const Restaurant = this.props.rest;
+    const Restaurant = this.props.cart.getRestaurant();
     return(
       <div>
         <center>
@@ -74,7 +74,7 @@ class CartTotals extends Component{
       </tr>,
       <tr height='50px' valign='bottom'>
         <td colspan="4" align='center'>
-          <button class='cbutton'>Check Out</button>
+          <a href='/checkout'><button class='cbutton'>Check Out</button></a>
         </td>
       </tr>
     ];
@@ -108,7 +108,7 @@ class ShoppingCart extends Component {
       return (
         <div>
           <div class="cartlist" align="center">
-            <CartHeading rest={this.state.Restaurant}/>
+            <CartHeading cart={this.props.cart}/>
             <table border="0" width="400px">
                 { body }
                 <CartTotals cart={this.props.cart}/>
