@@ -76,18 +76,26 @@ class Menu extends Component {
     );
 
     return [
-      <div class='leftpanel'>
-        <div class="menulist">
-            <MenuHeading Restaurant={this.state.Restaurant}/>
-            { menuItems }
-        </div>
-      </div>,
-      <div class='rightpanel'>
-        <ShoppingCart
-          cart={this.props.cart}
-          onRemoveItem={this.props.onRemoveItem}
-          onUpdateItem={this.props.onUpdateItem}/>
-      </div>
+      <table border='0' align='center'>
+        <tr>
+          <td valign='top'>
+            <div class='container leftpanel'>
+              <div class="menulist">
+                  <MenuHeading Restaurant={this.state.Restaurant}/>
+                  { menuItems }
+              </div>
+            </div>,
+          </td>
+          <td valign='top'>
+            <div class='container rightpanel'>
+              <ShoppingCart
+                cart={this.props.cart}
+                onRemoveItem={this.props.onRemoveItem}
+                onUpdateItem={this.props.onUpdateItem}/>
+            </div>
+          </td>
+        </tr>
+      </table>
     ]
   }
 }

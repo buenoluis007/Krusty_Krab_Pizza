@@ -24,7 +24,7 @@ class CartItem extends Component{
     return[
       <tr height='60px' valign='top'>
         <td width="70px">
-          <input type='number' min='1' max='99'
+          <input type='number' min='1' max='99' style={{textAlign:'left', width:'40px'}}
             value={item.qty}
             onChange={(e)=>this.props.onUpdateItem(index,e.target.value)}>
           </input>
