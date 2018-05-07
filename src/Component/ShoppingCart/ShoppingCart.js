@@ -4,25 +4,80 @@ import './ShoppingCart.css'
 
 class CartHeading extends Component{
   render(){
+    const Restaurant = this.props.rest;
     return(
-      <div></div>
+      <div>
+        <center>
+          <p>{Restaurant.name}<br/>
+          {Restaurant.address}<br/>
+          {Restaurant.phoneNum}</p>
+        </center>
+      </div>
     );
   }
 }
 
 class CartItem extends Component{
   render(){
-    return(
-      <div></div>
-    );
+    const item = this.props.item
+    const index = this.props.index
+    return[
+      <tr height='60px' valign='top'>
+        <td width="70px">
+          <input type='number' min='1' max='99'
+            value={item.qty}
+            onChange={(e)=>this.props.onUpdateItem(index,e.target.value)}>
+          </input>
+        </td>
+        <td width="">
+          { item.foodName }
+        </td>
+        <td align='center' width='40px'>
+          <button class='rbutton' onClick={()=>this.props.onRemoveItem(index)}>
+            X
+          </button>
+        </td>
+        <td width="90px" align='right'>
+          ${ (item.price*item.qty).toFixed(2) }
+        </td>
+      </tr>
+    ];
   }
 }
 
 class CartTotals extends Component{
   render(){
-    return(
-      <div></div>
-    );
+    const receipt = this.props.cart.getReceipt();
+    let discount = null;
+
+    if (receipt.discountpct !== 0)
+      discount = [
+        <tr>
+          <td colspan="3"> Discount({receipt.discountpct*100}%): </td>
+          <td align='right'> ${receipt.discount.toFixed(2)} </td>
+        </tr>
+      ];
+
+    return[
+      discount,
+      <tr>
+        <td colspan="3"> Subtotal: </td>
+        <td align='right'>${receipt.subtotal.toFixed(2)}</td>
+      </tr>,
+      <tr>
+        <td colspan="3">Tax({receipt.taxpct*100}%):</td>
+        <td align='right'>${receipt.tax.toFixed(2)}</td>
+      </tr>,
+      <tr>
+        <td colspan="3">Total:</td>
+        <td align='right'>${receipt.total.toFixed(2)}</td>
+      </tr>,
+      <tr height='50px' valign='bottom'>
+        <td colspan="4" align='center'>
+          <button class='cbutton'>Check Out</button>
+        </td>
+      </tr>
+    ];
   }
 }
 
@@ -32,8 +87,6 @@ class ShoppingCart extends Component {
       this.state =
       {
         Restaurant: [],
-        Totals: [],
-        Items: []
       };
     }
 
@@ -41,65 +94,24 @@ class ShoppingCart extends Component {
       fetch('/restaurantInfo?id=1')
         .then(res => res.json())
         .then(info => this.setState({ Restaurant: info }));
-      fetch('/receipt')
-        .then(res => res.json())
-        .then(info => this.setState({ Totals: info }));
-      fetch('/shoppingCart')
-        .then(res => res.json())
-        .then(info => this.setState({ Items: info }));
     }
 
     render() {
-
-      let heading = null;
       let body = null;
-      let totals = null;
-
-      heading = (
-        <div>
-          <center>
-            <p>{this.state.Restaurant.name}</p>
-            <p>{this.state.Restaurant.address}</p>
-            <p>{this.state.Restaurant.phoneNum}</p>
-          </center>
-        </div>
-      );
 
       body = this.props.cart.getItems().map((item, index) =>
-        <tr>
-          <td width="50%">{ item.foodName }</td>
-          <td width="20%">{ item.qty }</td>
-          <td width="30%" align='right'>${ item.price.toFixed(2) }</td>
-        </tr>
+        <CartItem item={item} index={index}
+          onRemoveItem={this.props.onRemoveItem}
+          onUpdateItem={this.props.onUpdateItem}/>
       );
-
-      let receipt = this.props.cart.getReceipt();
-      totals = [
-        <tr>
-          <td colspan="2"> Discount({receipt.discountpct*100}%): </td>
-          <td> ${receipt.discount.toFixed(2)} </td>
-        </tr>,
-        <tr>
-          <td colspan="2"> Subtotal: </td>
-          <td>${receipt.subtotal.toFixed(2)}</td>
-        </tr>,
-        <tr>
-          <td colspan="2">Tax({receipt.taxpct*100}%):</td>
-          <td>${receipt.tax.toFixed(2)}</td>
-        </tr>,
-        <tr>
-          <td colspan="2">Total:</td>
-          <td>${receipt.total.toFixed(2)}</td>
-        </tr>
-      ];
 
       return (
         <div>
           <div class="cartlist" align="center">
-            { heading }
-            <table border="1" width="400px" bgcolor="white">
+            <CartHeading rest={this.state.Restaurant}/>
+            <table border="0" width="400px">
                 { body }
-                { totals }
+                <CartTotals cart={this.props.cart}/>
             </table>
           </div>
         </div>

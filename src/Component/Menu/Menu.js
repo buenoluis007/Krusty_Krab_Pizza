@@ -30,7 +30,8 @@ class MenuItem extends Component{
         <div class='item-right'>
         ${ item.price.toFixed(2) }
 
-            <button style={{bottom:5,left:0,position:'absolute'}} onClick={()=>this.props.onAddItem({
+            <button style={{bottom:5,left:0,position:'absolute'}}
+              onClick={()=>this.props.onAddItem({
                 foodName:item.foodName,
                 qty:1,
                 price:item.price})}>Add to Cart</button>
@@ -47,7 +48,8 @@ class Menu extends Component {
       this.state =
       {
         Restaurant: [],
-        Menu: []
+        Menu: [],
+        Status: 2
       };
     }
 
@@ -59,6 +61,12 @@ class Menu extends Component {
       fetch('/menuInfo' + restID)
         .then(res => res.json())
         .then(menu => this.setState({ Menu: menu }));
+      if (this.state.Status === 1)
+        this.props.onUpdateDiscount(.05);
+      else if (this.state.Status === 2)
+        this.props.onUpdateDiscount(.1);
+
+
     }
 
     render() {
@@ -76,7 +84,9 @@ class Menu extends Component {
           </div>
         </div>,
         <div class='rightpanel'>
-          <ShoppingCart cart={this.props.cart}/>
+          <ShoppingCart cart={this.props.cart}
+            onRemoveItem={this.props.onRemoveItem}
+            onUpdateItem={this.props.onUpdateItem}/>
         </div>
       ]
     }
