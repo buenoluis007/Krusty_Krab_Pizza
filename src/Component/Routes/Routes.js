@@ -132,15 +132,20 @@ class Routes extends Component {
                 <Route path="/restaurant/:resID" exact component={ Restaurant }/>
                 <Route path="/menu/:resID" render={(props) =>{return(
                   <Menu
-                  {...props}
-                  user={this.state.User}
-                  cart={this.state.Cart}
-                  onResInfo={this.handleResInfo}
-                  onAddItem={this.handleAddItem}
-                  onUpdateItem={this.handleUpdateItem}
-                  onRemoveItem={this.handleRemoveItem}
-                  onUpdateDiscount={this.handleUpdateDiscount}/>)}} />
-                <Route path="/checkout" exact component={ CheckOut } />
+                    {...props}
+                    user={this.state.User}
+                    cart={this.state.Cart}
+                    onResInfo={this.handleResInfo}
+                    onAddItem={this.handleAddItem}
+                    onUpdateItem={this.handleUpdateItem}
+                    onRemoveItem={this.handleRemoveItem}
+                    onUpdateDiscount={this.handleUpdateDiscount}/>)}} />
+                <Route path="/checkout" render={(props) =>{return(
+                  <CheckOut
+                    user={this.state.User}
+                    cart={this.state.Cart}
+                    onUpdateItem={this.handleUpdateItem}
+                    onRemoveItem={this.handleRemoveItem}/>)}} />
               </div>
             </div>
         );

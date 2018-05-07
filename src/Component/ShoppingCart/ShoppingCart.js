@@ -82,20 +82,6 @@ class CartTotals extends Component{
 }
 
 class ShoppingCart extends Component {
-  constructor(props) {
-      super(props);
-      this.state =
-      {
-        Restaurant: [],
-      };
-    }
-
-    componentDidMount() {
-      fetch('/restaurantInfo?id=1')
-        .then(res => res.json())
-        .then(info => this.setState({ Restaurant: info }));
-    }
-
     render() {
       let body = null;
 
