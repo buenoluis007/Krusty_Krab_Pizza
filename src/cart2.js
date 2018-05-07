@@ -28,6 +28,10 @@ var cart = function(){
     return discountpct;
   };
 
+  this.setDiscountPct = function(dpct){
+    discountpct = dpct;
+  }
+
   this.getTaxPct = function(){
     return items;
   };

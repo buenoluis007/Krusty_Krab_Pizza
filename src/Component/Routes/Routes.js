@@ -21,6 +21,9 @@ class Routes extends Component {
       };
 
       this.handleAddItem = this.handleAddItem.bind(this);
+      this.handleUpdateItem = this.handleUpdateItem.bind(this);
+      this.handleRemoveItem = this.handleRemoveItem.bind(this);
+      this.handleUpdateDiscount = this.handleUpdateDiscount.bind(this);
     }
 
     // fetch the user's info from express
@@ -48,13 +51,33 @@ class Routes extends Component {
        this.setState({Cart:cart});
     }
 
+    handleUpdateItem(index,qty){
+       let cart = this.state.Cart;
+       cart.updateQty(index,qty);
+       cart.updatePrice();
+       this.setState({Cart:cart});
+    }
+
+    handleRemoveItem(index){
+       let cart = this.state.Cart;
+       cart.removeItem(index);
+       cart.updatePrice();
+       this.setState({Cart:cart});
+    }
+
+    handleUpdateDiscount(pct){
+        let cart = this.state.Cart;
+        cart.setDiscountPct(pct);
+        cart.updatePrice();
+        this.setState({Cart: cart});
+    }
+
     render () {
       // check if the user is logged in using the info provided by express
       let loggedIn = false;
       if(this.state.Users.loggedIn === true){
         loggedIn = true
       }
-
 
       // adjust the link accordingly to the log in status of the user
       let status = null;
@@ -100,8 +123,12 @@ class Routes extends Component {
               <Route path="/restaurant/:resID" exact component={ Restaurant }/>
               <Route path="/menu" render={() =>{return(
                 <Menu
+                user={this.state.User}
                 cart={this.state.Cart}
-                onAddItem={this.handleAddItem}/>)}} />
+                onAddItem={this.handleAddItem}
+                onUpdateItem={this.handleUpdateItem}
+                onRemoveItem={this.handleRemoveItem}
+                onUpdateDiscount={this.handleUpdateDiscount}/>)}} />
                 </div>
             </div>
         );
