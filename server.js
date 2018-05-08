@@ -40,19 +40,11 @@ let Cooks = {
 };
 // Establish connection with database
 var connection = mysql.createConnection({
-<<<<<<< HEAD
-      host: '',
-      port: ,
-      user: '',
-      password: '',
-      database: ''
-=======
     host: '',
     port: 40397,
     user: 'admin',
     password: '',
     database: ''
->>>>>>> e62d085407ab0c725022bf47d4f78bef086b4c1b
 });
 
 // Check if database is properly connected to
