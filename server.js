@@ -334,7 +334,6 @@ app.post("/restaurant/:resName/cook/menu/removeFood",function(req,res){
     });
 });
 
-
 // Manager Part of Website
 // app.get('/Manager', function(req, res) {
 //     var restaurantName = req.params.resName;
@@ -508,14 +507,19 @@ app.post('/restaurant/:resName/manager/fire', function(req, res) {
     var q = "DELETE FROM " + workerType + " WHERE userID = " + workerID;
     connection.query(q, function(err, results) {
         if(err) throw err;
-        q = "DELETE FROM Users WHERE userID = " + workerID;
+        q = "DELETE FROM RegisteredAccts WHERE userID = " + workerID;
         connection.query(q, function(err, results) {
             if(err) throw err;
-            console.log("user successfully fired");
+            q = "DELETE FROM Users WHERE userID = " + workerID;
+            connection.query(q, function(err, results) {
+                if(err) throw err;
+                console.log("user successfully fired");
+            });
         });
     });
     res.redirect("/restaurant/" + restaurantName + "/manager");
 });
+
 
 // Change wages of workers (currently have no wages attribute in any table), but an input form next to the worker
 app.post('/restaurant/:resName/manager/changeWage', function(req, res) {

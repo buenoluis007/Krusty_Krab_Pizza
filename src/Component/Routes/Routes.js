@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Link } from 'react-router-dom';
+import cart from '../../cart2'
 import './Routes.css';
 
 import Register from '../Register/Register';
@@ -9,25 +10,74 @@ import Home from '../Home/Home';
 import Accounts from '../Accounts/Accounts';
 import Manager from '../Manager/Manager';
 import Restaurant from '../Restaurant/Restaurant';
+<<<<<<< HEAD
 import Cooks from '../Manager/Cooks'
 
 
 
+=======
+import Menu from '../Menu/Menu';
+>>>>>>> 7a12da88a327fc734464a7d887399d147e322ad5
 
 class Routes extends Component {
   constructor() {
       super();
       this.state =
       {
-        Users : []
+        Users : [],
+        Cart : new cart()
       };
+
+      this.handleAddItem = this.handleAddItem.bind(this);
+      this.handleUpdateItem = this.handleUpdateItem.bind(this);
+      this.handleRemoveItem = this.handleRemoveItem.bind(this);
+      this.handleUpdateDiscount = this.handleUpdateDiscount.bind(this);
     }
 
     // fetch the user's info from express
     componentDidMount() {
+      let savedItems = JSON.parse(sessionStorage.getItem('savedState'));
+      if (savedItems != null){
+        let savedCart = this.state.Cart;
+        savedCart.setItems(savedItems);
+        savedCart.updatePrice();
+        this.setState({Cart: savedCart});
+      }
       fetch('/user')
         .then(res => res.json())
         .then(user => this.setState({ Users: user }))
+    }
+
+    componentWillUpdate(){
+      sessionStorage.setItem('savedState', JSON.stringify(this.state.Cart.getItems()));
+    }
+
+    handleAddItem(item){
+       let cart = this.state.Cart;
+       cart.addItem(item.foodName,item.qty,item.price);
+       cart.updatePrice();
+       this.setState({Cart:cart});
+    }
+
+    handleUpdateItem(index,qty){
+       let cart = this.state.Cart;
+       cart.updateQty(index,qty);
+       cart.updatePrice();
+       this.setState({Cart:cart});
+    }
+
+    handleRemoveItem(index){
+       let cart = this.state.Cart;
+       cart.removeItem(index);
+       cart.updatePrice();
+       this.setState({Cart:cart});
+    }
+
+    handleUpdateDiscount(pct){
+        let cart = this.state.Cart;
+        cart.setDiscountPct(pct);
+        cart.updatePrice();
+        this.setState({Cart: cart});
     }
 
     render () {
@@ -36,7 +86,6 @@ class Routes extends Component {
       if(this.state.Users.loggedIn === true){
         loggedIn = true
       }
-
 
       // adjust the link accordingly to the log in status of the user
       let status = null;
@@ -67,6 +116,7 @@ class Routes extends Component {
 
         return (
             <div>
+            <div class='navbar'>
               <header className='Routes'>
                     <nav>
                       <ul>
@@ -77,14 +127,28 @@ class Routes extends Component {
                       </ul>
                   </nav>
               </header>
-
+              </div>
+              <div class='main'>
               <Route path="/" exact component={ Home } />
               <Route path="/Account" exact component={ Accounts } />
               <Route path="/Account/Manager" exact component={ Manager } />
               <Route path="/register" exact component={ Register } />
               <Route path="/login" exact component={ LogIn } />
               <Route path="/SignOut" exact component={ SignOut } />
+<<<<<<< HEAD
               <Route path="/restaurant/:resName" exact component={ Restaurant }/>
+=======
+              <Route path="/restaurant/:resID" exact component={ Restaurant }/>
+              <Route path="/menu" render={() =>{return(
+                <Menu
+                user={this.state.User}
+                cart={this.state.Cart}
+                onAddItem={this.handleAddItem}
+                onUpdateItem={this.handleUpdateItem}
+                onRemoveItem={this.handleRemoveItem}
+                onUpdateDiscount={this.handleUpdateDiscount}/>)}} />
+                </div>
+>>>>>>> 7a12da88a327fc734464a7d887399d147e322ad5
             </div>
         );
     }

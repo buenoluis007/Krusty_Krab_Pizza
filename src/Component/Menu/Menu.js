@@ -1,150 +1,97 @@
 import React, { Component } from 'react';
 import './Menu.css'
+import ShoppingCart from '../ShoppingCart/ShoppingCart'
 
 var restID = '?id=1'
 
+class MenuHeading extends Component{
+  render(){
+    return(
+      <div class='menuheading'>
+        <p><h1>{this.props.Restaurant.name}</h1>
+        {this.props.Restaurant.address}<br/>
+        {this.props.Restaurant.phoneNum}</p>
+      </div>
+    );
+  }
+}
+
+class MenuItem extends Component{
+  render(){
+    const item = this.props.item
+    return(
+      <div class='item'>
+        <div class='item-left'>
+          <span style={{fontSize:18, fontWeight:'bold'}}>
+            { item.foodName }<br/></span>
+          <span style={{fontSize:14, color:'rgba(80,80,80)'}}>
+            { item.description }</span>
+        </div>
+        <div class='item-right'>
+        ${ item.price.toFixed(2) }
+
+            <button style={{bottom:5,left:0,position:'absolute'}}
+              onClick={()=>this.props.onAddItem({
+                foodName:item.foodName,
+                qty:1,
+                price:item.price})}>Add to Cart</button>
+
+        </div>
+      </div>
+    );
+  }
+}
+
 class Menu extends Component {
-  constructor() {
-      super();
+  constructor(props) {
+      super(props);
       this.state =
       {
-        Users : [],
         Restaurant: [],
-        Menu: []
+        Menu: [],
+        Status: 2
       };
     }
 
-    // fetch the user's info from express
-    componentDidMount(props) {
-      fetch('/users')
-        .then(res => res.json())
-        .then(user => this.setState({ Users: user }));
+    componentDidMount() {
+      //restID = this.props.match.params;
       fetch('/restaurantInfo' + restID)
         .then(res => res.json())
         .then(info => this.setState({ Restaurant: info }));
       fetch('/menuInfo' + restID)
         .then(res => res.json())
         .then(menu => this.setState({ Menu: menu }));
+      if (this.state.Status === 1)
+        this.props.onUpdateDiscount(.05);
+      else if (this.state.Status === 2)
+        this.props.onUpdateDiscount(.1);
+
+
     }
 
     render() {
-      // change the login state if the info inputted is wrong
-      let heading = null;
       let menuItems = null;
 
-      //this.state.Restaurant not fetching
-      heading = (
-        <div>
-            <h1>{this.state.Restaurant.name}</h1>
-            <p>{this.state.Restaurant.address}</p>
-            <p>{this.state.Restaurant.phoneNum}</p>
-          </div>
-        );
-
-      menuItems = this.state.Menu.map((items) =>
-        <li> { items.foodName } ${ items.price } { items.description }
-          <form target="shopcart" action="/addItem" method="POST">
-            <input type="hidden" name="foodName" value={items.foodName}/>
-            <input type="hidden" name="qty" value="1"/>
-            <input type="hidden" name="price" value={items.price}/>
-            <button type="submit" name="submit"> Add to Cart </button>
-          </form>
-        </li>
+      menuItems = this.state.Menu.map((item) =>
+        <MenuItem item={item} onAddItem={this.props.onAddItem}/>
       );
 
-      return (
-        <div>
-          { heading }
-          <div id="menulist">
-            <ul>
-                { menuItems }
-            </ul>
+      return [
+        <div class='leftpanel'>
+          <div class="menulist">
+              <MenuHeading Restaurant={this.state.Restaurant}/>
+              { menuItems }
           </div>
-          <iframe name="shopcart" src=""></iframe>
-          <ShoppingCart/>
+        </div>,
+        <div class='rightpanel'>
+          <ShoppingCart cart={this.props.cart}
+            onRemoveItem={this.props.onRemoveItem}
+            onUpdateItem={this.props.onUpdateItem}/>
         </div>
-      )
+      ]
     }
 }
 
-class ShoppingCart extends Component {
-  constructor() {
-      super();
-      this.state =
-      {
-        Restaurant: [],
-        Totals: [],
-        Items: []
-      };
-    }
 
-    componentDidMount() {
-      fetch('/restaurantInfo?id=1')
-        .then(res => res.json())
-        .then(info => this.setState({ Restaurant: info }));
-      fetch('/receipt')
-        .then(res => res.json())
-        .then(info => this.setState({ Totals: info }));
-      fetch('/shoppingCart')
-        .then(res => res.json())
-        .then(info => this.setState({ Items: info }));
-    }
-
-    render() {
-
-      let heading = null;
-      let body = null;
-      let totals = null;
-
-      heading = (
-        <div>
-          <center>
-            <p>{this.state.Restaurant.name}</p>
-            <p>{this.state.Restaurant.address}</p>
-            <p>{this.state.Restaurant.phoneNum}</p>
-          </center>
-        </div>
-      );
-
-      body = this.state.Items.map((item) =>
-        <tr>
-          <td width="50%">{ item.foodName }</td>
-          <td width="20%">{ item.qty }</td>
-          <td width="30%">${ item.price }</td>
-        </tr>
-      );
-
-      totals = [
-        <tr>
-          <td colspan="2"> Discount({this.state.Totals.discountpct*100}%): </td>
-          <td> ${this.state.Totals.discount} </td>
-        </tr>,
-        <tr>
-          <td colspan="2"> Subtotal: </td>
-          <td>${this.state.Totals.subtotal}</td>
-        </tr>,
-        <tr>
-          <td colspan="2">Tax({this.state.Totals.taxpct*100}%):</td>
-          <td>${this.state.Totals.tax}</td>
-        </tr>,
-        <tr>
-          <td colspan="2">Total:</td>
-          <td>${this.state.Totals.total}</td>
-        </tr>
-      ];
-
-      return (
-        <div>
-          { heading }
-          <div id="items" align="center">
-            <table border="1" width="50%" bgcolor="white">
-                { body }
-                { totals }
-            </table>
-          </div>
-        </div>
-      )
-    }
-}
 
 export default Menu;
