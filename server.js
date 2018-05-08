@@ -38,7 +38,7 @@ let Manager = {
 let Cooks = {
 
 };
-// Establish connection with database
+// Establish connection with database :)
 var connection = mysql.createConnection({
     host: '',
     port: 40397,
@@ -46,6 +46,7 @@ var connection = mysql.createConnection({
     password: '',
     database: ''
 });
+
 
 // Check if database is properly connected to
 connection.connect(function(error) {
