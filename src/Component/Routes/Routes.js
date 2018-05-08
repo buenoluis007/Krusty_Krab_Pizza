@@ -123,7 +123,7 @@ class Routes extends Component {
 
 
         return (
-            <div>
+          <div>
             <div class='navbar'>
               <header className='Routes'>
                     <nav>
@@ -163,7 +163,8 @@ class Routes extends Component {
                     restInfo={this.state.RestInfo}
                     onUpdateItem={this.handleUpdateItem}
                     onRemoveItem={this.handleRemoveItem}/>)}} />
-            </div>
+          </div>
+        </div>
         );
     }
 }
