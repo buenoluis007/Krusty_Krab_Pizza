@@ -40,11 +40,19 @@ let Cooks = {
 };
 // Establish connection with database
 var connection = mysql.createConnection({
+<<<<<<< HEAD
       host: '',
       port: ,
       user: '',
       password: '',
       database: ''
+=======
+    host: '',
+    port: 40397,
+    user: 'admin',
+    password: '',
+    database: ''
+>>>>>>> e62d085407ab0c725022bf47d4f78bef086b4c1b
 });
 
 // Check if database is properly connected to
@@ -57,10 +65,10 @@ connection.connect(function(error) {
 });
 
 
-// app.get('/', function(req, res) {
-//   console.log("Asdasdasdasdsad");
-//   console.log(signedInUser);
-// })
+app.get('/', function(req, res) {
+  console.log("Asdasdasdasdsad");
+  console.log(signedInUser);
+})
 
 app.get('/user', function(req, res) {
   console.log("Hello there from server");
@@ -94,29 +102,29 @@ app.get('/restaurant', function(req, res) {
   })
 });
 
-// // Login Page
-// app.post('/login', function(req, res) {
-//   console.log(signedInUser.email);
-//     if(signedInUser.status === true) { // If the user is already signed in and tries to access this page, redirect them
-//       req.redirect('/');
-//     } else {
-//         res.render("/login");
-//     }
-// });
-// app.post('/checkRest', function(req, res) {
-//   var restID = req.body.link;
-//   console.log("the restid is:" + restID);
-//   q = "SELECT * FROM Restaurants WHERE restaurantID = '" + restID + "'";
-//   connect.query(q, function(err, results) {
-//     if(err) throw err;
-//     if(results[0]) {
-//       restaurant.name = results[0].name;
-//       restaurant.address = results[0].address;
-//       restaurant.phoneNum = results[0].phoneNum;
-//       console.log("res:" + restaurant);
-//     }
-//   })
-// });
+// Login Page
+app.post('/login', function(req, res) {
+  console.log(signedInUser.email);
+    if(signedInUser.status === true) { // If the user is already signed in and tries to access this page, redirect them
+      req.redirect('/');
+    } else {
+        res.render("/login");
+    }
+});
+app.post('/checkRest', function(req, res) {
+  var restID = req.body.link;
+  console.log("the restid is:" + restID);
+  q = "SELECT * FROM Restaurants WHERE restaurantID = '" + restID + "'";
+  connect.query(q, function(err, results) {
+    if(err) throw err;
+    if(results[0]) {
+      restaurant.name = results[0].name;
+      restaurant.address = results[0].address;
+      restaurant.phoneNum = results[0].phoneNum;
+      console.log("res:" + restaurant);
+    }
+  })
+});
 
 app.post('/checkRest', function(req, res) {
     var id = req.body.linkbtn;
@@ -224,14 +232,14 @@ app.post('/logincheck', function(req, res) {
     });
 });
 
-// Register Page
-// app.get('/register', function(req, res) {
-//     if(signedInUser.email) { // If the user is already signed in and tries to access this page, redirect them
-//         res.redirect('/');
-//     } else {
-//         res.render('register');
-//     }
-// });
+//Register Page
+app.get('/register', function(req, res) {
+    if(signedInUser.email) { // If the user is already signed in and tries to access this page, redirect them
+        res.redirect('/');
+    } else {
+        res.render('register');
+    }
+});
 
 app.post('/registercheck', function(req, res) {
     var fName = req.body.fName; // information obtained from body-parser
@@ -289,13 +297,44 @@ app.post('/signout', function(req, res) {
 
 //Cook section of the site.
 
+app.get("/restaurant/cook/menu",function(req, res){
+    if(signedInUser.type === "Cook"){
+        var resName = res.params.resName;
+        var currentMenuName = [];
+        var currentMenuDesc = [];
+        var currentMenuPrice =[];
+        restaurantID = 0;
+
+        //retrieves the specific restaurantID using the restaurant name.
+        var q = "SELECT restaurantID FROM Restaurants WHERE name = '" + resName+"'";
+        connection.query(q, function(err, results) {
+            if(err) throw err;
+            var restaurantID = results[0].restaurantID;
+
+            //Adds all of the food in a the Menu array from the Menu database
+            var k = "SELECT * FROM Menu WHERE restaurantID = " + restaurantID ;
+
+            connection.query(k, function(err, results) {
+                if(err) throw err;
+                for(var i = 0; i< results.length; i++){
+                currentMenuName.push(results[i].foodName);
+                currentMenuDesc.push(results[i].description);
+                currentMenuPrice.push(results[i].price);
+            }
+
+            });
+        });
+    }
+});
+
 // Add the new button to the Menu
 app.post("/restaurant/:resName/cook/menu/addfood", function(req,res){
   var foodName = req.body.foodName;
   var description = req.body.foodDesc;
   var price = req.body.foodPrice;
-  var restaurantID = 8;
+  var restaurantID = 0;
   var resName = req.params.resName;
+
   var Food = {
     restaurantID: restaurantID,
     foodName : foodName,
@@ -303,6 +342,7 @@ app.post("/restaurant/:resName/cook/menu/addfood", function(req,res){
     price : price,
   };
   console.log(Food.price);
+
 
 //  Adds the new food item to the Menu table in the database.
   connection.query("INSERT INTO Menu SET ?", Food, function(err, results) {
@@ -319,7 +359,6 @@ app.post("/restaurant/:resName/cook/menu/removeFood",function(req,res){
     var foodName = req.body.foodName;
     var resName = req.params.resName;
 
-
     //retrieves the specific restaurantID using the restaurant name.
     var q = "SELECT restaurantID FROM Restaurants WHERE name = '" + resName+"'";
     connection.query(q, function(err, results) {
@@ -334,6 +373,10 @@ app.post("/restaurant/:resName/cook/menu/removeFood",function(req,res){
     });
 });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> e62d085407ab0c725022bf47d4f78bef086b4c1b
 // Manager Part of Website
 // app.get('/Manager', function(req, res) {
 //     var restaurantName = req.params.resName;
@@ -582,6 +625,10 @@ app.post('/restaurant/:resName/manager/changeUserStatus', function(req, res) {
     res.redirect("/restaurant/" + restaurantName + "/manager");
 });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> e62d085407ab0c725022bf47d4f78bef086b4c1b
 
 app.get('*', function(req, res) {
     res.send("This is not a valid page on this website.")

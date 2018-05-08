@@ -27,7 +27,7 @@ class LogIn extends Component {
         retry = (
           <div>
             <h2 className='warning'>Please Try Again.</h2>
-            <h3 className='warning'>The Email Or Password You've Entered Is Incorrect</h3>
+            <h3 className='warning'>The Email Or Password You have Entered Is Incorrect</h3>
             <form className="login2" action="/logincheck" method="POST">
                 <input type="email" name="email" placeholder="email"/>
                 <br/>
