@@ -9,7 +9,7 @@ class Home extends Component {
         return (
           <div className="home">
             <h1 className='welcome'>Welcome to Krusty Krab Pizza</h1>
-            <h2 className='welcome' id='slogan'>Where You'll Find The Pizza Of Your Life</h2>
+            <h2 className='welcome' id='slogan'>Where You will Find The Pizza Of Your Life</h2>
 
 
               < Maps />
