@@ -10,14 +10,9 @@ import Home from '../Home/Home';
 import Accounts from '../Accounts/Accounts';
 import Manager from '../Manager/Manager';
 import Restaurant from '../Restaurant/Restaurant';
-<<<<<<< HEAD
 import Cooks from '../Manager/Cooks'
-
-
-
-=======
 import Menu from '../Menu/Menu';
->>>>>>> 7a12da88a327fc734464a7d887399d147e322ad5
+
 
 class Routes extends Component {
   constructor() {
@@ -135,9 +130,9 @@ class Routes extends Component {
               <Route path="/register" exact component={ Register } />
               <Route path="/login" exact component={ LogIn } />
               <Route path="/SignOut" exact component={ SignOut } />
-<<<<<<< HEAD
+
               <Route path="/restaurant/:resName" exact component={ Restaurant }/>
-=======
+
               <Route path="/restaurant/:resID" exact component={ Restaurant }/>
               <Route path="/menu" render={() =>{return(
                 <Menu
@@ -148,7 +143,7 @@ class Routes extends Component {
                 onRemoveItem={this.handleRemoveItem}
                 onUpdateDiscount={this.handleUpdateDiscount}/>)}} />
                 </div>
->>>>>>> 7a12da88a327fc734464a7d887399d147e322ad5
+
             </div>
         );
     }

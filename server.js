@@ -373,10 +373,6 @@ app.post("/restaurant/:resName/cook/menu/removeFood",function(req,res){
     });
 });
 
-<<<<<<< HEAD
-=======
-
->>>>>>> e62d085407ab0c725022bf47d4f78bef086b4c1b
 // Manager Part of Website
 // app.get('/Manager', function(req, res) {
 //     var restaurantName = req.params.resName;
@@ -625,10 +621,6 @@ app.post('/restaurant/:resName/manager/changeUserStatus', function(req, res) {
     res.redirect("/restaurant/" + restaurantName + "/manager");
 });
 
-<<<<<<< HEAD
-=======
-
->>>>>>> e62d085407ab0c725022bf47d4f78bef086b4c1b
 
 app.get('*', function(req, res) {
     res.send("This is not a valid page on this website.")
