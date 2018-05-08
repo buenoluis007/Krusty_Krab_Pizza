@@ -1,9 +1,28 @@
 .pizzerias {
-  background-color: white;
+    display: inline-grid;
+    background-color: rgba(225, 229, 232, 0.8);
+    border: 1px solid rgb(217, 221, 219);
+    box-shadow: 4px 5px grey;
+    padding: 16px;
+    margin: 1.2%;
+    height: 100px;
+    width: 300px;
+    text-align: center;
 }
 
-GoogleMap{
-  margin: 0;
-  width: 600px;
-  float: left;
+.pizzerias:hover {
+    background-color:rgba(160, 163, 165, 0.8);
+}
+
+.selectedPlace {
+    background-color: red;
+}
+
+.gmap{
+    flex: 0 0 32%
+}
+
+img {
+    width: auto;
+    height: auto;
 }

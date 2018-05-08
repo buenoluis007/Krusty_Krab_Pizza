@@ -5,6 +5,7 @@ class SignOut extends Component {
   render() {
     return (
       <form className="signOut" action='/signout' method='POST'>
+        <h1>Come Back Soon!</h1>
         <button
           id="enter"
           type="submit"

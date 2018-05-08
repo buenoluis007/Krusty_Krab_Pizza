@@ -7,7 +7,12 @@ import LogIn from '../LogIn/LogIn';
 import SignOut from '../SignOut/SignOut';
 import Home from '../Home/Home';
 import Accounts from '../Accounts/Accounts';
+import Manager from '../Manager/Manager';
 import Restaurant from '../Restaurant/Restaurant';
+import Cooks from '../Manager/Cooks'
+
+
+
 
 class Routes extends Component {
   constructor() {
@@ -38,21 +43,27 @@ class Routes extends Component {
       let registerable = null;
       let accountInfo = null;
       if(loggedIn === false) {
-        status = (
-          <li><Link to="/login">Log In</Link></li>
-        )
-        registerable = (
-          <li><Link to="/register">Register</Link></li>
-        )
+          status = (
+              <li><Link to="/login">Log In</Link></li>
+          )
+          registerable = (
+              <li><Link to="/register">Register</Link></li>
+          )
       } else {
-        status = (
-          <li><Link to="/signout">Sign Out</Link></li>
+            status = (
+                <li><Link to="/signout">Sign Out</Link></li>
         )
-        accountInfo = (
-          <li><Link to="/user">Account</Link></li>
-        )
-      }
-      console.log("Hello from Routes " + this.state.Users);
+            if(this.state.Users.type === 'Manager'){
+                accountInfo = (
+                    <li><Link to="/Account/Manager">Account</Link></li>
+                )
+            } else {
+                accountInfo = (
+                    <li><Link to="/Account">Account</Link></li>
+                )
+            }
+        }
+
 
         return (
             <div>
@@ -68,11 +79,12 @@ class Routes extends Component {
               </header>
 
               <Route path="/" exact component={ Home } />
-              <Route path="/user" exact component={ Accounts } />
+              <Route path="/Account" exact component={ Accounts } />
+              <Route path="/Account/Manager" exact component={ Manager } />
               <Route path="/register" exact component={ Register } />
               <Route path="/login" exact component={ LogIn } />
               <Route path="/SignOut" exact component={ SignOut } />
-              <Route path="/restaurant/:resID" exact component={ Restaurant }/>
+              <Route path="/restaurant/:resName" exact component={ Restaurant }/>
             </div>
         );
     }

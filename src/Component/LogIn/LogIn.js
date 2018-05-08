@@ -64,7 +64,6 @@ class LogIn extends Component {
           <div className="loginDiv">
             <h1 id="loginStatement">Welcome Back</h1>
             { retry }
-
             <div id="mission">
               <p>Hi there! At Krusty Krab Pizza, we aim to make your life easier when it comes to grabbing a slice of pizza.Hi there! At Krusty Krab Pizza, we aim to make your life easier when it comes to grabbing a slice of pizza.Hi there! At Krusty Krab Pizza, we aim to make your life easier when it comes to grabbing a slice of pizza.Hi there! At Krusty Krab Pizza, we aim to make your life easier when it comes to grabbing a slice of pizza.Hi there! At Krusty Krab Pizza, we aim to make your life easier when it comes to grabbing a slice of pizza.</p>
             </div>

@@ -133,3 +133,10 @@ CREATE TABLE Complaints(
     FOREIGN KEY(restaurantID) REFERENCES Restaurants(restaurantID),
     FOREIGN KEY(foodName) REFERENCES Menu(foodName)
 );
+
+
+
+
+SELECT Cooks.userID FROM Cooks JOIN RegisteredAccts ON Cooks.userID = RegisteredAccts.userID JOIN Restaurants ON Restaurants.restaurantID = Cooks.restaurantID WHERE Cooks.restaurantID = 8;
+
+SELECT Cooks.userID, Cooks.salery, CONCAT(f_name, " ", l_name) AS name FROM DeliveryPerson JOIN Users ON DeliveryPerson.userID = Users.userID JOIN RegisteredAccts ON Users.userID = RegisteredAccts.userID WHERE Cooks.restaurantID =
