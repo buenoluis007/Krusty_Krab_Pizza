@@ -4,7 +4,7 @@ import './ShoppingCart.css'
 
 class CartHeading extends Component{
   render(){
-    const Restaurant = this.props.rest;
+    const Restaurant = this.props.cart.getRestaurant();
     return(
       <div>
         <center>
@@ -24,7 +24,7 @@ class CartItem extends Component{
     return[
       <tr height='60px' valign='top'>
         <td width="70px">
-          <input type='number' min='1' max='99'
+          <input type='number' min='1' max='99' style={{textAlign:'left', width:'40px'}}
             value={item.qty}
             onChange={(e)=>this.props.onUpdateItem(index,e.target.value)}>
           </input>
@@ -74,7 +74,7 @@ class CartTotals extends Component{
       </tr>,
       <tr height='50px' valign='bottom'>
         <td colspan="4" align='center'>
-          <button class='cbutton'>Check Out</button>
+          <a href='/checkout'><button class='cbutton'>Check Out</button></a>
         </td>
       </tr>
     ];
@@ -82,20 +82,6 @@ class CartTotals extends Component{
 }
 
 class ShoppingCart extends Component {
-  constructor(props) {
-      super(props);
-      this.state =
-      {
-        Restaurant: [],
-      };
-    }
-
-    componentDidMount() {
-      fetch('/restaurantInfo?id=1')
-        .then(res => res.json())
-        .then(info => this.setState({ Restaurant: info }));
-    }
-
     render() {
       let body = null;
 
@@ -104,11 +90,10 @@ class ShoppingCart extends Component {
           onRemoveItem={this.props.onRemoveItem}
           onUpdateItem={this.props.onUpdateItem}/>
       );
-
       return (
         <div>
           <div class="cartlist" align="center">
-            <CartHeading rest={this.state.Restaurant}/>
+            <CartHeading cart={this.props.cart}/>
             <table border="0" width="400px">
                 { body }
                 <CartTotals cart={this.props.cart}/>

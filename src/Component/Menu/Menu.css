@@ -1,15 +1,13 @@
+.container{
+  margin-top: 18px;
+}
+
 .rightpanel{
-    position: fixed;
-    top: 10px;
-    right: 0px;
-    margin-top: 85px;
-    margin-right: 50px;
-    width: 30%;
+    margin-left: 20px;
 }
 
 .leftpanel{
-    width: 70%;
-    margin-right: 10px;
+    margin-left: 90px;
 }
 
 .menulist {
@@ -17,8 +15,6 @@
   justify-content: center;
   grid-template-columns: 420px 420px;
   grid-gap: 10px;
-  padding-top: 20px;
-  margin-left: 75px;
 }
 
 .item {
@@ -63,8 +59,7 @@
   .rightpanel {margin-right: 150px}
 }
 
-@media only screen and (max-width: 1056px) {
-  //.menuheading {grid-column-end:2}
-  //.menulist { grid-template-columns: 500px }
-  .rightpanel {display:none}
+@media only screen and (max-width: 900px) {
+  //.rightpanel {display:none}
+  .leftpanel{margin-left: 0}
 }

@@ -5,12 +5,11 @@ var cart = function(){
   var taxpct = 0.08875;
   var tax = 0.0;
   var total = 0.0;
-  var restaurantID = null;
-  var restaurantName = "";
+  var restaurant = {};
   var items = [];
 
   this.getReceipt = function(){
-    return {'restaurantName':restaurantName,
+    return {'restaurant':restaurant,
                    'items':items,
                    'subtotal':subtotal,
                    'discountpct':discountpct,
@@ -36,9 +35,12 @@ var cart = function(){
     return items;
   };
 
-  this.setRestaurant = function(rID,dPct){
-    restaurantID = rID;
-    discountpct = dPct;
+  this.setRestaurant = function(rest){
+    restaurant = rest;
+  };
+
+  this.getRestaurant = function(){
+    return restaurant;
   };
 
   this.setItems = function(array){

@@ -12,6 +12,7 @@ import Manager from '../Manager/Manager';
 import Restaurant from '../Restaurant/Restaurant';
 import Cooks from '../Manager/Cooks'
 import Menu from '../Menu/Menu';
+import CheckOut from '../CheckOut/CheckOut';
 
 
 class Routes extends Component {
@@ -20,12 +21,14 @@ class Routes extends Component {
       this.state =
       {
         Users : [],
-        Cart : new cart()
+        Cart : new cart(),
+        RestInfo: {}
       };
 
       this.handleAddItem = this.handleAddItem.bind(this);
       this.handleUpdateItem = this.handleUpdateItem.bind(this);
       this.handleRemoveItem = this.handleRemoveItem.bind(this);
+      this.handleResInfo = this.handleResInfo.bind(this);
       this.handleUpdateDiscount = this.handleUpdateDiscount.bind(this);
     }
 
@@ -40,10 +43,13 @@ class Routes extends Component {
       }
       fetch('/user')
         .then(res => res.json())
-        .then(user => this.setState({ Users: user }))
+        .then(user => this.setState({ Users: user }));
+      fetch('/currRest')
+        .then(res => res.json())
+        .then(info => this.setState({ RestInfo: info }));
     }
 
-    componentWillUpdate(){
+    componentDidUpdate(){
       sessionStorage.setItem('savedState', JSON.stringify(this.state.Cart.getItems()));
     }
 
@@ -68,11 +74,18 @@ class Routes extends Component {
        this.setState({Cart:cart});
     }
 
+    handleResInfo(restaurant){
+      console.log(restaurant);
+      let cart = this.state.Cart;
+      cart.setRestaurant(restaurant)
+      this.setState({Cart: cart});
+    }
+
     handleUpdateDiscount(pct){
-        let cart = this.state.Cart;
-        cart.setDiscountPct(pct);
-        cart.updatePrice();
-        this.setState({Cart: cart});
+      let cart = this.state.Cart;
+      cart.setDiscountPct(pct);
+      cart.updatePrice();
+      this.setState({Cart: cart});
     }
 
     render () {
@@ -122,28 +135,34 @@ class Routes extends Component {
                       </ul>
                   </nav>
               </header>
-              </div>
-              <div class='main'>
+            </div>
+            <div class='main'>
+
               <Route path="/" exact component={ Home } />
               <Route path="/Account" exact component={ Accounts } />
               <Route path="/Account/Manager" exact component={ Manager } />
               <Route path="/register" exact component={ Register } />
               <Route path="/login" exact component={ LogIn } />
               <Route path="/SignOut" exact component={ SignOut } />
-
               <Route path="/restaurant/:resName" exact component={ Restaurant }/>
-
               <Route path="/restaurant/:resID" exact component={ Restaurant }/>
-              <Route path="/menu" render={() =>{return(
-                <Menu
-                user={this.state.User}
-                cart={this.state.Cart}
-                onAddItem={this.handleAddItem}
-                onUpdateItem={this.handleUpdateItem}
-                onRemoveItem={this.handleRemoveItem}
-                onUpdateDiscount={this.handleUpdateDiscount}/>)}} />
-                </div>
-
+              <Route path="/menu/:resID" render={(props) =>{return(
+                  <Menu
+                    {...props}
+                    user={this.state.Users}
+                    cart={this.state.Cart}
+                    onResInfo={this.handleResInfo}
+                    onAddItem={this.handleAddItem}
+                    onUpdateItem={this.handleUpdateItem}
+                    onRemoveItem={this.handleRemoveItem}
+                    onUpdateDiscount={this.handleUpdateDiscount}/>)}} />
+              <Route path="/checkout" render={(props) =>{return(
+                  <CheckOut
+                    user={this.state.Users}
+                    cart={this.state.Cart}
+                    restInfo={this.state.RestInfo}
+                    onUpdateItem={this.handleUpdateItem}
+                    onRemoveItem={this.handleRemoveItem}/>)}} />
             </div>
         );
     }
