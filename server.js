@@ -11,6 +11,7 @@ const React = require('react');
 app.use(express.static(__dirname + "/public")); // Use public folder to access css
 app.use(bodyParser.urlencoded({extended: true})); // Needed for post requests ie: submitting a form
 let signedInUser = {
+    userID: '0',
     email: "",
     type: "",
     loggedIn: false,
@@ -21,6 +22,10 @@ let restaurant = {
   name: '',
   address: '',
   phoneNum: ''
+};
+
+let restinfo = {
+  restaurantID: '0'
 };
 // Establish connection with database
 var connection = mysql.createConnection({
@@ -119,11 +124,17 @@ app.post('/checkRest', function(req, res) {
 var cart = require('./cart');
 var shoppingCart = new cart();
 
+app.get('/currRest',function(req,res){
+  console.log('RESTINFO: '+JSON.stringify(restinfo));
+  res.send(JSON.stringify(restinfo));
+});
+
 app.get('/restaurantInfo', function(req,res){
   console.log('request restaurantInfo ');
   var q = "select * from Restaurants where restaurantID = "+req.query.id+";";
   connection.query(q,function(err,data){
     if (err) return console.error("Restaurant Not Found" + err);
+    restinfo = data[0];
     res.send(JSON.stringify(data[0]));
     console.log('restaurantInfo sent');
   });
@@ -149,35 +160,32 @@ app.get('/shoppingCart',function(req,res){
   res.send(JSON.stringify(shoppingCart.getItems()));
 });
 
-app.post('/addItem',function(req,res){
-  shoppingCart.addItem(req.body.foodName,req.body.qty,req.body.price);
-  shoppingCart.updatePrice();
-  console.log(req.body.foodName + ' added');
-  res.end();
-});
-
-app.post('/removeItem',function(req,res){
-  shoppingCart.removeItem(req.body.index);
-  shoppingCart.updatePrice();
-  res.end();
-});
-
-app.post('/increaseQty',function(req,res){
-  shoppingCart.increaseQty(req.body.index);
-  shoppingCart.updatePrice();
-  res.end();
-});
-
-app.post('/decreaseQty',function(req,res){
-  shoppingCart.decreaseQty(req.body.index);
-  shoppingCart.updatePrice();
-  res.end();
-});
-
-app.post('/clearCart',function(req,res){
-  shoppingCart.clearCart();
-  shoppingCart.updatePrice();
-  res.end();
+app.post('/placeorder', function(req,res){
+  var user = req.body.user;
+  var restID = req.body.restID;
+  var items = JSON.parse(req.body.items);
+  var q = "INSERT INTO Orders (userID,restaurantID,orderDate) values ("
+          + user + "," + restID + ",now());";
+  var orderid = null;
+  var valuestr = null;
+  console.log(q);
+  connection.query(q, function(err,results){
+    if(err) console.error('insert into orders: '+err);
+    q = 'select last_insert_id() as id;'
+    connection.query(q, function(err,results){
+      orderid = results[0].id;
+      var tupleArr = items.map(item=>{
+        valuestr = "("+orderid+",'"+item.foodName+"',"+item.qty+")";
+        return valuestr;
+      });
+      q = 'INSERT INTO FoodInOrder values '+tupleArr.join(',')+';';
+      console.log(q);
+      connection.query(q, function(err,results){
+        if(err) console.error('insert into foodinorder: '+err);
+        res.redirect('/processingorder')
+      });
+    });
+  });
 });
 
 app.post('/logincheck', function(req, res) {
@@ -193,6 +201,7 @@ app.post('/logincheck', function(req, res) {
             console.log("The email and password are correct!");
             signedInUser.email = results[0].email;
             signedInUser.type = results[0].acctType;
+            signedInUser.userID = results[0].userID;
             signedInUser.loggedIn = true;
             signedInUser.failed = false;
             console.log(signedInUser);

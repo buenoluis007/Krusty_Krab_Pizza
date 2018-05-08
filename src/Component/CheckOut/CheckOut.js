@@ -145,20 +145,32 @@ class CheckPayment extends Component{
 class CheckPlaceOrder extends Component{
   render(){
     return(
-      <div></div>
+      <div>
+        <form name='placeorder' action='/placeorder' method='post'>
+          <input type='hidden' name='items' value={JSON.stringify(this.props.cart.getItems())}/>
+          <input type='hidden' name='user' value={this.props.user.userID}/>
+          <input type='hidden' name='restID' value={this.props.restInfo.restaurantID}/>
+          <input type='submit' name='submit' value='Place Order'/>
+        </form>
+      </div>
     );
   }
 }
 
 class CheckOut extends Component {
   render() {
-
+    console.log('WTF: '+JSON.stringify(this.props.restInfo.restaurantID));
     return (
       <div class='checkcontainer' align='center'>
         <CheckOrder cart={this.props.cart}
           onRemoveItem={this.props.onRemoveItem}
           onUpdateItem={this.props.onUpdateItem}/>
-        <CheckPayment user={this.props.user}/>
+        <CheckPayment
+          user={this.props.user}/>
+        <CheckPlaceOrder
+          user={this.props.user}
+          restInfo={this.props.restInfo}
+          cart={this.props.cart}/>
       </div>
     );
   }

@@ -18,7 +18,8 @@ class Routes extends Component {
       this.state =
       {
         Users : [],
-        Cart : new cart()
+        Cart : new cart(),
+        RestInfo: {}
       };
 
       this.handleAddItem = this.handleAddItem.bind(this);
@@ -39,7 +40,10 @@ class Routes extends Component {
       }
       fetch('/user')
         .then(res => res.json())
-        .then(user => this.setState({ Users: user }))
+        .then(user => this.setState({ Users: user }));
+      fetch('/currRest')
+        .then(res => res.json())
+        .then(info => this.setState({ RestInfo: info }));
     }
 
     componentDidUpdate(){
@@ -133,7 +137,7 @@ class Routes extends Component {
                 <Route path="/menu/:resID" render={(props) =>{return(
                   <Menu
                     {...props}
-                    user={this.state.User}
+                    user={this.state.Users}
                     cart={this.state.Cart}
                     onResInfo={this.handleResInfo}
                     onAddItem={this.handleAddItem}
@@ -142,8 +146,9 @@ class Routes extends Component {
                     onUpdateDiscount={this.handleUpdateDiscount}/>)}} />
                 <Route path="/checkout" render={(props) =>{return(
                   <CheckOut
-                    user={this.state.User}
+                    user={this.state.Users}
                     cart={this.state.Cart}
+                    restInfo={this.state.RestInfo}
                     onUpdateItem={this.handleUpdateItem}
                     onRemoveItem={this.handleRemoveItem}/>)}} />
               </div>

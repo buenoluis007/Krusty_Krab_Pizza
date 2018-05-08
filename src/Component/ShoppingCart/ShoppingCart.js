@@ -90,7 +90,6 @@ class ShoppingCart extends Component {
           onRemoveItem={this.props.onRemoveItem}
           onUpdateItem={this.props.onUpdateItem}/>
       );
-
       return (
         <div>
           <div class="cartlist" align="center">
