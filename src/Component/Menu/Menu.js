@@ -5,7 +5,7 @@ import ShoppingCart from '../ShoppingCart/ShoppingCart'
 class MenuHeading extends Component{
   render(){
     return(
-      <div class='menuheading'>
+      <div className='menuheading'>
         <p><h1>{this.props.Restaurant.name}</h1>
         {this.props.Restaurant.address}<br/>
         {this.props.Restaurant.phoneNum}</p>
@@ -18,14 +18,14 @@ class MenuItem extends Component{
   render(){
     const item = this.props.item
     return(
-      <div class='item'>
-        <div class='item-left'>
+      <div className='item'>
+        <div className='item-left'>
           <span style={{fontSize:18, fontWeight:'bold'}}>
             { item.foodName }<br/></span>
           <span style={{fontSize:14, color:'rgba(80,80,80)'}}>
             { item.description }</span>
         </div>
-        <div class='item-right'>
+        <div className='item-right'>
         ${ item.price.toFixed(2) }
 
             <button style={{bottom:5,left:0,position:'absolute'}}
@@ -52,14 +52,14 @@ class Menu extends Component {
     }
 
   componentDidMount() {
-    let restID = this.props.match.params.resID;
-    fetch('/restaurantInfo?id=' + restID)
+    let placeID = this.props.match.params.placeID;
+    fetch('/restaurantInfo/' + placeID)
       .then(res => res.json())
       .then(info => {
         this.setState({ Restaurant: info });
         this.props.onResInfo(this.state.Restaurant);
       });
-    fetch('/menuInfo?id=' + restID)
+    fetch('/menuInfo/' + placeID)
       .then(res => res.json())
       .then(menu => this.setState({ Menu: menu }));
     //fetch MemberStatus
@@ -70,6 +70,7 @@ class Menu extends Component {
   }
 
   render() {
+    console.log(this.state.Menu);
     let menuItems = null;
     menuItems = this.state.Menu.map((item) =>
       <MenuItem item={item} onAddItem={this.props.onAddItem}/>
@@ -79,15 +80,15 @@ class Menu extends Component {
       <table border='0' align='center'>
         <tr>
           <td valign='top'>
-            <div class='container leftpanel'>
-              <div class="menulist">
+            <div className='container leftpanel'>
+              <div className="menulist">
                   <MenuHeading Restaurant={this.state.Restaurant}/>
                   { menuItems }
               </div>
             </div>,
           </td>
           <td valign='top'>
-            <div class='container rightpanel'>
+            <div className='container rightpanel'>
               <ShoppingCart
                 cart={this.props.cart}
                 onRemoveItem={this.props.onRemoveItem}

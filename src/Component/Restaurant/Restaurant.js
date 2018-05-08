@@ -4,20 +4,21 @@ class Restaurant extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      resID: this.props.match.params.resID,
+      placeID: this.props.match.params.placeID,
       restInfo: []
     }
   }
   componentDidMount() {
-    fetch('/restaurant?id='+this.state.resID)
+    fetch('/restaurant/' + this.state.placeID)
       .then(res => res.json())
       .then(rest => this.setState({ restInfo: rest }))
   }
 
   render() {
+      console.log(this.state.restInfo)
+      console.log(this.state.placeID);
     return (
       <div>
-        {console.log(this.state.restInfo)}
         <h1>Hello</h1>
         <h1>{this.state.resID}</h1>
         <h1>name: {this.state.restInfo.name}</h1>

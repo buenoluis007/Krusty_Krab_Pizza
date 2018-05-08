@@ -19,7 +19,7 @@ class Cooks extends Component {
         console.log(this.state.Cook[0]);
         return (
             <div>
-                <h1>hi</h1>
+                <h1>Cooks Staff Members:</h1>
                 {this.state.Cook.map((cook,i) =>
                     <div key={i}>
                         <div>{this.state.Cook[i].name}

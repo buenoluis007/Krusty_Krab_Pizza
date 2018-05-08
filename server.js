@@ -11,8 +11,7 @@ const React = require('react');
 app.use(express.static(__dirname + "/public")); // Use public folder to access css
 app.use(bodyParser.urlencoded({extended: true})); // Needed for post requests ie: submitting a form
 let signedInUser = {
-    userID: '0',
-    id: "",
+    userID: '',
     email: "",
     type: "",
     loggedIn: false,
@@ -28,14 +27,14 @@ let restaurantInfo = {
 
 
 let restinfo = {
-  restaurantID: '0'
+  restaurantID: ''
 };
 // Establish connection with database
 let Manager = {
+    userID: '',
     resID: '',
-    name: '',
-    address: '',
-    deliveryPerson: [],
+    resName: '',
+    resAddress: '',
     pendingUsers: [],
     orders: [],
     complaints: []
@@ -44,13 +43,18 @@ let Manager = {
 let Cooks = {
 
 };
+
+let DeliveryPerson = {
+
+};
+
 // Establish connection with database :)
 var connection = mysql.createConnection({
-    host: '',
+    host: 'sl-us-south-1-portal.20.dblayer.com',
     port: 40397,
     user: 'admin',
-    password: '',
-    database: ''
+    password: 'SFXQRQVBQVYQFGUC',
+    database: 'compose'
 });
 
 
@@ -65,7 +69,6 @@ connection.connect(function(error) {
 
 
 app.get('/', function(req, res) {
-  console.log("Asdasdasdasdsad");
   console.log(signedInUser);
 })
 
@@ -84,9 +87,10 @@ app.get('/user', function(req, res) {
   });
 });
 
-app.get('/restaurant', function(req, res) {
+app.get('/restaurant/:placeID', function(req, res) {
   var id = req.query.id;
-  var q = "SELECT * FROM Restaurants WHERE restaurantID=" + id;
+  var q = "SELECT * FROM Restaurants WHERE googleID=" + id;
+  console.log("hello from restaurant");
   connection.query(q, function(err, results) {
       if(err) throw err;
       // console.log(results);
@@ -144,13 +148,14 @@ var cart = require('./cart');
 var shoppingCart = new cart();
 
 app.get('/currRest',function(req,res){
-  console.log('RESTINFO: '+JSON.stringify(restinfo));
+  console.log('RESTINFO: '+ JSON.stringify(restinfo));
   res.send(JSON.stringify(restinfo));
 });
 
-app.get('/restaurantInfo', function(req,res){
+app.get('/restaurantInfo/:placeID', function(req,res){
+    var placeID = req.params.placeID;
   console.log('request restaurantInfo ');
-  var q = "select * from Restaurants where restaurantID = "+req.query.id+";";
+  var q = "select * from Restaurants where googleID = '" + placeID + "'";
   connection.query(q,function(err,data){
     if (err) return console.error("Restaurant Not Found" + err);
     restinfo = data[0];
@@ -159,9 +164,10 @@ app.get('/restaurantInfo', function(req,res){
   });
 });
 
-app.get('/menuInfo',function(req,res){
+app.get('/menuInfo/:placeID',function(req,res){
+    var placeID = req.params.placeID;
   console.log('request menuInfo ');
-  var q = "select * from Menu where restaurantID = " + req.query.id + ";";
+  var q = "select * from Menu where googleID = '" + placeID + "'";
   connection.query(q,function(err,data){
     if (err) return console.error("Restaurant Not Found" + err);
     res.send(JSON.stringify(data));
@@ -207,6 +213,7 @@ app.post('/placeorder', function(req,res){
   });
 });
 
+// check the crediental provided
 app.post('/logincheck', function(req, res) {
     var email = req.body.email;
     var password = req.body.pass;
@@ -218,14 +225,32 @@ app.post('/logincheck', function(req, res) {
         // console.log(results);
         if(results[0]) {
             console.log("The email and password are correct!");
-            signedInUser.id = results[0].userID;
+            signedInUser.userID = results[0].userID;
             signedInUser.email = results[0].email;
             signedInUser.type = results[0].acctType;
             signedInUser.userID = results[0].userID;
             signedInUser.loggedIn = true;
             signedInUser.failed = false;
+            Manager.userID = results[0].userID;
             console.log(signedInUser);
-            res.redirect('/');
+            var z = "SELECT * FROM Restaurants JOIN Managers ON Restaurants.restaurantID = Managers.restaurantID WHERE Managers.userID= " + signedInUser.userID;
+            if(signedInUser.type === "Manager") {
+                connection.query(z, function(err, results) {
+                    if(err) throw err;
+                    if(results[0]){
+                        console.log(results);
+                        Manager.resID = results[0].restaurantID;
+                        Manager.resName = results[0].name;
+                        Manager.resAddress = results[0].address;
+                        console.log('the resID is ' + Manager.resID);
+                        console.log('name of rest is: ' + Manager.resName);
+                        console.log('address:' + Manager.resAddress);
+                        res.redirect('/')
+                    }
+                });
+            } else {
+                res.redirect('/');
+            }
         } else {
             console.log("The email or password is incorrect. Try again.");
             signedInUser.failed = true
@@ -295,6 +320,13 @@ app.post('/signout', function(req, res) {
     signedInUser.email = "";
     signedInUser.type = "";
     signedInUser.loggedIn = false;
+    Manager.userID = '';
+    Manager.resID = '';
+    Manager.resName = '';
+    Manager.resAddress = '';
+    Manager.pendingUsers = [];
+    Manager.orders = [];
+    Manager.complaints = [];
     res.redirect('/');
 });
 
@@ -444,64 +476,31 @@ app.post("/restaurant/:resName/cook/menu/removeFood",function(req,res){
 // });
 
 // -------------------------------------------------------------------------------
-app.get('/Account/Manager', function(req, res) {
-    console.log('hello from manager server');
-        var q = "SELECT * FROM Restaurants JOIN Managers ON Restaurants.restaurantID = Managers.restaurantID WHERE userID= " + signedInUser.id;
-        console.log('manager id is: ' + signedInUser.id);
-        connection.query(q, function(err, results) {
-            if(err) throw err;
-            Manager.resID = results[0].restaurantID;
-            Manager.name = results[0].name;
-            Manager.address = results[0].address;
-            console.log('the resID is ' + Manager.resID);
-            console.log('name of rest is: ' + Manager.name);
-            console.log('address:' + Manager.address);
-
-            // View DeliveryPerson from their restaurant
-            q = `SELECT DeliveryPerson.userID, DeliveryPerson.salery, CONCAT(f_name, " ", l_name) AS name FROM DeliveryPerson JOIN Users ON DeliveryPerson.userID = Users.userID JOIN RegisteredAccts ON Users.userID = RegisteredAccts.userID WHERE DeliveryPerson.restaurantID = ${Manager.resID}`;
-            connection.query(q, function(err, results){
-                if(err) throw err;
-                // Every cook comes back as an array of objects
-                Manager.deliveryPerson.name = results[0].name;
-                Manager.deliveryPerson.salary = results[0].salery;
-            });
-            // View Current Orders (Selecting DeliveryPerson will be done in another post request)
-            q = "SELECT * FROM Orders WHERE restaurantID = " + Manager.resID;
-            connection.query(q, function(err, results) {
-                if(err) throw err;
-                if(results[0]) {
-                    Managerorders.push(results); // orders[0][i].AnAttributeFromOrdersTableGoesHere
-                } else {
-                    console.log("There are 0 orders for this restaurant at the moment");
-                }
-            });
-            // Pending Users
-            q = "SELECT * FROM PendingApps";
-            connection.query(q, function(err, results) {
-                if(err) throw err;
-                if(results[0]){
-                    Manager.pendingUsers.push(results);
-                } else {
-                    console.log('no pending');
-                }
-            });
-
-            // Show Complaints
-            q = "SELECT * FROM Complaints WHERE restaurantID = " + Manager.resID;
-            connection.query(q, function(err, results) {
-                if(err) throw err;
-                Manager.complaints.push(results);
-                res.send(JSON.stringify(Manager));
-            });
-
-        });
-});
+// app.post('/Account/Manager', function(req, res) {
+//         console.log('hello from manager server');
+//         console.log(Manager.userID);
+//         var q = "SELECT * FROM Restaurants JOIN Managers ON Restaurants.restaurantID = Managers.restaurantID WHERE Managers.userID= " + Manager.userID;
+//         connection.query(q, function(err, results) {
+//             if(err) throw err;
+//             if(results[0]){
+//                 console.log(results);
+//                 Manager.resID = results[0].restaurantID;
+//                 Manager.resName = results[0].name;
+//                 Manager.resAddress = results[0].address;
+//                 console.log('the resID is ' + Manager.resID);
+//                 console.log('name of rest is: ' + Manager.resName);
+//                 console.log('address:' + Manager.resAddress);
+//             }
+//         });
+// });
 
 
 app.get('/Cooks', function(req, res) {
     console.log("Hello from cooks");
-    var q = `SELECT Cooks.userID, Cooks.salery, CONCAT(f_name, " " , l_name) as name FROM Cooks JOIN RegisteredAccts ON Cooks.userID = RegisteredAccts.userID JOIN Restaurants ON Restaurants.restaurantID = Cooks.restaurantID WHERE Cooks.restaurantID = 8`;
-    console.log('asldkjhasdkjajksd');
+    console.log(Manager);
+    console.log(signedInUser);
+    console.log("the manager resID:" + Manager.resID);
+    var q = 'SELECT Cooks.userID, Cooks.salery, CONCAT(f_name, " " , l_name) as name FROM Cooks JOIN RegisteredAccts ON Cooks.userID = RegisteredAccts.userID JOIN Restaurants ON Restaurants.restaurantID = Cooks.restaurantID WHERE Cooks.restaurantID =' + Manager.resID ;
     connection.query(q, function(err, results) {
         if(err) throw err;
         Cooks = results;
@@ -510,11 +509,49 @@ app.get('/Cooks', function(req, res) {
     });
 });
 
+app.get('/DeliveryPerson', function(req, res) {
+    console.log("Hello from deliveryPerson");
+    console.log(Manager);
+    console.log(signedInUser);
+    var q = 'SELECT DeliveryPerson.userID, DeliveryPerson.salery, CONCAT(f_name, " " , l_name) as name FROM DeliveryPerson JOIN RegisteredAccts ON DeliveryPerson.userID = RegisteredAccts.userID JOIN Restaurants ON Restaurants.restaurantID = DeliveryPerson.restaurantID WHERE DeliveryPerson.restaurantID =' + Manager.resID;
+    connection.query(q, function(err, results) {
+        if(err) throw err;
+        DeliveryPerson = results;
+        console.log(DeliveryPerson);
+        res.send(JSON.stringify(DeliveryPerson));
+    });
+});
 
 
 
-
-
+//
+// q = "SELECT * FROM Orders WHERE restaurantID = " + Manager.resID;
+// connection.query(q, function(err, results) {
+//     if(err) throw err;
+//     if(results[0]) {
+//         Managerorders.push(results); // orders[0][i].AnAttributeFromOrdersTableGoesHere
+//     } else {
+//         console.log("There are 0 orders for this restaurant at the moment");
+//     }
+// });
+// // Pending Users
+// q = "SELECT * FROM PendingApps";
+// connection.query(q, function(err, results) {
+//     if(err) throw err;
+//     if(results[0]){
+//         Manager.pendingUsers.push(results);
+//     } else {
+//         console.log('no pending');
+//     }
+// });
+//
+// // Show Complaints
+// q = "SELECT * FROM Complaints WHERE restaurantID = " + Manager.resID;
+// connection.query(q, function(err, results) {
+//     if(err) throw err;
+//     Manager.complaints.push(results);
+//     res.send(JSON.stringify(Manager));
+// });
 
 
 

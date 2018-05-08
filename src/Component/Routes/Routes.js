@@ -10,7 +10,8 @@ import Home from '../Home/Home';
 import Accounts from '../Accounts/Accounts';
 import Manager from '../Manager/Manager';
 import Restaurant from '../Restaurant/Restaurant';
-import Cooks from '../Manager/Cooks'
+import Cooks from '../Manager/Cooks';
+import DeliveryPerson from '../Manager/DeliveryPerson';
 import Menu from '../Menu/Menu';
 import CheckOut from '../CheckOut/CheckOut';
 
@@ -124,7 +125,7 @@ class Routes extends Component {
 
         return (
           <div>
-            <div class='navbar'>
+            <div className='navbar'>
               <header className='Routes'>
                     <nav>
                       <ul>
@@ -136,7 +137,7 @@ class Routes extends Component {
                   </nav>
               </header>
             </div>
-            <div class='main'>
+            <div className='main'>
 
               <Route path="/" exact component={ Home } />
               <Route path="/Account" exact component={ Accounts } />
@@ -144,9 +145,7 @@ class Routes extends Component {
               <Route path="/register" exact component={ Register } />
               <Route path="/login" exact component={ LogIn } />
               <Route path="/SignOut" exact component={ SignOut } />
-              <Route path="/restaurant/:resName" exact component={ Restaurant }/>
-              <Route path="/restaurant/:resID" exact component={ Restaurant }/>
-              <Route path="/menu/:resID" render={(props) =>{return(
+              <Route path="/menu/:placeID" render={(props) =>{return(
                   <Menu
                     {...props}
                     user={this.state.Users}

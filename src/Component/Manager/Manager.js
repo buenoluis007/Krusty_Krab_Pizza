@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import Cooks from './Cooks';
+import DeliveryPerson from './DeliveryPerson';
 
 class Manager extends PureComponent {
     constructor(props) {
@@ -18,26 +19,12 @@ class Manager extends PureComponent {
 
 
     render() {
-        // this.state.Restaurant.cooks.map((user) => {
-        //     <li>user.name</li>
-        //                     })
-        //console.log('Restaurant state: ');
-        //console.log(this.state.Restaurant);
-        //console.log(this.state.Restaurant[0].name);
-        //console.log(this.state.Restaurant.pendingUsers);
         console.log(this.state.Manager);
-        // const name = this.state.Restaurant.cooks.map((cook, i) =>{
-        //     return (<div key={i}>{this.state.Restaurant[i].name}</div>)}
-        // )
-
-        // const name = this.state.Restaurant.keys(cooks).map(function(key, index) {
-        //     return (<div>{cooks[key]}</div>)
-        // });
         return (
             <div>
-                <h1>{this.state.Manager.name}</h1>
-                <Cooks/>
-
+                <h1>{this.state.Manager.resName}</h1>
+                < Cooks />
+                < DeliveryPerson />
             </div>
         )
     }

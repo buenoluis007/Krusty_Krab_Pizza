@@ -23,10 +23,10 @@ class Accounts extends Component {
             this.props.history.push('/Account/Manager')
                 display = (
                     <div>
-                        <Manager />
+                        < Manager />
                     </div>
                 )
-        } 
+        }
         return (
             <div>
                 <h1>Your Email: {this.state.Users.email}</h1>

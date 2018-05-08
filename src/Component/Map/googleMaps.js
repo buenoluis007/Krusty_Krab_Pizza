@@ -69,13 +69,15 @@ const MapComponent = compose(
                     const service = new window.google.maps.places.PlacesService(refs.map.context.__SECRET_MAP_DO_NOT_USE_OR_YOU_WILL_BE_FIRED);
                     const request = {
                           location: refs.map.getCenter(),
-                          radius: '450',
+                          radius: '50',
+                          rankBy: google.maps.places.RankBy.Distance,
                           keyword: 'pizza',
                           name: 'pizza',
                           type: 'restaurant',
                     };
                     service.nearbySearch(request, (results, status) => {
                         if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+
                             console.log(results);
                             updatePlaces(results);
                         }
@@ -143,7 +145,7 @@ const MapComponent = compose(
           </GoogleMap>
 
           {props.places && props.places.map((place, resID) =>
-                <Link className='pizzerias' to={'/restaurant/' + place.name} name='linkbtn'  key={resID} value={resID}>
+                <Link className='pizzerias' to={'/menu/' + place.place_id} name='linkbtn'  key={resID} value={resID}>
                     <div>Pizzeria #{resID}</div>
                     <div>{place.name}</div>
                     <div>{place.vicinity}</div>
