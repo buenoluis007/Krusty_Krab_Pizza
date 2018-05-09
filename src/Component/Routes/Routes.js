@@ -30,6 +30,7 @@ class Routes extends Component {
       this.handleUpdateItem = this.handleUpdateItem.bind(this);
       this.handleRemoveItem = this.handleRemoveItem.bind(this);
       this.handleResInfo = this.handleResInfo.bind(this);
+      this.handleClearCart = this.handleClearCart.bind(this);
       this.handleUpdateDiscount = this.handleUpdateDiscount.bind(this);
     }
 
@@ -71,6 +72,13 @@ class Routes extends Component {
     handleRemoveItem(index){
        let cart = this.state.Cart;
        cart.removeItem(index);
+       cart.updatePrice();
+       this.setState({Cart:cart});
+    }
+
+    handleClearCart(){
+       let cart = this.state.Cart;
+       cart.clearCart();
        cart.updatePrice();
        this.setState({Cart:cart});
     }
@@ -165,8 +173,7 @@ class Routes extends Component {
                     onRemoveItem={this.handleRemoveItem}/>)}} />
               <Route path="/processingorder" render={(props) =>{return(
                   <ProcessOrder
-                    cart={this.state.Cart}
-                    onClearCart={this.handleRemoveItem}/>)}} />
+                    onClearCart={this.handleClearCart}/>)}} />
           </div>
         </div>
         );
