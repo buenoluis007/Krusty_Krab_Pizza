@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
-import Cooks from './Cooks';
-import DeliveryPerson from './DeliveryPerson';
+import Cooks from './ManageCooks';
+import DeliveryPerson from './ManageDeliveryPerson';
+import Pending from './PendingApps';
+import './Manager.css';
 
 class Manager extends PureComponent {
     constructor(props) {
@@ -25,6 +27,8 @@ class Manager extends PureComponent {
                 <h1>{this.state.Manager.resName}</h1>
                 < Cooks />
                 < DeliveryPerson />
+                < Pending />
+
             </div>
         )
     }
