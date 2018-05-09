@@ -144,20 +144,52 @@ class CheckPayment extends Component{
 
 class CheckPlaceOrder extends Component{
   render(){
+    let selectCooks = [];
+    console.log('COOK ARRAY: '+JSON.stringify(this.props.cooks));
+    selectCooks = (this.props.cooks.map((cook)=>
+      <option value={cook.userID}>{cook.f_name} {cook.l_name}</option>
+    ));
+
     return(
-      <div>
-        <form name='placeorder' action='/placeorder' method='post'>
-          <input type='hidden' name='items' value={JSON.stringify(this.props.cart.getItems())}/>
-          <input type='hidden' name='user' value={this.props.user.userID}/>
-          <input type='hidden' name='restID' value={this.props.restInfo.restaurantID}/>
-          <input type='submit' name='submit' value='Place Order'/>
-        </form>
+      <div className='checksubmit'>
+        <table border='1' class='submittable'>
+          <tr>
+            <td>
+              <label>Select Your Cook &ensp;
+                <select name='cookID' form='placeorder'>
+                  {selectCooks}
+                </select>
+              </label>
+            </td>
+            <td align='center'>
+              <form name='placeorder' id='placeorder' action='/placeorder' method='post'>
+                <input type='hidden' name='items' value={JSON.stringify(this.props.cart.getItems())}/>
+                <input type='hidden' name='user' value={this.props.user.userID}/>
+                <input type='hidden' name='restID' value={this.props.restInfo.restaurantID}/>
+                <input type='submit' name='submit' value='Place Order'/>
+              </form>
+            </td>
+          </tr>
+        </table>
       </div>
     );
   }
 }
 
 class CheckOut extends Component {
+  constructor(props) {
+      super(props);
+      this.state =
+      {
+        Cooks: []
+      };
+    }
+
+  componentDidMount() {
+    fetch('/getCooks')
+      .then(res => res.json())
+      .then(info => this.setState({ Cooks: info }));
+  }
   render() {
     console.log('WTF: '+JSON.stringify(this.props.restInfo.restaurantID));
     return (
@@ -170,7 +202,8 @@ class CheckOut extends Component {
         <CheckPlaceOrder
           user={this.props.user}
           restInfo={this.props.restInfo}
-          cart={this.props.cart}/>
+          cart={this.props.cart}
+          cooks={this.state.Cooks}/>
       </div>
     );
   }

@@ -214,14 +214,15 @@ app.get('/memberStatus',function(req,res){
   });
 });
 
-app.get('/receipt',function(req,res){
-  console.log('request receipt ');
-  res.send(JSON.stringify(shoppingCart.getReceipt()));
-});
-
-app.get('/shoppingCart',function(req,res){
-  console.log('request shoppingCartInfo ');
-  res.send(JSON.stringify(shoppingCart.getItems()));
+app.get('/getCooks',function(req,res){
+  let q='select Cooks.userID,restaurantID,f_name,l_name from Cooks left join '
+    +'RegisteredAccts on Cooks.userID=RegisteredAccts.userID where Cooks.restaurantID='
+    +restinfo.restaurantID+';';
+  connection.query(q,function(err,data){
+    console.log('getCOOKS: '+JSON.stringify(data));
+    if (err) return console.log('getCOOKS: '+err);
+    res.send(JSON.stringify(data));
+  })
 });
 
 app.post('/apply',function(req,res){
@@ -237,9 +238,10 @@ app.post('/apply',function(req,res){
 app.post('/placeorder', function(req,res){
   var user = req.body.user;
   var restID = req.body.restID;
+  var cookID = req.body.cookID;
   var items = JSON.parse(req.body.items);
-  var q = "INSERT INTO Orders (userID,restaurantID,orderDate) values ("
-          + user + "," + restID + ",now());";
+  var q = "INSERT INTO Orders (userID,cookID,restaurantID,orderDate) values ("
+          + user + "," +cookID+","+ restID + ",now());";
   var orderid = null;
   var valuestr = null;
   console.log(q);

@@ -13,6 +13,7 @@ import Restaurant from '../Restaurant/Restaurant';
 import Menu from '../Menu/Menu';
 import CheckOut from '../CheckOut/CheckOut';
 import Cook from '../Cook/Cook';
+import ProcessOrder from '../ProcessOrder/ProcessOrder';
 
 
 class Routes extends Component {
@@ -162,6 +163,10 @@ class Routes extends Component {
                     restInfo={this.state.RestInfo}
                     onUpdateItem={this.handleUpdateItem}
                     onRemoveItem={this.handleRemoveItem}/>)}} />
+              <Route path="/processingorder" render={(props) =>{return(
+                  <ProcessOrder
+                    cart={this.state.Cart}
+                    onClearCart={this.handleRemoveItem}/>)}} />
           </div>
         </div>
         );
