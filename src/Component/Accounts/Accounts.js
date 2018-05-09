@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import Manager from '../Manager/Manager';
+import Cook from '../Cook/Cook';
 
 class Accounts extends Component {
     constructor() {
@@ -24,6 +25,14 @@ class Accounts extends Component {
                 display = (
                     <div>
                         < Manager />
+                    </div>
+                )
+        }
+        if(this.state.Users.type === 'Cook'){
+            this.props.history.push('/Account/Cook')
+                display = (
+                    <div>
+                        < Cook />
                     </div>
                 )
         }
