@@ -386,20 +386,27 @@ var q = "SELECT * FROM Cooks WHERE userID =" + signedInUser.userID;
 connection.query(q, function(err, results) {
     if(err) throw err;
     var restaurantID = results[0]['restaurantID']
-    var Food = {
-      restaurantID,
-      foodName,
-      description,
-      price
-    };
 
-      connection.query("INSERT INTO Menu SET ?", Food, function(err, results) {
-          if(err) throw err;
-          console.log("It eorke");
-      });
+    var q = "SELECT * FROM Restaurants WHERE restaurantID =" + restaurantID;
+    connection.query(q,function(err, results){
+        if(err) throw err;
 
-      res.redirect("/Account/Cook");
+        var googleID = results[0].googleID;
+        var Food = {
+          googleID,
+          restaurantID,
+          foodName,
+          description,
+          price
+        };
+        
+          connection.query("INSERT INTO Menu SET ?", Food, function(err, results) {
+              if(err) throw err;
+              console.log("It eorke");
+          });
 
+          res.redirect("/Account/Cook");
+        });
     });
 });
 
