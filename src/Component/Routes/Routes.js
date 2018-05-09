@@ -10,8 +10,6 @@ import Home from '../Home/Home';
 import Accounts from '../Accounts/Accounts';
 import Manager from '../Manager/Manager';
 import Restaurant from '../Restaurant/Restaurant';
-import Cooks from '../Manager/Cooks';
-import DeliveryPerson from '../Manager/DeliveryPerson';
 import Menu from '../Menu/Menu';
 import CheckOut from '../CheckOut/CheckOut';
 
