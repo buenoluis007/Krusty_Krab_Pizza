@@ -4,11 +4,43 @@ import ShoppingCart from '../ShoppingCart/ShoppingCart'
 
 class MenuHeading extends Component{
   render(){
+    let memberstatus = [
+      <form name='apply' action='/apply' method='post'>
+        <input type='hidden' name='userID' value={this.props.user.userID}/>
+        <input type='hidden' name='restID' value={this.props.Restaurant.restaurantID}/>
+        <input type='submit' className='applybutton' value='Apply for Membership'/>
+      </form>
+    ];
+
+    if (this.props.status === 1){
+      memberstatus = (
+        <div>
+          Status: Member
+        </div>
+      );
+    }
+    else if(this.props.status === 2){
+      memberstatus = (
+        <div>
+          Status: VIP
+        </div>
+      );
+    }
+
     return(
       <div className='menuheading'>
-        <p><h1>{this.props.Restaurant.name}</h1>
-        {this.props.Restaurant.address}<br/>
-        {this.props.Restaurant.phoneNum}</p>
+        <table border='0' width='100%'>
+          <tr>
+            <td>
+              <span><h1>{this.props.Restaurant.name}</h1>
+              {this.props.Restaurant.address}<br/>
+              {this.props.Restaurant.phoneNum}</span>
+            </td>
+            <td align='right' valign='top'>
+              {memberstatus}
+            </td>
+          </tr>
+        </table>
       </div>
     );
   }
@@ -62,11 +94,15 @@ class Menu extends Component {
     fetch('/menuInfo/' + placeID)
       .then(res => res.json())
       .then(menu => this.setState({ Menu: menu }));
-    //fetch MemberStatus
-    if (this.state.Status === 1)
-      this.props.onUpdateDiscount(.05);
-    else if (this.state.Status === 2)
-      this.props.onUpdateDiscount(.1);
+    fetch('/memberStatus')
+      .then(res => res.json())
+      .then(state=>{
+        this.setState({Status: parseInt(state)});
+        if (this.state.Status === 1)
+          this.props.onUpdateDiscount(.05);
+        else if (this.state.Status === 2)
+          this.props.onUpdateDiscount(.1);
+      });
   }
 
   render() {
@@ -82,7 +118,10 @@ class Menu extends Component {
           <td valign='top'>
             <div className='container leftpanel'>
               <div className="menulist">
-                  <MenuHeading Restaurant={this.state.Restaurant}/>
+                  <MenuHeading
+                    Restaurant={this.state.Restaurant}
+                    user={this.props.user}
+                    status={this.state.Status}/>
                   { menuItems }
               </div>
             </div>,

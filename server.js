@@ -11,7 +11,7 @@ const React = require('react');
 app.use(express.static(__dirname + "/public")); // Use public folder to access css
 app.use(bodyParser.urlencoded({extended: true})); // Needed for post requests ie: submitting a form
 let signedInUser = {
-    userID: '',
+    userID: '0',
     email: "",
     type: "",
     loggedIn: false,
@@ -19,7 +19,7 @@ let signedInUser = {
 };
 
 let restaurantInfo = {
-    resID: '',
+    resID: '0',
     name: '',
     address: '',
     phoneNum: ''
@@ -27,7 +27,7 @@ let restaurantInfo = {
 
 
 let restinfo = {
-  restaurantID: ''
+  restaurantID: '0'
 };
 // Establish connection with database
 let Manager = {
@@ -50,11 +50,11 @@ let DeliveryPerson = {
 
 // Establish connection with database :)
 var connection = mysql.createConnection({
-    host: '',
+    host: 'sl-us-south-1-portal.20.dblayer.com',
     port: 40397,
     user: 'admin',
-    password: '',
-    database: ''
+    password: 'SFXQRQVBQVYQFGUC',
+    database: 'compose'
 });
 
 
@@ -128,7 +128,7 @@ app.post('/checkRest', function(req, res) {
     }
   })
 });
-
+/*
 app.post('/checkRest', function(req, res) {
     var id = req.body.linkbtn;
     var q = "SELECT * FROM Restaurants WHERE restaurantID=" + id;
@@ -143,7 +143,7 @@ app.post('/checkRest', function(req, res) {
         }
     });
 });
-
+*/
 var cart = require('./cart');
 var shoppingCart = new cart();
 
@@ -175,6 +175,21 @@ app.get('/menuInfo/:placeID',function(req,res){
   });
 });
 
+app.get('/memberStatus',function(req,res){
+  var stat = '0';
+  var q = "select status from Members where userID="+signedInUser.userID+" and restaurantID="+restinfo.restaurantID+";";
+  connection.query(q,function(err,data){
+    console.log('MEMBERSTATUS: '+JSON.stringify(data));
+    if (err) return console.log('MEMBER STATUS: '+err);
+    if (data[0]){
+      if (data[0].status === 0) stat = '1';
+      stat = '2';
+    }
+    console.log('MEMBERS RETURN: '+stat);
+    res.send(stat);
+  });
+});
+
 app.get('/receipt',function(req,res){
   console.log('request receipt ');
   res.send(JSON.stringify(shoppingCart.getReceipt()));
@@ -183,6 +198,16 @@ app.get('/receipt',function(req,res){
 app.get('/shoppingCart',function(req,res){
   console.log('request shoppingCartInfo ');
   res.send(JSON.stringify(shoppingCart.getItems()));
+});
+
+app.post('/apply',function(req,res){
+  let userID = req.body.userID;
+  let restID = req.body.restID;
+  var q = "insert into PendingApps values ("+userID+","+restID+")";
+  connection.query(q,function(err,results){
+    if (err) return console.log('APPLY: '+err);
+  });
+  res.redirect(req.get('referer'));
 });
 
 app.post('/placeorder', function(req,res){
