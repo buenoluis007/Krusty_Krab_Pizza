@@ -11,7 +11,7 @@ const React = require('react');
 app.use(express.static(__dirname + "/public")); // Use public folder to access css
 app.use(bodyParser.urlencoded({extended: true})); // Needed for post requests ie: submitting a form
 let signedInUser = {
-    userID: '',
+    userID: '0',
     email: "",
     type: "",
     loggedIn: false,
@@ -50,11 +50,11 @@ let DeliveryPerson = {
 
 // Establish connection with database :)
 var connection = mysql.createConnection({
-    host: '',
+    host: 'sl-us-south-1-portal.20.dblayer.com',
     port: 40397,
     user: 'admin',
-    password: '',
-    database: ''
+    password: 'SFXQRQVBQVYQFGUC',
+    database: 'compose'
 });
 
 
@@ -332,70 +332,79 @@ app.post('/signout', function(req, res) {
 
 //Cook section of the site.
 
-app.get("/restaurant/cook/menu",function(req, res){
-    if(signedInUser.type === "Cook"){
-        var resName = res.params.resName;
-        var currentMenuName = [];
-        var currentMenuDesc = [];
-        var currentMenuPrice =[];
-        restaurantID = 0;
+app.get("/Account/Cook",function(req, res){
 
-        //retrieves the specific restaurantID using the restaurant name.
-        var q = "SELECT restaurantID FROM Restaurants WHERE name = '" + resName+"'";
-        connection.query(q, function(err, results) {
-            if(err) throw err;
-            var restaurantID = results[0].restaurantID;
+console.log("You made it to your section of the site! ")
 
-            //Adds all of the food in a the Menu array from the Menu database
-            var k = "SELECT * FROM Menu WHERE restaurantID = " + restaurantID ;
-
-            connection.query(k, function(err, results) {
-                if(err) throw err;
-                for(var i = 0; i< results.length; i++){
-                currentMenuName.push(results[i].foodName);
-                currentMenuDesc.push(results[i].description);
-                currentMenuPrice.push(results[i].price);
-            }
-
-            });
-        });
-    }
+    // if(signedInUser.type === "Cook"){
+    //     var resName = res.params.resName;
+    //     var currentMenuName = [];
+    //     var currentMenuDesc = [];
+    //     var currentMenuPrice =[];
+    //     restaurantID = 0;
+    //
+    //     //retrieves the specific restaurantID using the restaurant name.
+    //     var q = "SELECT restaurantID FROM Restaurants WHERE name = '" + resName+"'";
+    //     connection.query(q, function(err, results) {
+    //         if(err) throw err;
+    //         var restaurantID = results[0].restaurantID;
+    //
+    //         //Adds all of the food in a the Menu array from the Menu database
+    //         var k = "SELECT * FROM Menu WHERE restaurantID = " + restaurantID ;
+    //
+    //         connection.query(k, function(err, results) {
+    //             if(err) throw err;
+    //             for(var i = 0; i< results.length; i++){
+    //             currentMenuName.push(results[i].foodName);
+    //             currentMenuDesc.push(results[i].description);
+    //             currentMenuPrice.push(results[i].price);
+    //         }
+    //
+    //         });
+    //     });
+    // }
 });
 
 // Add the new button to the Menu
-app.post("/restaurant/:resName/cook/menu/addfood", function(req,res){
+app.post("/Account/Cook/AddFood", function(req,res){
   var foodName = req.body.foodName;
   var description = req.body.foodDesc;
   var price = req.body.foodPrice;
-  var restaurantID = 0;
-  var resName = req.params.resName;
 
-  var Food = {
-    restaurantID: restaurantID,
-    foodName : foodName,
-    description: description,
-    price : price,
-  };
-  console.log(Food.price);
+  console.log(price);
+  console.log(foodName);
 
 
 //  Adds the new food item to the Menu table in the database.
-  connection.query("INSERT INTO Menu SET ?", Food, function(err, results) {
-      if(err) throw err;
-  });
+var q = "SELECT * FROM Cooks WHERE userID =" + signedInUser.userID;
+connection.query(q, function(err, results) {
+    if(err) throw err;
+    var restaurantID = results[0]['restaurantID']
+    var Food = {
+      restaurantID,
+      foodName,
+      description,
+      price
+    };
 
-  res.redirect("/"+ resName +"/cook/menu");
+      connection.query("INSERT INTO Menu SET ?", Food, function(err, results) {
+          if(err) throw err;
+          console.log("It eorke");
+      });
 
+      res.redirect("/Account/Cook");
+
+    });
 });
 
-//post request that removes food from menu.
-app.post("/restaurant/:resName/cook/menu/removeFood",function(req,res){
 
-    var foodName = req.body.foodName;
-    var resName = req.params.resName;
+//post request that removes food from menu.
+app.post("/Account/Cook/RemoveFood",function(req,res){
+
+    var foodName = req.body.foodName_2;
 
     //retrieves the specific restaurantID using the restaurant name.
-    var q = "SELECT restaurantID FROM Restaurants WHERE name = '" + resName+"'";
+    var q = "SELECT * FROM Cooks WHERE userID =" + signedInUser.userID;
     connection.query(q, function(err, results) {
         if(err) throw err;
         var restaurantID = results[0].restaurantID;
@@ -405,8 +414,11 @@ app.post("/restaurant/:resName/cook/menu/removeFood",function(req,res){
         connection.query(k, function(err, results) {
             if(err) throw err;
         });
+      res.redirect("/Account/Cook");
     });
 });
+
+
 
 // Manager Part of Website
 // app.get('/Manager', function(req, res) {
