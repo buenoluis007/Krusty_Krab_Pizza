@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import Cooks from './ManageCooks';
 import DeliveryPerson from './ManageDeliveryPerson';
 import Pending from './PendingApps';
+import './Manager.css';
 
 class Manager extends PureComponent {
     constructor(props) {
@@ -27,7 +28,7 @@ class Manager extends PureComponent {
                 < Cooks />
                 < DeliveryPerson />
                 < Pending />
-            < Direction />
+
             </div>
         )
     }
