@@ -56,11 +56,11 @@ let Complaints ={
 
 // Establish connection with database :)
 var connection = mysql.createConnection({
-    host: '',
+    host: 'sl-us-south-1-portal.20.dblayer.com',
     port: 40397,
     user: 'admin',
-    password: '',
-    database: ''
+    password: 'SFXQRQVBQVYQFGUC',
+    database: 'compose'
 });
 
 
@@ -399,7 +399,7 @@ connection.query(q, function(err, results) {
           description,
           price
         };
-        
+
           connection.query("INSERT INTO Menu SET ?", Food, function(err, results) {
               if(err) throw err;
               console.log("It eorke");
