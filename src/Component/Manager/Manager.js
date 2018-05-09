@@ -27,7 +27,6 @@ class Manager extends PureComponent {
                 < Cooks />
                 < DeliveryPerson />
                 < Pending />
-            < Direction />
             </div>
         )
     }
