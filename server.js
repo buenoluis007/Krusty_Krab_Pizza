@@ -166,7 +166,6 @@ app.post('/checkRest', function(req, res) {
 //     });
 // });
 
->>>>>>> a28b5d84786028e636ff34b01ac61157079a6ba8
 var cart = require('./cart');
 var shoppingCart = new cart();
 
@@ -183,6 +182,7 @@ app.get('/restaurantInfo/:placeID', function(req,res){
     if (err) return console.error("Restaurant Not Found" + err);
     restinfo = data[0];
     res.send(JSON.stringify(data[0]));
+    console.log('restaurantInfo: '+JSON.stringify(restinfo));
     console.log('restaurantInfo sent');
   });
 });
@@ -201,12 +201,13 @@ app.get('/menuInfo/:placeID',function(req,res){
 app.get('/memberStatus',function(req,res){
   var stat = '0';
   var q = "select status from Members where userID="+signedInUser.userID+" and restaurantID="+restinfo.restaurantID+";";
+  console.log('S: '+signedInUser.userID+' R: '+restinfo.restaurantID);
   connection.query(q,function(err,data){
     console.log('MEMBERSTATUS: '+JSON.stringify(data));
     if (err) return console.log('MEMBER STATUS: '+err);
     if (data[0]){
       if (data[0].status === 0) stat = '1';
-      stat = '2';
+      else stat = '2';
     }
     console.log('MEMBERS RETURN: '+stat);
     res.send(stat);
