@@ -1,21 +1,7 @@
 import React, { Component } from 'react';
 import './Cook.css'
 class Cook extends Component{
-    // constructor() {
-    //     super();
-    //     this.state =
-    //     {
-    //       Users : []
-    //     };
-    //   }
-    //
-    //
-    // // fetch the user's info from express
-    // componentDidMount() {
-    //   fetch('/Account/Cook')
-    //     .then(res => res.json())
-    //     .then(user => this.setState({ Users: user }))
-    // }
+
 
   render(){
     return(
