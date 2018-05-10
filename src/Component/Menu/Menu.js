@@ -100,6 +100,11 @@ class Menu extends Component {
       .then(info => {
         this.setState({ Restaurant: info });
         this.props.onResInfo(this.state.Restaurant);
+        console.log('PREVSTATE: '+this.props.prev);
+        if (this.props.prev !== this.state.Restaurant.restaurantID){
+          this.props.onClearCart();
+          this.props.onSetPrev(this.state.Restaurant.restaurantID);
+        }
         fetch('/memberStatus')
           .then(res => res.json())
           .then(state=>{
@@ -119,6 +124,7 @@ class Menu extends Component {
   render() {
     console.log(this.state.Menu);
     let menuItems = null;
+
     menuItems = this.state.Menu.map((item) =>
       <MenuItem item={item} onAddItem={this.props.onAddItem}/>
     );

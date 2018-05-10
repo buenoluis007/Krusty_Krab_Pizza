@@ -25,7 +25,8 @@ class Routes extends Component {
         Cart : new cart(),
         Visitor: {}, //info from RegisteredAccts
         Pay: {},
-        RestInfo: {}
+        RestInfo: {},
+        PrevRest: 0
       };
 
       this.handleAddItem = this.handleAddItem.bind(this);
@@ -36,6 +37,7 @@ class Routes extends Component {
       this.handleUpdateDiscount = this.handleUpdateDiscount.bind(this);
       this.handleVisitorChange = this.handleVisitorChange.bind(this);
       this.handlePayChange = this.handlePayChange.bind(this);
+      this.handleSetPrev = this.handleSetPrev.bind(this);
     }
 
     // fetch the user's info from express
@@ -47,6 +49,7 @@ class Routes extends Component {
         savedCart.updatePrice();
         this.setState({Cart: savedCart});
       }
+      this.setState({PrevRest: JSON.parse(sessionStorage.getItem('savedPrev'))})
       fetch('/user')
         .then(res => res.json())
         .then(user => this.setState({ Users: user }));
@@ -63,8 +66,12 @@ class Routes extends Component {
 
     componentDidUpdate(){
       sessionStorage.setItem('savedState', JSON.stringify(this.state.Cart.getItems()));
+      sessionStorage.setItem('savedPrev', JSON.stringify(this.state.PrevRest));
     }
 
+    handleSetPrev(currest){
+      this.setState({ PrevRest: currest});
+    }
     handleAddItem(item){
        let cart = this.state.Cart;
        cart.addItem(item.foodName,item.qty,item.price);
@@ -191,10 +198,13 @@ class Routes extends Component {
                     {...props}
                     user={this.state.Users}
                     cart={this.state.Cart}
+                    prev={this.state.PrevRest}
+                    onSetPrev={this.handleSetPrev}
                     onResInfo={this.handleResInfo}
                     onAddItem={this.handleAddItem}
                     onUpdateItem={this.handleUpdateItem}
                     onRemoveItem={this.handleRemoveItem}
+                    onClearCart={this.handleClearCart}
                     onUpdateDiscount={this.handleUpdateDiscount}/>)}} />
               <Route path="/checkout" render={(props) =>{return(
                   <CheckOut
