@@ -41,11 +41,7 @@ VALUES ("Don Antonio","309 W 50th St, New York","ChIJN_hR41ZYwokRB8wicROs-eY");
 
 
 UPDATE Restaurants SET longitude = -73.982876, latitude = 40.761083 WHERE googleID = 'ChIJ8f20wb1ZwokRRKCkdTIRk7A';
-
-
 UPDATE Restaurants SET longitude = -73.989534, latitude = 40.754025 WHERE googleID = 'ChIJ_1bEhaxZwokRIqNQV6dunL8';
-
-
 UPDATE Restaurants SET longitude = -73.988963 , latitude = 40.758902 WHERE googleID = 'ChIJn2zgeFRYwokRUEccs5Vqqzc';
 UPDATE Restaurants SET longitude = -73.988914 , latitude = 40.758041 WHERE googleID = 'ChIJG_XUfVNYwokRo688OBhScoY';
 UPDATE Restaurants SET longitude = -73.982945 , latitude = 40.763812 WHERE googleID = 'ChIJCTvSdPhYwokR5PDoOE7VuCc';
