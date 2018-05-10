@@ -89,50 +89,42 @@ class CheckOrder extends Component{
 
 class CheckPayment extends Component{
   render(){
+    let v = this.props.visitor;
+    let p = this.props.pay;
     return[
       <div class='checkpayment'>
         <h2 align='left'>Payment Information</h2>
         <form>
           <table border='0' class='paytable'>
             <tr>
-              <td colspan='2'><label>Full Name<br/>
-                <input type="text" size='60' required/>
-              </label></td>
-            </tr>
-            <tr>
               <td><label>Card Number<br/>
-                <input type="text" size='35' required/>
+                <input type="text" name='cardnum' size='26' maxlength='16' value={p.creditNum} onChange={(e)=>this.props.onP(e)}/>
               </label></td>
-              <td><label>Exp Date<br/>
-                <input type="text" size='17' required/>
+              <td><label>Exp Date(mm/yy)<br/>
+                <input type="text" name='exp' size='17' maxlength='5' value={p.expiration} onChange={(e)=>this.props.onP(e)}/>
               </label></td>
             </tr>
             <tr>
               <td><label>CCV<br/>
-                <input type="text" size='3' required/>
+                <input type="text" name='ccv' size='3' maxlength='3' value={p.ccv} onChange={(e)=>this.props.onP(e)}/>
               </label></td>
             </tr>
             <tr>
-              <td colspan='2' style={{paddingTop:'40px'}}><label>Address<br/>
-                <input type="text" size='60' required/>
+              <td width='215' style={{paddingTop:'40px'}}><label>First Name<br/>
+                <input type="text" name='f_name' size='26' value={v.f_name} onChange={(e)=>this.props.onV(e)} required/>
+              </label></td>
+              <td style={{paddingTop:'40px'}}><label>Last Name<br/>
+                <input type="text" name='l_name' size='26' value={v.l_name} onChange={(e)=>this.props.onV(e)} required/>
               </label></td>
             </tr>
             <tr>
-              <td width='270'><label>City<br/>
-                <input type="text" size='35' required/>
-              </label></td>
-              <td><label>State<br/>
-                <input type="text" size='17' required/>
-              </label></td>
-            </tr>
-            <tr>
-              <td colspan='2'><label>Postal Code<br/>
-                <input type="text" size='35' required/>
+              <td colspan='2'><label>Address<br/>
+                <input type="text" name='address' size='60' value={v.address} onChange={(e)=>this.props.onV(e)} required/>
               </label></td>
             </tr>
             <tr>
               <td colspan='2'><label>Phone Number<br/>
-                <input type="text" size='35' required/>
+                <input type="text" name='phoneNum' size='35' maxlength='15' value={v.phoneNum} onChange={(e)=>this.props.onV(e)}/>
               </label></td>
             </tr>
           </table>
@@ -153,7 +145,7 @@ class CheckPlaceOrder extends Component{
 
     return(
       <div className='checksubmit'>
-        <table border='1' class='submittable'>
+        <table border='0' class='submittable'>
           <tr>
             <td>
               <label>Select Your Cook &ensp;
@@ -164,6 +156,7 @@ class CheckPlaceOrder extends Component{
             </td>
             <td align='center'>
               <form name='placeorder' id='placeorder' action='/placeorder' method='post'>
+                <input type='hidden' name='address' value={this.props.visitor.address}/>
                 <input type='hidden' name='items' value={JSON.stringify(this.props.cart.getItems())}/>
                 <input type='hidden' name='user' value={this.props.user.userID}/>
                 <input type='hidden' name='restID' value={this.props.restInfo.restaurantID}/>
@@ -200,8 +193,13 @@ class CheckOut extends Component {
           onRemoveItem={this.props.onRemoveItem}
           onUpdateItem={this.props.onUpdateItem}/>
         <CheckPayment
+          visitor={this.props.visitor}
+          pay={this.props.pay}
+          onV={this.props.onV}
+          onP={this.props.onP}
           user={this.props.user}/>
         <CheckPlaceOrder
+          visitor={this.props.visitor}
           user={this.props.user}
           restInfo={this.props.restInfo}
           cart={this.props.cart}
