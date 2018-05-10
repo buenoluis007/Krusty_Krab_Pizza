@@ -30,6 +30,9 @@ let restinfo = {
   restaurantID: '0'
 };
 
+let Visitor = {};
+let Pay = {};
+
 let Manager = {
     userID: '',
     resID: '',
@@ -99,11 +102,10 @@ app.get('/user', function(req, res) {
 
 app.get('/visitorInfo',function(req,res){
   let q = 'select * from RegisteredAccts where userID='+signedInUser.userID+';';
-  let data = {};
   connection.query(q, function(err,results){
     if(err) return console.error('VISITOR INFO: '+err);
-    if (results[0]) data = results[0];
-    res.send(data);
+    if (results[0]) Visitor = results[0];
+    res.send(JSON.stringify(Visitor));
   });
 });
 
@@ -112,8 +114,8 @@ app.get('/payInfo',function(req,res){
   let data = {};
   connection.query(q, function(err,results){
     if(err) return console.error('PAYMENT INFO: '+err);
-    if (results[0]) data = results[0];
-    res.send(data);
+    if (results[0]) Pay = results[0];
+    res.send(JSON.stringify(Pay));
   });
 });
 
