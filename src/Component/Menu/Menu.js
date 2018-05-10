@@ -91,6 +91,7 @@ class Menu extends Component {
         this.setState({ Restaurant: info });
         this.props.onResInfo(this.state.Restaurant);
       });
+      
     fetch('/menuInfo/' + placeID)
       .then(res => res.json())
       .then(menu => this.setState({ Menu: menu }));
