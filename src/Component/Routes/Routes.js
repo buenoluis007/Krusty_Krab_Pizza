@@ -13,8 +13,8 @@ import Restaurant from '../Restaurant/Restaurant';
 import Menu from '../Menu/Menu';
 import CheckOut from '../CheckOut/CheckOut';
 import Cook from '../Cook/Cook';
+import Visitor from '../Visitor/Visitor';
 import ProcessOrder from '../ProcessOrder/ProcessOrder';
-
 
 class Routes extends Component {
   constructor() {
@@ -151,6 +151,10 @@ class Routes extends Component {
               <Route path="/Account" exact component={ Accounts } />
               <Route path="/Account/Manager" exact component={ Manager } />
               <Route path="/Account/Cook" exact component={ Cook } />
+              <Route path="/Account/Visitor" render={(props) =>{return(
+                  <Visitor
+                    user={this.state.Users}
+                    cart={this.state.Cart}/>)}} />
               <Route path="/register" exact component={ Register } />
               <Route path="/login" exact component={ LogIn } />
               <Route path="/SignOut" exact component={ SignOut } />
@@ -173,6 +177,7 @@ class Routes extends Component {
                     onRemoveItem={this.handleRemoveItem}/>)}} />
               <Route path="/processingorder" render={(props) =>{return(
                   <ProcessOrder
+                    cart={this.state.Cart}
                     onClearCart={this.handleClearCart}/>)}} />
           </div>
         </div>

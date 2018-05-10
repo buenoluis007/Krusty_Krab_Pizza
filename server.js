@@ -93,6 +93,26 @@ app.get('/user', function(req, res) {
   });
 });
 
+app.get('/visitorInfo',function(req,res){
+  let q = 'select * from RegisteredAccts where userID='+signedInUser.userID+';';
+  let data = {};
+  connection.query(q, function(err,results){
+    if(err) return console.error('VISITOR INFO: '+err);
+    if (results[0]) data = results[0];
+    res.send(data);
+  });
+});
+
+app.get('/payInfo',function(req,res){
+  let q = 'select * from PaymentInfo where userID='+signedInUser.userID+';';
+  let data = {};
+  connection.query(q, function(err,results){
+    if(err) return console.error('PAYMENT INFO: '+err);
+    if (results[0]) data = results[0];
+    res.send(data);
+  });
+});
+
 app.get('/restaurant/:placeID', function(req, res) {
   var id = req.query.id;
   var q = "SELECT * FROM Restaurants WHERE googleID=" + id;
@@ -166,9 +186,6 @@ app.post('/checkRest', function(req, res) {
 //     });
 // });
 
-var cart = require('./cart');
-var shoppingCart = new cart();
-
 app.get('/currRest',function(req,res){
   console.log('RESTINFO: '+ JSON.stringify(restinfo));
   res.send(JSON.stringify(restinfo));
@@ -223,6 +240,20 @@ app.get('/getCooks',function(req,res){
     if (err) return console.log('getCOOKS: '+err);
     res.send(JSON.stringify(data));
   })
+});
+
+app.post('/editprofile',function(req,res){
+  let q = 'Replace into RegisteredAccts (userID,f_name,l_name,address,phoneNum) values('
+    + signedInUser.userID +",'"+req.body.f_name+"','"+req.body.l_name+"','"+req.body.address+"','"+req.body.phoneNum+"');";
+  let p = 'Replace into PaymentInfo (userID,name,creditNum,ccv,expiration) values('
+    + signedInUser.userID +",'"+req.body.f_name+' '+req.body.l_name+"',"+req.body.cardnum+","+req.body.ccv+",'"+req.body.exp+"');";
+  connection.query(q,function(err,data){
+    if (err) return console.error('EDITACCT: '+err);
+  });
+  connection.query(p,function(err,data){
+    if (err) return console.error('EDITPAY: '+err);
+  });
+  res.redirect(req.get('referer'));
 });
 
 app.post('/apply',function(req,res){

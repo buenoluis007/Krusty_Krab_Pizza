@@ -10,11 +10,12 @@ class ProcessOrder extends Component {
       };
     }
 
-  componentDidMount() {
-    this.props.onClearCart();
+  shouldComponentUpdate() {
+    return this.props.cart.getItems().length > 0;
   }
 
   render() {
+    this.props.onClearCart();
     return (
       <div className='pcontainter' align='center'>
         <h1>Thank You For Your Purchase!<br/>

@@ -90,19 +90,19 @@ class Menu extends Component {
       .then(info => {
         this.setState({ Restaurant: info });
         this.props.onResInfo(this.state.Restaurant);
+        fetch('/memberStatus')
+          .then(res => res.json())
+          .then(state=>{
+            this.setState({Status: parseInt(state)});
+            if (this.state.Status === 1)
+              this.props.onUpdateDiscount(.05);
+            else if (this.state.Status === 2)
+              this.props.onUpdateDiscount(.1);
+          });
       });
     fetch('/menuInfo/' + placeID)
       .then(res => res.json())
       .then(menu => this.setState({ Menu: menu }));
-    fetch('/memberStatus')
-      .then(res => res.json())
-      .then(state=>{
-        this.setState({Status: parseInt(state)});
-        if (this.state.Status === 1)
-          this.props.onUpdateDiscount(.05);
-        else if (this.state.Status === 2)
-          this.props.onUpdateDiscount(.1);
-      });
   }
 
   render() {
