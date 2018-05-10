@@ -16,7 +16,6 @@ class ViewProfile extends Component {
 
     render() {
         let v = this.props.visitor;
-        let f=v.f_name;
 
         return [
           <div className='viewcontainer'>
@@ -25,33 +24,33 @@ class ViewProfile extends Component {
               <table border='0' class='profiletable' align='left'>
                 <tr>
                   <td width='215'><label>First Name<br/>
-                    <input type="text" name='f_name' size='26' ref={this.props.visitor.f_name}/>
+                    <input type="text" name='f_name' size='26' value={v.f_name} onChange={(e)=>this.props.onV(e)} required/>
                   </label></td>
                   <td><label>Last Name<br/>
-                    <input type="text" name='l_name' placeholder={v.l_name} size='26' required/>
+                    <input type="text" name='l_name' size='26' value={v.l_name} onChange={(e)=>this.props.onV(e)} required/>
                   </label></td>
                 </tr>
                 <tr>
                   <td colspan='2'><label>Address<br/>
-                    <input type="text" name='address' placeholder={v.address} size='60' required/>
+                    <input type="text" name='address' size='60' value={v.address} onChange={(e)=>this.props.onV(e)} required/>
                   </label></td>
                 </tr>
                 <tr>
                   <td colspan='2'><label>Phone Number<br/>
-                    <input type="text" name='phoneNum' size='35' value={v.phoneNum}/>
+                    <input type="text" name='phoneNum' size='35' value={v.phoneNum} onChange={(e)=>this.props.onV(e)}/>
                   </label></td>
                 </tr>
                 <tr>
                   <td style={{paddingTop:'40px'}}><label>Card Number<br/>
-                    <input type="text" name='cardnum' size='26'/>
+                    <input type="text" name='cardnum' size='26' onChange={(e)=>this.props.onP(e)}/>
                   </label></td>
                   <td style={{paddingTop:'40px'}}><label>Exp Date(mm/yy)<br/>
-                    <input type="text" name='exp' size='17'/>
+                    <input type="text" name='exp' size='17' onChange={(e)=>this.props.onP(e)}/>
                   </label></td>
                 </tr>
                 <tr>
                   <td><label>CCV<br/>
-                    <input type="text" name='ccv' size='3'/>
+                    <input type="text" name='ccv' size='3' onChange={(e)=>this.props.onP(e)}/>
                   </label></td>
                 </tr>
                 <tr>
