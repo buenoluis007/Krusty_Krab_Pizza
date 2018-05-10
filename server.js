@@ -29,7 +29,7 @@ let restaurantInfo = {
 let restinfo = {
   restaurantID: ''
 };
-// Establish connection with database
+
 let Manager = {
     userID: '',
     resID: '',
@@ -46,6 +46,10 @@ let DeliveryPerson = {
 
 };
 
+let Orders = {
+
+};
+
 let Pending = {
 
 };
@@ -56,11 +60,11 @@ let Complaints ={
 
 // Establish connection with database :)
 var connection = mysql.createConnection({
-    host: '',
+    host: 'sl-us-south-1-portal.20.dblayer.com',
     port: 40397,
     user: 'admin',
-    password: '',
-    database: ''
+    password: 'SFXQRQVBQVYQFGUC',
+    database: 'compose'
 });
 
 
@@ -485,36 +489,41 @@ app.get('/pendingUsers', function(req, res) {
 })
 
 // Show Complaints
-app.get('/pendingUsers', function(req, res) {
-    q = "SELECT * FROM Complaints WHERE restaurantID = " + Manager.resID;
+app.get('/Complaints', function(req, res) {
+    q = "SELECT complaintID, CONCAT(f_name, ' ', l_name) AS name, complaint, rating, foodName FROM Complaints JOIN RegisteredAccts ON Complaints.userID = RegisteredAccts.userID WHERE Complaints.restaurantID = " + Manager.resID;
     connection.query(q, function(err, results) {
         if(err) throw err;
-        Manager.complaints.push(results);
-        res.send(JSON.stringify(Manager));
+        Complaints = results;
+        res.send(JSON.stringify(Complaints));
+        console.log(Complaints);
     });
 });
 
+// Manage Complaints
+app.post('/removeComplaint', function(req,res){
+    var complaintID = req.body.complaintID;
+
+    var q = "DELETE FROM Complaints WHERE ComplaintID =" + complaintID ;
+    connection.query(q, function(err, results) {
+        if(err) throw err;
+        console.log("You deleted a complaint !");
+    });
+    res.redirect("/Account/Manager");
+});
 
 
-//
-// q = "SELECT * FROM Orders WHERE restaurantID = " + Manager.resID;
-// connection.query(q, function(err, results) {
-//     if(err) throw err;
-//     if(results[0]) {
-//         Managerorders.push(results); // orders[0][i].AnAttributeFromOrdersTableGoesHere
-//     } else {
-//         console.log("There are 0 orders for this restaurant at the moment");
-//     }
+// View orders that are ready to be deliver
+// app.get('/Orders', function(res, req) {
+//     var q = "SELECT * FROM Orders JOIN FoodInOrder ON Orders.orderID = FoodInOrder.orderID WHERE Orders.restaurantID =" + Manager.resID;
+//     connection.query(q, function(err, results) {
+//         if(err) throw err;
+//         Orders = results;
+//         console.log(Orders);
+//         res.send(JSON.stringify(Orders));
+//     });
+//     res.redirect("/Account/Manager");
 // });
 
-//
-// // Show Complaints
-// q = "SELECT * FROM Complaints WHERE restaurantID = " + Manager.resID;
-// connection.query(q, function(err, results) {
-//     if(err) throw err;
-//     Manager.complaints.push(results);
-//     res.send(JSON.stringify(Manager));
-// });
 
 // Apoint Devlivery Person to an order
 // Some form that you can appoint a delivery person to an order (a drop down can appear for the orders next to a delivery person)
@@ -553,7 +562,6 @@ app.post('/manager/fire', function(req, res) {
             });
         });
     })
-
     res.redirect("/Account/Manager");
 });
 
@@ -582,22 +590,8 @@ app.post('/manager/changeWage', function(req, res) {
     res.redirect("/Account/Manager");
 });
 
-// Manage Complaints
-app.post('/restaurant/:resName/manager/complaints', function(req,res){
-    var restaurantName = req.params.resName;
-    // var userID = req.body.userID;
-    // var resID = req.body.restaurantID;
-    var complaintID = req.body.complaintID;
-
-    var q = "DELETE FROM Complaints WHERE ComplaintID =" + complaintID ;
-    connection.query(q, function(err, results) {
-        if(err) throw err;
-        console.log("You deleted a complaint !");
-    });
-});
 
 // Accept User request to join restaurant (accept/reject form)
-// Currently Database is insufficient to handle this request
 app.post('/Manager/changeUserStatus', function(req, res) {
     var userID = req.body.userID;
     var choice = req.body.choice;

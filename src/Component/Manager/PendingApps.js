@@ -20,10 +20,10 @@ class Pending extends Component {
         return(
             <div>
                 <h1>Pending Users</h1>
-                <table>
+                <table className='manager'>
                     <thead>
                         <td>Name</td>
-                        <td></td>
+                        <td>Action</td>
                     </thead>
                     {this.state.Apps.map((app, i) =>
                         <tbody key={this.state.Apps[i].userID}>

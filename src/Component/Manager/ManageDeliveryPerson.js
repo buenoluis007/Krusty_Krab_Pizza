@@ -25,15 +25,16 @@ class DeliveryPerson extends Component {
     // )}
 
     render(){
-        console.log(this.state.DeliveryPerson[0]);
+        console.log(this.state.DeliveryPerson);
         return (
             <div>
                 <h1 id="deliveryHeader">Delivery Staff Members:</h1>
-                <table>
+                <table className='manager'>
                     <thead>
                         <td>Name</td>
                         <td>Salary</td>
                         <td>Rating</td>
+                        <td>Action</td>
                     </thead>
                     {this.state.DeliveryPerson.map((person, i) =>
                         <tbody key={this.state.DeliveryPerson[i].userID}>
