@@ -69,15 +69,13 @@ const MapComponent = compose(
                     const service = new window.google.maps.places.PlacesService(refs.map.context.__SECRET_MAP_DO_NOT_USE_OR_YOU_WILL_BE_FIRED);
                     const request = {
                           location: refs.map.getCenter(),
-                          radius: '50',
-                          rankBy: google.maps.places.RankBy.Distance,
+                          radius: '75',
                           keyword: 'pizza',
                           name: 'pizza',
                           type: 'restaurant',
                     };
                     service.nearbySearch(request, (results, status) => {
                         if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-
                             console.log(results);
                             updatePlaces(results);
                         }

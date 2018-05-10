@@ -28,12 +28,12 @@ class Cooks extends Component {
         return (
             <div className='cookDiv'>
                 <h1>Cooks Staff Members:</h1>
-                <table>
+                <table className='manager'>
                     <thead>
                         <td>Name</td>
                         <td>Salary</td>
                         <td>Strikes</td>
-                        <td></td>
+                        <td>Action</td>
                     </thead>
                     {this.state.Cook.map((cook,i) =>
                         <tbody key={this.state.Cook[i].userID}>

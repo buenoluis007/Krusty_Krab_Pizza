@@ -2,6 +2,9 @@ import React, { PureComponent } from 'react';
 import Cooks from './ManageCooks';
 import DeliveryPerson from './ManageDeliveryPerson';
 import Pending from './PendingApps';
+import Complaints from './Complaints';
+import Orders from './ReadyOrders';
+
 import './Manager.css';
 
 class Manager extends PureComponent {
@@ -28,7 +31,8 @@ class Manager extends PureComponent {
                 < Cooks />
                 < DeliveryPerson />
                 < Pending />
-
+                < Complaints />
+                < Orders />
             </div>
         )
     }
