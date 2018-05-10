@@ -445,6 +445,9 @@ app.get('/MenuCook/',function(req,res){
     });
    });
 });
+
+//This returns the current Orders in the sysytme
+
 app.get('/OrdersCook/',function(req,res){
     console.log('request for the current orders Information ');
     var q = "SELECT * FROM Cooks WHERE userID =" + signedInUser.userID;
@@ -455,7 +458,7 @@ app.get('/OrdersCook/',function(req,res){
     var restID = results[0].restaurantID;
     console.log(restID);
 
-        var q = "SELECT * FROM FoodInOrder JOIN Orders ON FoodInOrder.orderID = Orders.orderID WHERE Orders.restaurantID = " + restID + " ORDER BY FoodInOrder.orderID";
+        var q = "SELECT * FROM FoodInOrder JOIN Orders ON FoodInOrder.orderID = Orders.orderID WHERE Orders.restaurantID = " + restID + " AND status = 0 ORDER BY FoodInOrder.orderID";
         connection.query(q,function(err,data){
 
           if (err) return console.error("Orders Not Found" + err);

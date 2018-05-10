@@ -54,9 +54,14 @@ class Cook extends Component{
         </form>
 
         {this.state.Menu.map((item,i) =>
-            <div>{this.state.Menu[i].foodName}</div>
+            <div>{this.state.Menu[i].foodName}
+                 {this.state.Menu[i].description}
+                 {this.state.Menu[i].price}
+                 {this.state.Menu[i].rating}
+                 <h1> </h1></div>
 
         )}
+        <br/>
         <br/>
         {this.state.CurrentOrder.map((item,i) =>
 
