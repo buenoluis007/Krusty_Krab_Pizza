@@ -56,11 +56,11 @@ let Complaints ={
 
 // Establish connection with database :)
 var connection = mysql.createConnection({
-    host: 'sl-us-south-1-portal.20.dblayer.com',
+    host: '',
     port: 40397,
     user: 'admin',
-    password: 'SFXQRQVBQVYQFGUC',
-    database: 'compose'
+    password: '',
+    database: ''
 });
 
 
