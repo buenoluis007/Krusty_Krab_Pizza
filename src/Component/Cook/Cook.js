@@ -1,10 +1,23 @@
 import React, { Component } from 'react';
 import './Cook.css'
 class Cook extends Component{
-
-
+    constructor(props) {
+        super(props);
+        this.state =
+        {
+          Menu: [],
+          Status: 0
+        };
+      }
+    componentDidMount() {
+       fetch('/MenuCook/')
+         .then(res => res.json())
+         .then(menu => this.setState({ Menu: menu }));
+     }
   render(){
-    return(
+      console.log(this.state.Menu);
+    return( 
+
       <div>
       <form className="Cook" action="/Account/Cook/AddFood" method="POST">
         <h1>Add a food item to the Menu </h1>
@@ -34,9 +47,21 @@ class Cook extends Component{
               className="Cook">Remove Food</button>
 
         </form>
+
+        {this.state.Menu.map((item,i) =>
+            <div>{this.state.Menu[i].foodName}</div>
+
+        )}
+
+
+
+
+
         </div>
     );
   }
+
+
 }
 
 export default Cook;

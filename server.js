@@ -338,6 +338,7 @@ app.post('/signout', function(req, res) {
 
 //Cook section of the site.
 
+
 app.get("/Account/Cook",function(req, res){
 
 console.log("You made it to your section of the site! ")
@@ -370,6 +371,36 @@ console.log("You made it to your section of the site! ")
     //     });
     // }
 });
+
+app.get('/MenuCook/',function(req,res){
+
+  console.log('request menuInfo ');
+  var q = "SELECT * FROM Cooks WHERE userID =" + signedInUser.userID;
+  connection.query(q,function(err,results){
+      console.log(results[0]);
+
+
+  var restID = results[0].restaurantID;
+  console.log(restID);
+  var q = "SELECT * FROM Restaurants WHERE restaurantID = " + restID;
+  connection.query(q,function(err,results){
+
+
+      var googleID = results[0].googleID;
+      console.log(googleID);
+
+      var q = "SELECT * FROM Menu WHERE googleID = '" + googleID + "'";
+      connection.query(q,function(err,data){
+
+
+        if (err) return console.error("Restaurant Not Found" + err);
+        res.send(JSON.stringify(data));
+        console.log('menuInfo sent');
+        });
+    });
+   });
+});
+
 
 // Add the new button to the Menu
 app.post("/Account/Cook/AddFood", function(req,res){
@@ -430,6 +461,11 @@ app.post("/Account/Cook/RemoveFood",function(req,res){
       res.redirect("/Account/Cook");
     });
 });
+
+
+
+
+
 
 // MANAGER PAGE
 app.get('/Account/Manager', function(req, res) {
