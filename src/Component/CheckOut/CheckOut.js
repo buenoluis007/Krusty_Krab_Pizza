@@ -145,6 +145,7 @@ class CheckPayment extends Component{
 class CheckPlaceOrder extends Component{
   render(){
     let selectCooks = [];
+    const receipt = this.props.cart.getReceipt();
     console.log('COOK ARRAY: '+JSON.stringify(this.props.cooks));
     selectCooks = (this.props.cooks.map((cook)=>
       <option value={cook.userID}>{cook.f_name} {cook.l_name}</option>
@@ -166,6 +167,7 @@ class CheckPlaceOrder extends Component{
                 <input type='hidden' name='items' value={JSON.stringify(this.props.cart.getItems())}/>
                 <input type='hidden' name='user' value={this.props.user.userID}/>
                 <input type='hidden' name='restID' value={this.props.restInfo.restaurantID}/>
+                <input type='hidden' name='receipt' value={JSON.stringify(this.props.cart.getReceipt())}/>
                 <input type='submit' name='submit' value='Place Order'/>
               </form>
             </td>

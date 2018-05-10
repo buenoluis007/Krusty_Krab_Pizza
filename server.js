@@ -271,8 +271,9 @@ app.post('/placeorder', function(req,res){
   var restID = req.body.restID;
   var cookID = req.body.cookID;
   var items = JSON.parse(req.body.items);
-  var q = "INSERT INTO Orders (userID,cookID,restaurantID,orderDate) values ("
-          + user + "," +cookID+","+ restID + ",now());";
+  var receipt = JSON.parse(req.body.receipt);
+  var q = "INSERT INTO Orders (userID,cookID,restaurantID,tax,discount,subtotal,total,orderDate) values ("
+          + user + "," +cookID+","+ restID + "," +receipt.tax+"," +receipt.discount+"," +receipt.subtotal+"," +receipt.total+",now());";
   var orderid = null;
   var valuestr = null;
   console.log(q);

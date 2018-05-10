@@ -10,7 +10,6 @@ var cart = function(){
 
   this.getReceipt = function(){
     return {'restaurant':restaurant,
-                   'items':items,
                    'subtotal':subtotal,
                    'discountpct':discountpct,
                    'discount':discount,
