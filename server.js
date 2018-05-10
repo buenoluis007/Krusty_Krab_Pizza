@@ -203,8 +203,8 @@ app.get('/restaurantInfo/:placeID', function(req,res){
   var q = "select * from Restaurants where googleID = '" + placeID + "'";
   connection.query(q,function(err,data){
     if (err) return console.error("Restaurant Not Found" + err);
-    restinfo = data[0];
-    res.send(JSON.stringify(data[0]));
+    if (data[0]) restinfo = data[0];
+    res.send(JSON.stringify(restinfo));
     console.log('restaurantInfo: '+JSON.stringify(restinfo));
     console.log('restaurantInfo sent');
   });
