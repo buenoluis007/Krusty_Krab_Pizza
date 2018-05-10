@@ -30,6 +30,22 @@ let restinfo = {
   restaurantID: '0'
 };
 
+let Visitor = {
+  userID: 0,
+  address: '',
+  f_name: '',
+  l_name: '',
+  status: 0,
+  phoneNum: ''
+};
+let Pay = {
+  userID: 0,
+  name: '',
+  creditNum: '',
+  ccv: '',
+  expiration: ''
+};
+
 let Manager = {
     userID: '',
     resID: '',
@@ -99,11 +115,10 @@ app.get('/user', function(req, res) {
 
 app.get('/visitorInfo',function(req,res){
   let q = 'select * from RegisteredAccts where userID='+signedInUser.userID+';';
-  let data = {};
   connection.query(q, function(err,results){
     if(err) return console.error('VISITOR INFO: '+err);
-    if (results[0]) data = results[0];
-    res.send(data);
+    if (results[0]) Visitor = results[0];
+    res.send(JSON.stringify(Visitor));
   });
 });
 
@@ -112,8 +127,8 @@ app.get('/payInfo',function(req,res){
   let data = {};
   connection.query(q, function(err,results){
     if(err) return console.error('PAYMENT INFO: '+err);
-    if (results[0]) data = results[0];
-    res.send(data);
+    if (results[0]) Pay = results[0];
+    res.send(JSON.stringify(Pay));
   });
 });
 
@@ -201,8 +216,8 @@ app.get('/restaurantInfo/:placeID', function(req,res){
   var q = "select * from Restaurants where googleID = '" + placeID + "'";
   connection.query(q,function(err,data){
     if (err) return console.error("Restaurant Not Found" + err);
-    restinfo = data[0];
-    res.send(JSON.stringify(data[0]));
+    if (data[0]) restinfo = data[0];
+    res.send(JSON.stringify(restinfo));
     console.log('restaurantInfo: '+JSON.stringify(restinfo));
     console.log('restaurantInfo sent');
   });
@@ -220,18 +235,27 @@ app.get('/menuInfo/:placeID',function(req,res){
 });
 
 app.get('/memberStatus',function(req,res){
-  var stat = '0';
+  var stat = '1';
   var q = "select status from Members where userID="+signedInUser.userID+" and restaurantID="+restinfo.restaurantID+";";
   console.log('S: '+signedInUser.userID+' R: '+restinfo.restaurantID);
+  if (signedInUser.loggedIn === false) return res.send('0');
   connection.query(q,function(err,data){
     console.log('MEMBERSTATUS: '+JSON.stringify(data));
     if (err) return console.log('MEMBER STATUS: '+err);
     if (data[0]){
-      if (data[0].status === 0) stat = '1';
-      else stat = '2';
+      if (data[0].status === 0) stat = '2';
+      else stat = '3';
+      res.send(stat);
+    }
+    else {
+      var p = "select userID from PendingApps where userID="+signedInUser.userID+" and restaurantID="+restinfo.restaurantID+";";
+      connection.query(p,function(err,data2){
+        if (err) return console.log('MEMBER STATUS: '+err);
+        if (data2[0]){stat = '4';}
+        res.send(stat);
+      });
     }
     console.log('MEMBERS RETURN: '+stat);
-    res.send(stat);
   });
 });
 
@@ -250,11 +274,12 @@ app.post('/editprofile',function(req,res){
   let q = 'Replace into RegisteredAccts (userID,f_name,l_name,address,phoneNum) values('
     + signedInUser.userID +",'"+req.body.f_name+"','"+req.body.l_name+"','"+req.body.address+"','"+req.body.phoneNum+"');";
   let p = 'Replace into PaymentInfo (userID,name,creditNum,ccv,expiration) values('
-    + signedInUser.userID +",'"+req.body.f_name+' '+req.body.l_name+"',"+req.body.cardnum+","+req.body.ccv+",'"+req.body.exp+"');";
+    + signedInUser.userID +",'"+req.body.f_name+' '+req.body.l_name+"','"+req.body.cardnum+"','"+req.body.ccv+"','"+req.body.exp+"');";
   connection.query(q,function(err,data){
     if (err) return console.error('EDITACCT: '+err);
   });
   connection.query(p,function(err,data){
+    console.log('QQQ: '+p);
     if (err) return console.error('EDITPAY: '+err);
   });
   res.redirect(req.get('referer'));
@@ -274,9 +299,11 @@ app.post('/placeorder', function(req,res){
   var user = req.body.user;
   var restID = req.body.restID;
   var cookID = req.body.cookID;
+  var address = req.body.address;
   var items = JSON.parse(req.body.items);
-  var q = "INSERT INTO Orders (userID,cookID,restaurantID,orderDate) values ("
-          + user + "," +cookID+","+ restID + ",now());";
+  var receipt = JSON.parse(req.body.receipt);
+  var q = "INSERT INTO Orders (userID,cookID,restaurantID,address,tax,discount,subtotal,total,orderDate) values ("
+          + user + "," +cookID+","+ restID + ",'"+address+"',"+receipt.tax+"," +receipt.discount+"," +receipt.subtotal+"," +receipt.total+",now());";
   var orderid = null;
   var valuestr = null;
   console.log(q);
@@ -454,7 +481,7 @@ console.log("You made it to your section of the site! ")
 
 app.get('/MenuCook/',function(req,res){
 
-  console.log('request menuInfo ');
+  console.log('request the Menu Information ');
   var q = "SELECT * FROM Cooks WHERE userID =" + signedInUser.userID;
   connection.query(q,function(err,results){
       console.log(results[0]);
@@ -475,10 +502,44 @@ app.get('/MenuCook/',function(req,res){
 
         if (err) return console.error("Restaurant Not Found" + err);
         res.send(JSON.stringify(data));
-        console.log('menuInfo sent');
+        console.log('Information sent');
         });
     });
    });
+});
+
+//This returns the current Orders in the sysytme
+
+app.get('/OrdersCook/',function(req,res){
+    console.log('request for the current orders Information ');
+    var q = "SELECT * FROM Cooks WHERE userID =" + signedInUser.userID;
+    connection.query(q,function(err,results){
+        console.log(results[0]);
+
+
+    var restID = results[0].restaurantID;
+    console.log(restID);
+
+        var q = "SELECT * FROM FoodInOrder JOIN Orders ON FoodInOrder.orderID = Orders.orderID WHERE Orders.restaurantID = " + restID + " AND status = 0 ORDER BY FoodInOrder.orderID";
+        connection.query(q,function(err,data){
+
+          if (err) return console.error("Orders Not Found" + err);
+          res.send(JSON.stringify(data));
+          console.log('Information sent');
+          });
+
+     });
+});
+
+app.post("/Account/Cook/FoodDone",function(req,res){
+    var OrderID = req.body.FoodOrderID
+    var q = "UPDATE Orders SET status = 1 WHERE orderID = " + OrderID ;
+    connection.query(q,function(err,results){
+        if(err) throw err;
+        console.log("The food has been cooked!");
+    });
+    res.redirect("/Account/Cook");
+    
 });
 
 
@@ -513,7 +574,7 @@ connection.query(q, function(err, results) {
 
           connection.query("INSERT INTO Menu SET ?", Food, function(err, results) {
               if(err) throw err;
-              console.log("It eorke");
+              console.log("It worked");
           });
 
           res.redirect("/Account/Cook");

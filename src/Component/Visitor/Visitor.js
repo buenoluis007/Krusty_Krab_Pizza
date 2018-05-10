@@ -10,21 +10,13 @@ class Visitor extends Component {
         super(props);
         this.state =
         {
-            Visitor: {},
-            Pay: {},
-            View: 0
+            View: 0,
         };
 
         this.changeView=this.changeView.bind(this);
     }
 
     componentDidMount() {
-        fetch('/visitorInfo')
-            .then(res => res.json())
-            .then(info => this.setState({ Visitor: info }));
-        fetch('/payInfo')
-            .then(res => res.json())
-            .then(info => this.setState({ Pay: info }));
     }
 
     changeView(view){
@@ -32,9 +24,11 @@ class Visitor extends Component {
     }
 
     render() {
-
+        let vinfo = this.props.visitor;
+        let pinfo = this.props.pay;
         let body = null;
         console.log('View: '+this.state.View);
+
         switch(this.state.View){
           case 1:
             body = <ViewRate/>;
@@ -47,13 +41,15 @@ class Visitor extends Component {
             break;
           default:
             body = <ViewProfile
-                      visitor={this.state.Visitor}
-                      pay={this.state.Pay}/>;
+                      onV={this.props.onV}
+                      onP={this.props.onP}
+                      visitor={vinfo}
+                      pay={pinfo}/>;
         }
 
         return [
           <div>
-          <table border='0'>
+          <table border='0' align='center'>
             <tr>
               <td valign='top'>
                 <div className='container leftpanel'>

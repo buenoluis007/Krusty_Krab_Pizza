@@ -23,7 +23,10 @@ class Routes extends Component {
       {
         Users : [],
         Cart : new cart(),
-        RestInfo: {}
+        Visitor: {}, //info from RegisteredAccts
+        Pay: {},
+        RestInfo: {},
+        PrevRest: 0
       };
 
       this.handleAddItem = this.handleAddItem.bind(this);
@@ -32,6 +35,9 @@ class Routes extends Component {
       this.handleResInfo = this.handleResInfo.bind(this);
       this.handleClearCart = this.handleClearCart.bind(this);
       this.handleUpdateDiscount = this.handleUpdateDiscount.bind(this);
+      this.handleVisitorChange = this.handleVisitorChange.bind(this);
+      this.handlePayChange = this.handlePayChange.bind(this);
+      this.handleSetPrev = this.handleSetPrev.bind(this);
     }
 
     // fetch the user's info from express
@@ -43,18 +49,32 @@ class Routes extends Component {
         savedCart.updatePrice();
         this.setState({Cart: savedCart});
       }
+      let savePrev =  JSON.parse(sessionStorage.getItem('savedPrev'));
+      if (savePrev != null){
+        this.setState({PrevRest: savePrev});
+      }
       fetch('/user')
         .then(res => res.json())
         .then(user => this.setState({ Users: user }));
       fetch('/currRest')
         .then(res => res.json())
         .then(info => this.setState({ RestInfo: info }));
+      fetch('/visitorInfo')
+          .then(res => res.json())
+          .then(info => this.setState({ Visitor: info }));
+      fetch('/payInfo')
+          .then(res => res.json())
+          .then(info => this.setState({ Pay: info }));
     }
 
     componentDidUpdate(){
       sessionStorage.setItem('savedState', JSON.stringify(this.state.Cart.getItems()));
+      sessionStorage.setItem('savedPrev', JSON.stringify(this.state.PrevRest));
     }
 
+    handleSetPrev(currest){
+      this.setState({ PrevRest: currest});
+    }
     handleAddItem(item){
        let cart = this.state.Cart;
        cart.addItem(item.foodName,item.qty,item.price);
@@ -95,6 +115,20 @@ class Routes extends Component {
       cart.setDiscountPct(pct);
       cart.updatePrice();
       this.setState({Cart: cart});
+    }
+
+    handleVisitorChange(event){
+      const t = event.target;
+      const value = t.value;
+      const name = t.name;
+      this.setState({ Visitor: { [name]: value } });
+    }
+
+    handlePayChange(event){
+      const t = event.target;
+      const value = t.value;
+      const name = t.name;
+      this.setState({ Pay: { [name]: value } });
     }
 
     render () {
@@ -154,7 +188,11 @@ class Routes extends Component {
               <Route path="/Account/Visitor" render={(props) =>{return(
                   <Visitor
                     user={this.state.Users}
-                    cart={this.state.Cart}/>)}} />
+                    visitor={this.state.Visitor}
+                    pay={this.state.Pay}
+                    cart={this.state.Cart}
+                    onP={this.handlePayChange}
+                    onV={this.handleVisitorChange}/>)}} />
               <Route path="/register" exact component={ Register } />
               <Route path="/login" exact component={ LogIn } />
               <Route path="/SignOut" exact component={ SignOut } />
@@ -163,16 +201,23 @@ class Routes extends Component {
                     {...props}
                     user={this.state.Users}
                     cart={this.state.Cart}
+                    prev={this.state.PrevRest}
+                    onSetPrev={this.handleSetPrev}
                     onResInfo={this.handleResInfo}
                     onAddItem={this.handleAddItem}
                     onUpdateItem={this.handleUpdateItem}
                     onRemoveItem={this.handleRemoveItem}
+                    onClearCart={this.handleClearCart}
                     onUpdateDiscount={this.handleUpdateDiscount}/>)}} />
               <Route path="/checkout" render={(props) =>{return(
                   <CheckOut
                     user={this.state.Users}
                     cart={this.state.Cart}
                     restInfo={this.state.RestInfo}
+                    visitor={this.state.Visitor}
+                    pay={this.state.Pay}
+                    onP={this.handlePayChange}
+                    onV={this.handleVisitorChange}
                     onUpdateItem={this.handleUpdateItem}
                     onRemoveItem={this.handleRemoveItem}/>)}} />
               <Route path="/processingorder" render={(props) =>{return(
