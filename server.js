@@ -542,11 +542,6 @@ app.post("/Account/Cook/RemoveFood",function(req,res){
     });
 });
 
-
-
-
-
-
 // MANAGER PAGE
 app.get('/Account/Manager', function(req, res) {
         console.log('hello from manager server');
@@ -631,30 +626,71 @@ app.post('/removeComplaint', function(req,res){
 });
 
 
-// View orders that are ready to be deliver
-// app.get('/Orders', function(res, req) {
-//     var q = "SELECT * FROM Orders JOIN FoodInOrder ON Orders.orderID = FoodInOrder.orderID WHERE Orders.restaurantID =" + Manager.resID;
+//View orders that are ready to be deliver
+// var food = [];
+// app.get('/Orders', function(req, res) {
+//     var q = "SELECT * FROM Orders WHERE restaurantID =" + Manager.resID;
 //     connection.query(q, function(err, results) {
 //         if(err) throw err;
-//         Orders = results;
-//         console.log(Orders);
-//         res.send(JSON.stringify(Orders));
+//         // Orders = results;
+//         var item = {};
+//         for(let i = 0; i < results.length; i++) {
+//             q = "SELECT * FROM FoodInOrder WHERE orderID = " + results[i].orderID;
+//             connection.query(q, function(err, results) {
+//                 item[i] = results[i];
+//                 // food = results;
+//                 // res.send(JSON.stringify(food));
+//                 if(i>0 && results[i].orderID != results[i-1].orderID) {
+//                     food.push(item);
+//                 }
+//             });
+//         }
+//         console.log(food);
+//         res.send(JSON.stringify(food));
 //     });
 //     res.redirect("/Account/Manager");
 // });
 
+// Get orderID for orders that are ready to be delivered
+app.get('/getOrdersID', function(req, res) {
+    console.log('hello from orderID');
+    var q = 'SELECT * from Orders WHERE restaurantID = ' + Manager.resID + ' AND status = 1 AND deliveryID IS NULL;';
+    connection.query(q, function(err, results) {
+        if(err) throw err;
+        Orders = results;
+        console.log('OrderID');
+        console.log(Orders);
+        res.send(JSON.stringify(Orders));
+    })
+})
+
+// Foods = {};
+// app.get('/getFoodItems', function(req, res) {
+//     var orderID = req.query.OrderID
+//     console.log('hello from food item');
+//     var q = 'Select FoodInOrder.foodName, FoodInOrder.orderID from FoodInOrder JOIN Orders ON FoodInOrder.orderID = Orders.orderID join Managers on Managers.restaurantID = Orders.restaurantID where Orders.status = 1 and Managers.restaurantID =' + Manager.resID;
+//     connection.query(q, function(err, results) {
+//         if(err) throw err;
+//         Foods = results;
+//         console.log('Food');
+//         console.log(Foods);
+//         res.send(JSON.stringify(Foods));
+//     })
+// })
+
 
 // Apoint Devlivery Person to an order
-// Some form that you can appoint a delivery person to an order (a drop down can appear for the orders next to a delivery person)
-app.post('/restaurant/:resName/manager/delivery', function(req, res) {
-    var order = req.body.orderID;
-    var deliPersonID = req.body.delID;
-    var q = "UPDATE Orders SET userID = " + deliPersonID + " WHERE orderID = " + order;
+app.post('/AppointDelivery', function(req, res) {
+    var orderID = req.body.orderID;
+    var person = req.body.person;
+    console.log('order' + orderID);
+    console.log('deliperson' + person);
+    var q = "UPDATE Orders SET deliveryID =" + person + " WHERE orderID =" + orderID;
     connection.query(q, function(err, results) {
         if(err) throw err;
         console.log("delivery person successfully appointed to this order");
     });
-    res.redirect("/restaurant/" + restaurantName + "/manager");
+    res.redirect("/Account/Manager");
 });
 
 // Fire Worker
