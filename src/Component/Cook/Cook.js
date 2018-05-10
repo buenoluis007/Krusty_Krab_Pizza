@@ -52,7 +52,7 @@ class Cook extends Component{
               className="Cook">Remove Food</button>
 
         </form>
-
+        <h3> Menu </h3>
         {this.state.Menu.map((item,i) =>
             <div>{this.state.Menu[i].foodName}
                  {this.state.Menu[i].description}
@@ -63,13 +63,13 @@ class Cook extends Component{
         )}
         <br/>
         <br/>
+        <h3> Current Orders </h3>
         {this.state.CurrentOrder.map((item,i) =>
-
             <div>
                 {this.state.CurrentOrder[i].orderID}
                 {this.state.CurrentOrder[i].foodName}
                 {this.state.CurrentOrder[i].qty}
-                <h1> </h1>
+
             </div>
 
         )}
