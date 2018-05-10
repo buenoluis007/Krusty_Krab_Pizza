@@ -4,27 +4,37 @@ import ShoppingCart from '../ShoppingCart/ShoppingCart'
 
 class MenuHeading extends Component{
   render(){
-    let memberstatus = [
-      <form name='apply' action='/apply' method='post'>
-        <input type='hidden' name='userID' value={this.props.user.userID}/>
-        <input type='hidden' name='restID' value={this.props.Restaurant.restaurantID}/>
-        <input type='submit' className='applybutton' value='Apply for Membership'/>
-      </form>
-    ];
+    let memberstatus = null;
 
-    if (this.props.status === 1){
-      memberstatus = (
-        <div>
-          Status: Member
-        </div>
-      );
-    }
-    else if(this.props.status === 2){
-      memberstatus = (
-        <div>
-          Status: VIP
-        </div>
-      );
+    switch(this.props.status){
+      case 1:
+        memberstatus = [
+         <form name='apply' action='/apply' method='post'>
+           <input type='hidden' name='userID' value={this.props.user.userID}/>
+           <input type='hidden' name='restID' value={this.props.Restaurant.restaurantID}/>
+           <input type='submit' className='applybutton' value='Apply for Membership'/>
+         </form>];
+        break;
+      case 2:
+        memberstatus = (
+          <div>
+            Status: Member
+          </div>);
+        break;
+      case 3:
+        memberstatus = (
+          <div>
+            Status: VIP
+          </div>);
+        break;
+      case 4:
+        memberstatus = (
+          <div>
+            Status: Application Pending
+          </div>);
+        break;
+      default:
+        memberstatus = (<div></div>);
     }
 
     return(
@@ -94,13 +104,13 @@ class Menu extends Component {
           .then(res => res.json())
           .then(state=>{
             this.setState({Status: parseInt(state)});
-            if (this.state.Status === 1)
+            if (this.state.Status === 2)
               this.props.onUpdateDiscount(.05);
-            else if (this.state.Status === 2)
+            else if (this.state.Status === 3)
               this.props.onUpdateDiscount(.1);
           });
       });
-      
+
     fetch('/menuInfo/' + placeID)
       .then(res => res.json())
       .then(menu => this.setState({ Menu: menu }));

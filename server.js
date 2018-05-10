@@ -222,18 +222,27 @@ app.get('/menuInfo/:placeID',function(req,res){
 });
 
 app.get('/memberStatus',function(req,res){
-  var stat = '0';
+  var stat = '1';
   var q = "select status from Members where userID="+signedInUser.userID+" and restaurantID="+restinfo.restaurantID+";";
   console.log('S: '+signedInUser.userID+' R: '+restinfo.restaurantID);
+  if (signedInUser.loggedIn === false) return res.send('0');
   connection.query(q,function(err,data){
     console.log('MEMBERSTATUS: '+JSON.stringify(data));
     if (err) return console.log('MEMBER STATUS: '+err);
     if (data[0]){
-      if (data[0].status === 0) stat = '1';
-      else stat = '2';
+      if (data[0].status === 0) stat = '2';
+      else stat = '3';
+      res.send(stat);
+    }
+    else {
+      var p = "select userID from PendingApps where userID="+signedInUser.userID+" and restaurantID="+restinfo.restaurantID+";";
+      connection.query(p,function(err,data2){
+        if (err) return console.log('MEMBER STATUS: '+err);
+        if (data2[0]){stat = '4';}
+        res.send(stat);
+      });
     }
     console.log('MEMBERS RETURN: '+stat);
-    res.send(stat);
   });
 });
 
