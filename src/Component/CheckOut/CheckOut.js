@@ -77,7 +77,9 @@ class CheckOrder extends Component{
     return(
       <div class='checkorder'>
         <h2 align='left'>Your Order</h2>
-        //add restaurantinfo
+        <span>{this.props.restInfo.name}<br/>
+        {this.props.restInfo.address}<br/>
+        {this.props.restInfo.phoneNum}<br/><br/></span>
         <table border='0' class='ordertable'>
           {body}
           <CheckOrderTotals cart={this.props.cart}/>
@@ -189,7 +191,9 @@ class CheckOut extends Component {
     console.log('WTF: '+JSON.stringify(this.props.restInfo.restaurantID));
     return (
       <div class='checkcontainer' align='center'>
-        <CheckOrder cart={this.props.cart}
+        <CheckOrder
+          cart={this.props.cart}
+          restInfo={this.props.restInfo}
           onRemoveItem={this.props.onRemoveItem}
           onUpdateItem={this.props.onUpdateItem}/>
         <CheckPayment

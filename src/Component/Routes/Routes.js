@@ -49,7 +49,10 @@ class Routes extends Component {
         savedCart.updatePrice();
         this.setState({Cart: savedCart});
       }
-      this.setState({PrevRest: JSON.parse(sessionStorage.getItem('savedPrev'))})
+      let savePrev =  JSON.parse(sessionStorage.getItem('savedPrev'));
+      if (savePrev != null){
+        this.setState({PrevRest: savePrev});
+      }
       fetch('/user')
         .then(res => res.json())
         .then(user => this.setState({ Users: user }));

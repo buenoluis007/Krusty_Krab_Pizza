@@ -30,8 +30,21 @@ let restinfo = {
   restaurantID: '0'
 };
 
-let Visitor = {};
-let Pay = {};
+let Visitor = {
+  userID: 0,
+  address: '',
+  f_name: '',
+  l_name: '',
+  status: 0,
+  phoneNum: ''
+};
+let Pay = {
+  userID: 0,
+  name: '',
+  creditNum: '',
+  ccv: '',
+  expiration: ''
+};
 
 let Manager = {
     userID: '',

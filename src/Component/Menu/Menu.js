@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import './Menu.css'
 import ShoppingCart from '../ShoppingCart/ShoppingCart'
 
@@ -122,6 +123,9 @@ class Menu extends Component {
   }
 
   render() {
+    /*if(this.props.user.loggedIn === false){
+        return <Redirect to='/login' />
+    }*/
     console.log(this.state.Menu);
     let menuItems = null;
 
