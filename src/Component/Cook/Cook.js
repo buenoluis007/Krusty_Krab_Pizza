@@ -6,17 +6,22 @@ class Cook extends Component{
         this.state =
         {
           Menu: [],
-          Status: 0
+          CurrentOrder: []
         };
       }
     componentDidMount() {
-       fetch('/MenuCook/')
-         .then(res => res.json())
-         .then(menu => this.setState({ Menu: menu }));
+        fetch('/MenuCook/')
+            .then(res => res.json())
+            .then(menu => this.setState({ Menu: menu }));
+
+        fetch('/OrdersCook/')
+            .then(res => res.json())
+            .then(Order => this.setState({ CurrentOrder: Order }));
      }
+
   render(){
       console.log(this.state.Menu);
-    return( 
+    return(
 
       <div>
       <form className="Cook" action="/Account/Cook/AddFood" method="POST">
@@ -47,12 +52,39 @@ class Cook extends Component{
               className="Cook">Remove Food</button>
 
         </form>
+        <form className="Cook" action= "/Account/Cook/FoodDone" method="POST">
+            <h1>Done Cooking the Food</h1>
 
+            <input type="text" name="FoodOrderID" placeholder="Food Name"/>
+            <br/>
+            <button
+              id="enter"
+              type="submit"
+              name="button"
+              className="Cook">Food is Completed</button>
+
+        </form>
+        <h3> Menu </h3>
         {this.state.Menu.map((item,i) =>
-            <div>{this.state.Menu[i].foodName}</div>
+            <div>{this.state.Menu[i].foodName}
+                 {this.state.Menu[i].description}
+                 {this.state.Menu[i].price}
+                 {this.state.Menu[i].rating}
+                 <h1> </h1></div>
 
         )}
+        <br/>
+        <br/>
+        <h3> Current Orders </h3>
+        {this.state.CurrentOrder.map((item,i) =>
+            <div>
+                {this.state.CurrentOrder[i].orderID}
+                {this.state.CurrentOrder[i].foodName}
+                {this.state.CurrentOrder[i].qty}
 
+            </div>
+
+        )}
 
 
 

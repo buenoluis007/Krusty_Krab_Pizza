@@ -481,7 +481,7 @@ console.log("You made it to your section of the site! ")
 
 app.get('/MenuCook/',function(req,res){
 
-  console.log('request menuInfo ');
+  console.log('request the Menu Information ');
   var q = "SELECT * FROM Cooks WHERE userID =" + signedInUser.userID;
   connection.query(q,function(err,results){
       console.log(results[0]);
@@ -502,10 +502,44 @@ app.get('/MenuCook/',function(req,res){
 
         if (err) return console.error("Restaurant Not Found" + err);
         res.send(JSON.stringify(data));
-        console.log('menuInfo sent');
+        console.log('Information sent');
         });
     });
    });
+});
+
+//This returns the current Orders in the sysytme
+
+app.get('/OrdersCook/',function(req,res){
+    console.log('request for the current orders Information ');
+    var q = "SELECT * FROM Cooks WHERE userID =" + signedInUser.userID;
+    connection.query(q,function(err,results){
+        console.log(results[0]);
+
+
+    var restID = results[0].restaurantID;
+    console.log(restID);
+
+        var q = "SELECT * FROM FoodInOrder JOIN Orders ON FoodInOrder.orderID = Orders.orderID WHERE Orders.restaurantID = " + restID + " AND status = 0 ORDER BY FoodInOrder.orderID";
+        connection.query(q,function(err,data){
+
+          if (err) return console.error("Orders Not Found" + err);
+          res.send(JSON.stringify(data));
+          console.log('Information sent');
+          });
+
+     });
+});
+
+app.post("/Account/Cook/FoodDone",function(req,res){
+    var OrderID = req.body.FoodOrderID
+    var q = "UPDATE Orders SET status = 1 WHERE orderID = " + OrderID ;
+    connection.query(q,function(err,results){
+        if(err) throw err;
+        console.log("The food has been cooked!");
+    });
+    res.redirect("/Account/Cook");
+    
 });
 
 
@@ -540,7 +574,7 @@ connection.query(q, function(err, results) {
 
           connection.query("INSERT INTO Menu SET ?", Food, function(err, results) {
               if(err) throw err;
-              console.log("It eorke");
+              console.log("It worked");
           });
 
           res.redirect("/Account/Cook");
