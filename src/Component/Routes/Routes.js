@@ -55,7 +55,8 @@ class Routes extends Component {
         .then(info => this.setState({ RestInfo: info }));
       fetch('/visitorInfo')
           .then(res => res.json())
-          .then(info => this.setState({ Visitor: info }));
+          .then(info => {this.setState({ Visitor: info });
+                        console.log("FUCKKKKKKKKK: "+JSON.stringify(info));} );
       fetch('/payInfo')
           .then(res => res.json())
           .then(info => this.setState({ Pay: info }));

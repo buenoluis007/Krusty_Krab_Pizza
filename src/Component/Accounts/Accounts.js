@@ -39,11 +39,6 @@ class Accounts extends Component {
         }
         if(this.state.Users.type === 'Visitor' || this.state.Users.type === 'Registered'){
             this.props.history.push('/Account/Visitor')
-                display = (
-                    <div>
-                        < Visitor />
-                    </div>
-                )
         }
         return (
             <div>

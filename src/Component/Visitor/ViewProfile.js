@@ -16,6 +16,7 @@ class ViewProfile extends Component {
 
     render() {
         let v = this.props.visitor;
+        let p = this.props.pay;
 
         return [
           <div className='viewcontainer'>
@@ -37,20 +38,20 @@ class ViewProfile extends Component {
                 </tr>
                 <tr>
                   <td colspan='2'><label>Phone Number<br/>
-                    <input type="text" name='phoneNum' size='35' value={v.phoneNum} onChange={(e)=>this.props.onV(e)}/>
+                    <input type="text" name='phoneNum' size='35' maxlength='15' value={v.phoneNum} onChange={(e)=>this.props.onV(e)}/>
                   </label></td>
                 </tr>
                 <tr>
                   <td style={{paddingTop:'40px'}}><label>Card Number<br/>
-                    <input type="text" name='cardnum' size='26' onChange={(e)=>this.props.onP(e)}/>
+                    <input type="text" name='cardnum' size='26' maxlength='16' value={p.creditNum} onChange={(e)=>this.props.onP(e)}/>
                   </label></td>
                   <td style={{paddingTop:'40px'}}><label>Exp Date(mm/yy)<br/>
-                    <input type="text" name='exp' size='17' onChange={(e)=>this.props.onP(e)}/>
+                    <input type="text" name='exp' size='17' maxlength='5' value={p.expiration} onChange={(e)=>this.props.onP(e)}/>
                   </label></td>
                 </tr>
                 <tr>
                   <td><label>CCV<br/>
-                    <input type="text" name='ccv' size='3' onChange={(e)=>this.props.onP(e)}/>
+                    <input type="text" name='ccv' size='3' maxlength='3' value={p.ccv} onChange={(e)=>this.props.onP(e)}/>
                   </label></td>
                 </tr>
                 <tr>

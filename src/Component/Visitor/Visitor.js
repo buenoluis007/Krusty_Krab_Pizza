@@ -10,14 +10,13 @@ class Visitor extends Component {
         super(props);
         this.state =
         {
-            View: 0
+            View: 0,
         };
 
         this.changeView=this.changeView.bind(this);
     }
 
     componentDidMount() {
-
     }
 
     changeView(view){
@@ -50,7 +49,7 @@ class Visitor extends Component {
 
         return [
           <div>
-          <table border='0'>
+          <table border='0' align='center'>
             <tr>
               <td valign='top'>
                 <div className='container leftpanel'>
