@@ -6,17 +6,22 @@ class Cook extends Component{
         this.state =
         {
           Menu: [],
-          Status: 0
+          CurrentOrder: []
         };
       }
     componentDidMount() {
-       fetch('/MenuCook/')
-         .then(res => res.json())
-         .then(menu => this.setState({ Menu: menu }));
+        fetch('/MenuCook/')
+            .then(res => res.json())
+            .then(menu => this.setState({ Menu: menu }));
+
+        fetch('/OrdersCook/')
+            .then(res => res.json())
+            .then(Order => this.setState({ CurrentOrder: Order }));
      }
+
   render(){
       console.log(this.state.Menu);
-    return( 
+    return(
 
       <div>
       <form className="Cook" action="/Account/Cook/AddFood" method="POST">
@@ -52,7 +57,17 @@ class Cook extends Component{
             <div>{this.state.Menu[i].foodName}</div>
 
         )}
+        <br/>
+        {this.state.CurrentOrder.map((item,i) =>
 
+            <div>
+                {this.state.CurrentOrder[i].orderID}
+                {this.state.CurrentOrder[i].foodName}
+                {this.state.CurrentOrder[i].qty}
+                <h1> </h1>
+            </div>
+
+        )}
 
 
 
