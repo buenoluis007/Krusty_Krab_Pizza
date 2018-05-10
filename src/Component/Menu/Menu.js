@@ -100,6 +100,7 @@ class Menu extends Component {
               this.props.onUpdateDiscount(.1);
           });
       });
+      
     fetch('/menuInfo/' + placeID)
       .then(res => res.json())
       .then(menu => this.setState({ Menu: menu }));
