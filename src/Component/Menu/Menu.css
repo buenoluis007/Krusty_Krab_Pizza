@@ -50,7 +50,21 @@
   grid-column-start: 1;
   grid-column-end: 3;
   text-align: left;
+  padding-top: 20px;
   padding-left: 25px;
+  padding-right: 35px;
+}
+
+.applybutton{
+  width: 170px;
+  //border: 1;
+  //border-style: outset;
+  border-radius: 10px;
+  //padding: 2px;
+  background-color: rgba(180,10,10);
+  text-decoration: none;
+  color: white;
+  //font-weight: bold;
 }
 
 @media only screen and (max-width: 1428px) {

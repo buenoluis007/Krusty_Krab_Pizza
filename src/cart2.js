@@ -75,7 +75,7 @@ var cart = function(){
   };
 
   this.clearCart = function(){
-    //empty array
+    items = [];
   };
 
   this.updateQty = function(i, qty){
