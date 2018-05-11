@@ -23,7 +23,7 @@ class Cook extends Component{
       console.log(this.state.Menu);
     return(
 
-      <div>
+      <div className='dddd'>
       <form className="Cook" action="/Account/Cook/AddFood" method="POST">
         <h1>Add a food item to the Menu </h1>
           <input type="text" name="foodName" placeholder="Food Name"/>
@@ -64,28 +64,58 @@ class Cook extends Component{
               className="Cook">Food is Completed</button>
 
         </form>
-        <h3> Menu </h3>
-        {this.state.Menu.map((item,i) =>
-            <div>{this.state.Menu[i].foodName}
-                 {this.state.Menu[i].description}
-                 {this.state.Menu[i].price}
-                 {this.state.Menu[i].rating}
+        <h2 className="cookh3"> Menu </h2>
+
+            <div className='menuDiv'>
+                <table className='menuTable'>
+                    <thead>
+                        <th>Food Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Rating</th>
+                    </thead>
+                    {this.state.Menu.map((item,i) =>
+                    <tbody>
+                        <tr>
+                            <td>{this.state.Menu[i].foodName}</td>
+                            <td>{this.state.Menu[i].description}</td>
+                            <td>${this.state.Menu[i].price}</td>
+                            <td>{this.state.Menu[i].rating}</td>
+
+                        </tr>
+                    </tbody>
+                    )}
+                </table>
+
                  <h1> </h1></div>
 
-        )}
+
 
         <br/>
         <br/>
-        <h3> Current Orders </h3>
-        {this.state.CurrentOrder.map((item,i) =>
+        <h2 className="cookh3"> Current Orders </h2>
+
             <div>
-                {this.state.CurrentOrder[i].orderID}
-                {this.state.CurrentOrder[i].foodName}
-                {this.state.CurrentOrder[i].qty}
+            <table className='menuTable'>
+                <thead>
+                    <th>orderID</th>
+                    <th>foodName</th>
+                    <th>Quantity</th>
+                </thead>
+                {this.state.CurrentOrder.map((item,i) =>
+                <tbody>
+                    <tr>
+                        <td>{this.state.CurrentOrder[i].orderID}</td>
+                        <td>{this.state.CurrentOrder[i].foodName}</td>
+                        <td>{this.state.CurrentOrder[i].qty}</td>
+                    </tr>
+                </tbody>
+                )}
+            </table>
 
             </div>
 
-        )}
+
 
 
 
