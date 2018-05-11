@@ -54,3 +54,20 @@ a:active {
   height: 200px;
   text-align: left;
 }
+
+#ordertable {
+    border-collapse: collapse;
+}
+
+
+#ordertable thead th {
+    border: 1px solid black;
+}
+
+#ordertable tbody {
+    border: 1px solid black;
+}
+
+#ordertable td {
+    border: 1px solid black;
+}

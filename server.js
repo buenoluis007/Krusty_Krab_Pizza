@@ -30,21 +30,8 @@ let restinfo = {
   restaurantID: '0'
 };
 
-let Visitor = {
-  userID: 0,
-  address: '',
-  f_name: '',
-  l_name: '',
-  status: 0,
-  phoneNum: ''
-};
-let Pay = {
-  userID: 0,
-  name: '',
-  creditNum: '',
-  ccv: '',
-  expiration: ''
-};
+let Visitor = {};
+let Pay = {};
 
 let Manager = {
     userID: '',
@@ -326,6 +313,55 @@ app.post('/placeorder', function(req,res){
   });
 });
 
+let orderHistoryData = [];
+
+app.get('/Account/ViewOrderHistory', function(req, res) {
+
+    console.log(signedInUser.userID);
+    var q = "SELECT orderID, deliveryID, name, orderDate, total FROM Orders JOIN Restaurants ON Orders.restaurantID = Restaurants.restaurantID WHERE userID = " + signedInUser.userID + " ORDER BY orderID DESC LIMIT 3";
+    connection.query(q, function(err, data) {
+        if(err) throw err;
+        orderHistoryData.push(data);
+        // res.send(JSON.stringify(data));
+        q = "SELECT foodName, Orders.orderID FROM FoodInOrder JOIN Orders ON FoodInOrder.orderID = Orders.orderID WHERE userID = " + signedInUser.userID + " ORDER BY FoodInOrder.orderID";
+        let food = {};
+        let currentfood = [];
+        connection.query(q, function(err, results) {
+            if(err) throw err;
+            console.log("===========================");
+            // console.log(results.length-1);
+            for(var i = 0; i < results.length; i++) {
+                if(i>0 && results[i].orderID !== results[i-1].orderID) {
+                    food[results[i-1].orderID] = currentfood;
+                    currentfood = [];
+                    currentfood.push(results[i].foodName);
+                    // console.log(food);
+                } else if(i == (results.length-1)) {
+                    console.log("WE MADE IT");
+                    currentfood.push(results[i].foodName);
+                    food[results[i].orderID] = currentfood;
+                    // continue;
+                } else {
+                    currentfood.push(results[i].foodName);
+                    // console.log(currentfood);
+                }
+                console.log(i);
+                console.log(results.length-1);
+                console.log(results[i]);
+            }
+            console.log("==============================");
+            console.log(food);
+            orderHistoryData.push(results);
+            // console.log(orderHistoryData);
+            res.send(JSON.stringify(data));
+        });
+    });
+
+
+    var q = "SELECT * FROM FoodInOrder JOIN Orders ON FoodInOrder.orderID = Orders.orderID WHERE Orders.restaurantID = " + signedInUser.userID + " AND status = 0 ORDER BY FoodInOrder.orderID";
+
+});
+
 // check the crediental provided
 app.post('/logincheck', function(req, res) {
     var email = req.body.email;
@@ -531,17 +567,6 @@ app.get('/OrdersCook/',function(req,res){
      });
 });
 
-app.post("/Account/Cook/FoodDone",function(req,res){
-    var OrderID = req.body.FoodOrderID
-    var q = "UPDATE Orders SET status = 1 WHERE orderID = " + OrderID ;
-    connection.query(q,function(err,results){
-        if(err) throw err;
-        console.log("The food has been cooked!");
-    });
-    res.redirect("/Account/Cook");
-    
-});
-
 
 // Add the new button to the Menu
 app.post("/Account/Cook/AddFood", function(req,res){
@@ -574,7 +599,7 @@ connection.query(q, function(err, results) {
 
           connection.query("INSERT INTO Menu SET ?", Food, function(err, results) {
               if(err) throw err;
-              console.log("It worked");
+              console.log("It eorke");
           });
 
           res.redirect("/Account/Cook");
