@@ -31,20 +31,14 @@ class Visitor extends Component {
 
         switch(this.state.View){
           case 1:
-            body = <ViewRate/>;
-            break;
-          case 2:
-            body = <ViewOrderHistory/>;
-            break;
-          case 3:
-            body = <ViewFavorites/>;
-            break;
-          default:
             body = <ViewProfile
                       onV={this.props.onV}
                       onP={this.props.onP}
                       visitor={vinfo}
                       pay={pinfo}/>;
+            break;
+          default:
+            body = <ViewOrderHistory/>;
         }
 
         return [
@@ -59,11 +53,9 @@ class Visitor extends Component {
               <td valign='top'>
                 <div className='container rightpanel'>
                   <div className="visitornav" align="center">
-                    <table border="0" height='200px'>
-                      <tr><td><a onClick={()=>this.changeView(0)}>Profile</a></td></tr>
-                      <tr><td><a onClick={()=>this.changeView(1)}>Rate</a></td></tr>
-                      <tr><td><a onClick={()=>this.changeView(2)}>Order History</a></td></tr>
-                      <tr><td><a onClick={()=>this.changeView(3)}>Favorites</a></td></tr>
+                    <table border="0" height='100px'>
+                      <tr><td><a onClick={()=>this.changeView(0)}>Order History</a></td></tr>
+                      <tr><td><a onClick={()=>this.changeView(1)}>Profile</a></td></tr>
                     </table>
                   </div>
                 </div>

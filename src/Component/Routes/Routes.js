@@ -131,9 +131,9 @@ class Routes extends Component {
       const t = event.target;
       const value = t.value;
       const name = t.name;
-      var newstate = this.state.Visitor;
-      newstate[name] = value;
-      this.setState(newstate);
+      var newstate2 = this.state.Pay;
+      newstate2[name] = value;
+      this.setState(newstate2);
     }
 
     render () {
