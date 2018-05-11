@@ -105,19 +105,18 @@ class Menu extends Component {
           this.props.onClearCart();
           this.props.onSetPrev(this.state.Restaurant.restaurantID);
         }
+        fetch('/memberStatus')
+          .then(res => res.json())
+          .then(state=>{
+            this.setState({Status: parseInt(state)});
+            if (this.state.Status === 2)
+              this.props.onUpdateDiscount(.05);
+            else if (this.state.Status === 3)
+              this.props.onUpdateDiscount(.1);
+            else
+              this.props.onUpdateDiscount(0);
+          });
       });
-
-      fetch('/memberStatus')
-        .then(res => res.json())
-        .then(state=>{
-          this.setState({Status: parseInt(state)});
-          if (this.state.Status === 2)
-            this.props.onUpdateDiscount(.05);
-          else if (this.state.Status === 3)
-            this.props.onUpdateDiscount(.1);
-          else
-            this.props.onUpdateDiscount(0);
-        });
 
     fetch('/menuInfo/' + placeID)
       .then(res => res.json())
