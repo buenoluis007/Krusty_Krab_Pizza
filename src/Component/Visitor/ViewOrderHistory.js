@@ -1,207 +1,171 @@
 import React, { Component } from 'react';
 
+class OrderFoodList extends Component{
+  render(){
+    var food = this.props.food;
+    var order = this.props.order;
+    var rateb = null;
+    if (order.status >= 2 && food.rated == 0){
+      rateb = [
+        <form action='/rateFood' method='post'>
+          <input type='hidden' name='foodName' value={food.foodName}/>
+          <input type='hidden' name='restID' value={order.restaurantID}/>
+          <input type='hidden' name='orderID' value={food.orderID}/>
+          <select name='rating'>
+            <option value='5'>5</option>
+            <option value='4'>4</option>
+            <option value='3'>3</option>
+            <option value='2'>2</option>
+            <option value='1'>1</option>
+          </select>
+          &ensp;&ensp;
+          <input className='ratebutton' type='submit' name='submit' value='Rate'/>
+        </form>
+      ];
+    }
+    return[
+      <tr height='60px'>
+        <td align='left' valign='top' width='350px'>
+          <span>{food.foodName}</span>
+        </td>
+        <td align='left' valign='top' width='50px'>
+          <span>{food.qty}</span>
+        </td>
+        <td align='right' valign='top'>
+          {rateb}
+        </td>
+      </tr>
+    ];
+  }
+}
+
+class OrderContainer extends Component{
+  render(){
+    var foodarray = this.props.foods.filter((food)=>{ return (food.orderID===this.props.order.orderID);});
+    var foodlist = foodarray.map((f)=>{ return <OrderFoodList food={f} order={this.props.order}/> });
+
+    var order = this.props.order;
+    var rateR = null;
+    var rateD = null;
+    console.log('ORDERID: '+order.orderID)
+    if (order.status == 2){
+      rateR = [
+        <form action='/rateRestaurant' method='post'>
+          <input type='hidden' name='restName' value={order.name}/>
+          <input type='hidden' name='restID' value={order.restaurantID}/>
+          <input type='hidden' name='orderID' value={order.orderID}/>
+          <select name='rating'>
+            <option value='5'>5</option>
+            <option value='4'>4</option>
+            <option value='3'>3</option>
+            <option value='2'>2</option>
+            <option value='1'>1</option>
+          </select>
+          &ensp;&ensp;
+          <input className='ratebutton' type='submit' name='submit' value='Rate'/>
+        </form>
+      ];
+    }
+
+    if (order.status>=2 && order.drated==0){
+      rateD = [
+        <form action='/rateDelivery' method='post'>
+          <input type='hidden' name='deliveryID' value={order.deliveryID}/>
+          <input type='hidden' name='restID' value={order.restaurantID}/>
+          <input type='hidden' name='orderID' value={order.orderID}/>
+          <select name='rating'>
+            <option value='5'>5</option>
+            <option value='4'>4</option>
+            <option value='3'>3</option>
+            <option value='2'>2</option>
+            <option value='1'>1</option>
+          </select>
+          &ensp;&ensp;
+          <input className='ratebutton' type='submit' name='submit' value='Rate'/>
+        </form>
+      ];
+    }
+
+    return[
+      <p></p>,
+      <div className='viewcontainer'>
+        <h2 align='left'>Order# {this.props.order.orderID}</h2>
+          <table border='0' width='580px'>
+            <tr>
+              <td align='left' valign='top' height='40px'>
+                <span><b>Restaurant:</b> {this.props.order.name} </span>
+              </td>
+              <td align='right' valign='top'>
+                {rateR}
+              </td>
+            </tr>
+            <tr>
+              <td align='left' valign='top' height='40px'>
+                <span><b>Delivery Person #</b> {this.props.order.deliveryID} </span>
+              </td>
+              <td align='right' valign='top'>
+                {rateD}
+              </td>
+            </tr>
+            <tr>
+              <td align='left' width='340px'>
+                <span><b>Date:</b> {this.props.order.orderDate} </span>
+              </td>
+              <td align='left'>
+                <span><b>Total:</b> ${this.props.order.total} </span>
+              </td>
+            </tr>
+          </table>
+          <table border='0' width='580'>
+            <tr height='40px'>
+              <td align='left' valign='top' width='350px'>
+                <span><b>Item</b><br/></span>
+              </td>
+              <td align='left' valign='top' width='50px'>
+                <span><b>qty</b><br/></span>
+              </td>
+            </tr>
+            { foodlist }
+          </table>
+        </div>
+    ];
+  }
+}
+
 class ViewOrderHistory extends Component {
     constructor(props) {
         super(props);
         this.state =
         {
-            Data: [],
             Orders: [],
+            Foods: []
         };
     }
 
     componentDidMount() {
-        fetch('/Account/ViewOrderHistory')
+        fetch('/getOrderHistory')
             .then(res => res.json())
-            .then(data => this.setState({ Data: data }));
+            .then(data => this.setState({ Orders: data }));
+        fetch('/getFoodHistory')
+            .then(res => res.json())
+            .then(data => this.setState({ Foods: data }));
     }
 
 
     render() {
-        console.log(this.state.Data);
-        return (
-            <div>
-            {this.state.Data.map((order, i) =>
-                <div class='viewcontainer'>
-                <form class="" action="/Account/RateDeliveryPerson" method="POST">
-                    <table>
-                        <th>{this.state.Data[i].name}</th>
-                        <th>
-                            <select name="rating">
-                                <option selected>5</option>
-                                <option>4</option>
-                                <option>3</option>
-                                <option>2</option>
-                                <option>1</option>
-                            </select>
-                        </th>
-                        <th> <button type="submit" name="CHANGE">Rate</button> </th>
-                        <table>
-                            <thead>
-                                <th>OrderID: {this.state.Data[i].orderID}</th>
-                                <th>Date: {this.state.Data[i].orderDate}</th>
-                                <th>Total: {this.state.Data[i].total}</th>
-                            </thead>
-                        </table>
-                    </table>
-                </form>
-                <form action="/Account/RateDeliveryPerson" method="POST">
-                           <table>
-                               <thead>
-                                   <th>DeliveryPersonID: {this.state.Data[i].deliveryID}</th>
-                                   <th>
-                                       <select name="rating">
-                                           <option selected>5</option>
-                                           <option>4</option>
-                                           <option>3</option>
-                                           <option>2</option>
-                                           <option>1</option>
-                                       </select>
-                                   </th>
-                                   <th> <button type="submit" name="CHANGE">Rate</button> </th>
-                               </thead>
-                           </table>
-                       </form>
-                       <form class="" action="/Account/RateFood" method="POST">
-                                   <table>
-                                       <thead>
-                                           <th>Food Ordered</th>
-                                           <th>Qty</th>
-                                           <th>Price</th>
-                                           <th>Rating</th>
-                                       </thead>
-                                       <tbody>
-                                           <tr>
-                                               <td>Peperoni Pizza</td>
-                                               <td>$10.00</td>
-                                               <td>1</td>
-                                               <td>
-                                                   <div>
-                                                       <select name="rating">
-                                                           <option>1</option>
-                                                           <option>2</option>
-                                                           <option>3</option>
-                                                           <option>4</option>
-                                                           <option selected>5</option>
-                                                       </select>
-                                                   </div>
-                                               </td>
-                                               <td><button type="submit" name="CHANGE">Rate</button></td>
-                                           </tr>
-                                       </tbody>
-                                   </table>
-                               </form>
-                    </div>
-            )}
+      let body = this.state.Orders.map((order, i) =>
+        <OrderContainer order={order} foods={this.state.Foods}/>
+      );
+
+      return (
+          <div>
+            <div className='viewcontainer2'>
+              <h2>Order History</h2>
             </div>
-        );
+            {body}
+          </div>
+      );
     }
 }
 
 export default ViewOrderHistory;
-
-
-// {this.state.Data.map((order, i) =>
-//     <form class="" action="/Account/RateDeliveryPerson" method="POST">
-//         <table>
-//             <th>{this.state.Data[i].name}</th>
-//             <th>
-//                 <select name="rating">
-//                     <option selected>5</option>
-//                     <option>4</option>
-//                     <option>3</option>
-//                     <option>2</option>
-//                     <option>1</option>
-//                 </select>
-//             </th>
-//             <th> <button type="submit" name="CHANGE">Rate</button> </th>
-//             <table>
-//                 <thead>
-//                     <th>OrderID: {this.state.Data[i].orderID}</th>
-//                     <th>Date: {this.state.Data[i].orderDate}</th>
-//                     <th>Total: {this.state.Data[i].total}</th>
-//                 </thead>
-//             </table>
-//         </table>
-//     </form>
-// )}
-
-// <div class='viewcontainer'>
-//     <div>
-//         <form class="resHeadForm" action="/Account/RateRestaurant" method="POST">
-//         {this.state.Data.map((item, i) =>
-//             <table>
-//                 <thead>
-//                         <tr>
-//                         <th>{this.state.Data[i].name}</th>
-//                     <th>
-//                         <select name="rating">
-//                             <option selected>5</option>
-//                             <option>4</option>
-//                             <option>3</option>
-//                             <option>2</option>
-//                             <option>1</option>
-//                         </select>
-//                     </th>
-//                     <th> <button type="submit" name="CHANGE">Rate</button> </th>
-//                     </tr>
-//
-//                 </thead>
-//             </table>
-//             )}
-//         </form>
-//         <table>
-//             <thead>
-//                 <th>OrderID: <span>55</span></th>
-//                 <th>Date: <span>5/10/2018</span></th>
-//                 <th>Total: <span>$100.97</span></th>
-//             </thead>
-//         </table>
-//         <form class="" action="/Account/RateDeliveryPerson" method="POST">
-//             <table>
-//                 <thead>
-//                     <th>DeliveryPersonID: <span>5</span></th>
-//                     <th>
-//                         <select name="rating">
-//                             <option selected>5</option>
-//                             <option>4</option>
-//                             <option>3</option>
-//                             <option>2</option>
-//                             <option>1</option>
-//                         </select>
-//                     </th>
-//                     <th> <button type="submit" name="CHANGE">Rate</button> </th>
-//                 </thead>
-//             </table>
-//         </form>
-//         <form class="" action="/Account/RateFood" method="POST">
-//             <table>
-//                 <thead>
-//                     <th>Food Ordered</th>
-//                     <th>Qty</th>
-//                     <th>Price</th>
-//                     <th>Rating</th>
-//                 </thead>
-//                 <tbody>
-//                     <tr>
-//                         <td>Peperoni Pizza</td>
-//                         <td>$10.00</td>
-//                         <td>1</td>
-//                         <td>
-//                             <div>
-//                                 <select name="rating">
-//                                     <option>1</option>
-//                                     <option>2</option>
-//                                     <option>3</option>
-//                                     <option>4</option>
-//                                     <option selected>5</option>
-//                                 </select>
-//                             </div>
-//                         </td>
-//                         <td><button type="submit" name="CHANGE">Rate</button></td>
-//                     </tr>
-//                 </tbody>
-//             </table>
-//         </form>
-//     </div>
-// </div>
