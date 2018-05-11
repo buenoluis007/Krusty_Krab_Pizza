@@ -264,7 +264,7 @@ app.post('/editprofile',function(req,res){
   let q = 'Replace into RegisteredAccts (userID,f_name,l_name,address,phoneNum) values('
     + signedInUser.userID +",'"+req.body.f_name+"','"+req.body.l_name+"','"+req.body.address+"','"+req.body.phoneNum+"');";
   let p = 'Replace into PaymentInfo (userID,name,creditNum,ccv,expiration) values('
-    + signedInUser.userID +",'"+req.body.f_name+' '+req.body.l_name+"','"+req.body.cardnum+"','"+req.body.ccv+"','"+req.body.exp+"');";
+    + signedInUser.userID +",'"+req.body.f_name+' '+req.body.l_name+"','"+req.body.creditNum+"','"+req.body.ccv+"','"+req.body.expiration+"');";
   connection.query(q,function(err,data){
     if (err) return console.error('EDITACCT: '+err);
   });

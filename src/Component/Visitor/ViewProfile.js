@@ -30,10 +30,10 @@ class ViewProfile extends Component {
                 </tr>
                 <tr>
                   <td style={{paddingTop:'40px'}}><label>Card Number<br/>
-                    <input type="text" name='cardnum' size='26' maxlength='16' value={p.creditNum} onChange={(e)=>this.props.onP(e)} />
+                    <input type="text" name='creditNum' size='26' maxlength='16' value={p.creditNum} onChange={(e)=>this.props.onP(e)} />
                   </label></td>
                   <td style={{paddingTop:'40px'}}><label>Exp Date(mm/yy)<br/>
-                    <input type="text" name='exp' size='17' maxlength='5' value={p.expiration} onChange={(e)=>this.props.onP(e)} />
+                    <input type="text" name='expiration' size='17' maxlength='5' value={p.expiration} onChange={(e)=>this.props.onP(e)} />
                   </label></td>
                 </tr>
                 <tr>
