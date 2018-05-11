@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Direction from '../Map/Direction';
 import './Delivery.css';
 
+
 class DeliveryForm extends Component{
   render(){
     var rateform = <td></td>;
@@ -32,7 +33,7 @@ class DeliveryForm extends Component{
     return[
       <form action='/CompletedDelivery' method='POST'>
           <table className='delTable'>
-                  <thead>
+                  <thead className='header'>
                       <th>Order#</th>
                       <th>Address</th>
                       <th>Subtotal</th>
