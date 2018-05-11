@@ -507,38 +507,39 @@ app.post('/signout', function(req, res) {
 //Cook section of the site.
 
 
-app.get("/Account/Cook",function(req, res){
-
-console.log("You made it to your section of the site! ")
-
-    // if(signedInUser.type === "Cook"){
-    //     var resName = res.params.resName;
-    //     var currentMenuName = [];
-    //     var currentMenuDesc = [];
-    //     var currentMenuPrice =[];
-    //     restaurantID = 0;
-    //
-    //     //retrieves the specific restaurantID using the restaurant name.
-    //     var q = "SELECT restaurantID FROM Restaurants WHERE name = '" + resName+"'";
-    //     connection.query(q, function(err, results) {
-    //         if(err) throw err;
-    //         var restaurantID = results[0].restaurantID;
-    //
-    //         //Adds all of the food in a the Menu array from the Menu database
-    //         var k = "SELECT * FROM Menu WHERE restaurantID = " + restaurantID ;
-    //
-    //         connection.query(k, function(err, results) {
-    //             if(err) throw err;
-    //             for(var i = 0; i< results.length; i++){
-    //             currentMenuName.push(results[i].foodName);
-    //             currentMenuDesc.push(results[i].description);
-    //             currentMenuPrice.push(results[i].price);
-    //         }
-    //
-    //         });
-    //     });
-    // }
-});
+// app.get("/Account/Cook",function(req, res){
+//
+// console.log("You made it to your section of the site! ")
+//
+//
+//     // if(signedInUser.type === "Cook"){
+//     //     var resName = res.params.resName;
+//     //     var currentMenuName = [];
+//     //     var currentMenuDesc = [];
+//     //     var currentMenuPrice =[];
+//     //     restaurantID = 0;
+//     //
+//     //     //retrieves the specific restaurantID using the restaurant name.
+//     //     var q = "SELECT restaurantID FROM Restaurants WHERE name = '" + resName+"'";
+//     //     connection.query(q, function(err, results) {
+//     //         if(err) throw err;
+//     //         var restaurantID = results[0].restaurantID;
+//     //
+//     //         //Adds all of the food in a the Menu array from the Menu database
+//     //         var k = "SELECT * FROM Menu WHERE restaurantID = " + restaurantID ;
+//     //
+//     //         connection.query(k, function(err, results) {
+//     //             if(err) throw err;
+//     //             for(var i = 0; i< results.length; i++){
+//     //             currentMenuName.push(results[i].foodName);
+//     //             currentMenuDesc.push(results[i].description);
+//     //             currentMenuPrice.push(results[i].price);
+//     //         }
+//     //
+//     //         });
+//     //     });
+//     // }
+// });
 
 app.get('/MenuCook/',function(req,res){
 
@@ -569,7 +570,7 @@ app.get('/MenuCook/',function(req,res){
    });
 });
 
-//This returns the current Orders in the sysytme
+//This returns the current Orders in the system
 
 app.get('/OrdersCook/',function(req,res){
     console.log('request for the current orders Information ');
@@ -815,8 +816,16 @@ app.post('/AppointDelivery', function(req, res) {
     res.redirect("/Account/Manager");
 });
 
+app.post('/CompletedDelivery',function(req,res){
+    var orderID = req.body.order
+    var q = "UPDATE Oders SET status = 2 WHERE orderID = " + orderID;
+    connection.query(q, function(err,results){
+        if(err) throw err;
+    });
+});
+
 // Fire Worker
-app.post('/manager/fire', function(req, res) {
+app.post('/manager/fire' , function(req, res) {
     var workerID = req.body.fire;
     console.log(workerID);
     var q = "SELECT acctType FROM Users WHERE userID = " + workerID;
