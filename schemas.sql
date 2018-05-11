@@ -143,4 +143,8 @@ SELECT Cooks.userID, Cooks.salery, CONCAT(f_name, " ", l_name) AS name FROM Deli
 
 SELECT CONCAT(f_name, ' ', l_name) AS name, complaint, rating, foodName FROM Complaints JOIN RegisteredAccts ON Complaints.userID = RegisteredAccts.userID WHERE Complaints.restaurantID = 8;
 
-SELECT * FROM Orders JOIN FoodInOrder ON Orders.orderID = FoodInOrder.orderID WHERE Orders.restaurantID = 
+SELECT * FROM Orders JOIN FoodInOrder ON Orders.orderID = FoodInOrder.orderID WHERE Orders.restaurantID = 22;
+
+Select FoodInOrder.foodName, FoodInOrder.orderID from FoodInOrder JOIN Orders ON FoodInOrder.orderID = Orders.orderID join Managers on Managers.restaurantID = Orders.restaurantID where Orders.status = 1 and Managers.restaurantID = 22;
+
+select * from Orders JOIN Restaurants on Orders.restaurantID = Restaurants.restaurantID JOIN DeliveryPerson on DeliveryPerson.userID = Orders.deliveryID where deliveryID = 43;

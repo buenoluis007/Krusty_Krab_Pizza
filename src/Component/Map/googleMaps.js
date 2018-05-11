@@ -13,7 +13,7 @@ const _ = require("lodash");
 
 const MapComponent = compose(
     withProps({
-        googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places",
+        googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyBPPGOq8mrh_7i1PoC0JutKxr52fGMlPPw&v=3.exp&libraries=geometry,drawing,places",
         loadingElement: <div style={{ height: '80%', width: '100%' }} />,
         containerElement: <div style={{ height: '500px' }} />,
         mapElement: <div style={{ height: '80%', width: '100%' }} />,

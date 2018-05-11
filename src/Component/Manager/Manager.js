@@ -3,7 +3,7 @@ import Cooks from './ManageCooks';
 import DeliveryPerson from './ManageDeliveryPerson';
 import Pending from './PendingApps';
 import Complaints from './Complaints';
-import Orders from './ReadyOrders';
+import Orders from './ManageOrders';
 
 import './Manager.css';
 

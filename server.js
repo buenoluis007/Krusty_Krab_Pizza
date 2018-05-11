@@ -30,8 +30,33 @@ let restinfo = {
   restaurantID: '0'
 };
 
+<<<<<<< HEAD
 let Visitor = {};
 let Pay = {};
+=======
+let ComplaintInfo = {
+  userID: 0,
+  restaurantID: 0,
+  subject: '',
+  rating: 0
+}
+
+let Visitor = {
+  userID: 0,
+  address: '',
+  f_name: '',
+  l_name: '',
+  status: 0,
+  phoneNum: ''
+};
+let Pay = {
+  userID: 0,
+  name: '',
+  creditNum: '',
+  ccv: '',
+  expiration: ''
+};
+>>>>>>> 124a12ddf391b32f13864a00aae8bafd17fffead
 
 let Manager = {
     userID: '',
@@ -141,7 +166,7 @@ app.get('/restaurant/:placeID', function(req, res) {
 app.post('/login', function(req, res) {
   console.log(signedInUser.email);
     if(signedInUser.status === true) { // If the user is already signed in and tries to access this page, redirect them
-      req.redirect('/');
+      req.redirect('/Home');
     } else {
         res.render("/login");
     }
@@ -160,37 +185,10 @@ app.post('/checkRest', function(req, res) {
     }
   })
 });
-/*
-app.post('/checkRest', function(req, res) {
-    var id = req.body.linkbtn;
-    var q = "SELECT * FROM Restaurants WHERE restaurantID=" + id;
-    connection.query(q, function(err, results) {
-        if(err) throw err;
-        // console.log(results);
-        if(results[0]) {
-            restaurant.name = results[0].name;
-            restaurant.address = results[0].address;
-            restaurant.phoneNum = results[0].phoneNum;
-            console.log("ass" + restaurant);
-        }
-    });
-});
-*/
 
-// app.post('/checkRest', function(req, res) {
-//     var id = req.body.linkbtn;
-//     var q = "SELECT * FROM Restaurants WHERE restaurantID=" + id;
-//     connection.query(q, function(err, results) {
-//         if(err) throw err;
-//         // console.log(results);
-//         if(results[0]) {
-//             restaurant.name = results[0].name;
-//             restaurant.address = results[0].address;
-//             restaurant.phoneNum = results[0].phoneNum;
-//             console.log("ass" + restaurant);
-//         }
-//     });
-// });
+app.get('/complaintInfo',function(req,res){
+  res.send(JSON.stringify(ComplaintInfo));
+});
 
 app.get('/currRest',function(req,res){
   console.log('RESTINFO: '+ JSON.stringify(restinfo));
@@ -257,6 +255,16 @@ app.get('/getCooks',function(req,res){
   })
 });
 
+app.post('/complain',function(req,res){
+  let q = 'insert into Complaints (userID,restaurantID,rating,subject,complaint) values('
+    + ComplaintInfo.userID+','+ComplaintInfo.restaurantID+','+ComplaintInfo.rating+",'"+ComplaintInfo.subject+"','"+req.body.complaint+"');";
+  connection.query(q,function(err,data){
+    if (err) return console.error('SUBMIT COMPLAINT: '+err);
+  });
+  res.redirect('/Account/Visitor');
+});
+
+
 app.post('/editprofile',function(req,res){
   let q = 'Replace into RegisteredAccts (userID,f_name,l_name,address,phoneNum) values('
     + signedInUser.userID +",'"+req.body.f_name+"','"+req.body.l_name+"','"+req.body.address+"','"+req.body.phoneNum+"');";
@@ -282,6 +290,77 @@ app.post('/apply',function(req,res){
   res.redirect(req.get('referer'));
 });
 
+app.post('/rateFood',function(req,res){
+  let foodName = req.body.foodName;
+  let restID = req.body.restID;
+  let rate = req.body.rating;
+  q = "call rateFood('"+foodName+"',"+restID+","+rate+');';
+  connection.query(q,function(err,data){
+    if(err) return console.error('RATEFOOD: '+err);
+    if(rating<3){
+      ComplaintInfo={
+        userID: signedInUser.userID,
+        restaurantID: restID,
+        subject: foodName,
+        rating: rate
+      };
+      res.redirect('/complain');
+    }
+    res.redirect('/Account/Visitor');
+  });
+});
+
+app.post('/rateUser',function(req,res){
+  let userID = req.body.userID;
+  let restID = req.body.restID;
+  let rate = req.body.rating;
+  q = "call rateUser('"+userID+"',"+restID+","+rate+');';
+  connection.query(q,function(err,data){
+    if(err) return console.error('RATEUSER: '+err);
+    res.redirect('/Delivery');
+  });
+});
+
+app.post('/rateRestaurant',function(req,res){
+  let restID = req.body.restID;
+  let restName = req.body.restName;
+  let rate = req.body.rating;
+  q = "call rateRestaurant("+restID+","+rate+');';
+  connection.query(q,function(err,data){
+    if(err) return console.error('RATEREST: '+err);
+    if(rating<3){
+      ComplaintInfo={
+        userID: signedInUser.userID,
+        restaurantID: restID,
+        subject: 'Restaurant - '+restName,
+        rating: rate
+      };
+      res.redirect('/complain');
+    }
+    res.redirect('/Account/Visitor');
+  });
+});
+
+app.post('/rateDelivery',function(req,res){
+  let deliveryID = req.body.deliveryID;
+  let restID = req.body.restID;
+  let rate = req.body.rating;
+  q = "call rateDelivery("+deliveryID+","+rate+');';
+  connection.query(q,function(err,data){
+    if(err) return console.error('RATEDELIV: '+err);
+    if(rating<3){
+      ComplaintInfo={
+        userID: signedInUser.userID,
+        restaurantID: restID,
+        subject: 'Delivery ID - '+deliveryID,
+        rating: rate
+      };
+      res.redirect('/complain');
+    }
+    res.redirect('/Account/Visitor');
+  });
+});
+
 app.post('/placeorder', function(req,res){
   var user = req.body.user;
   var restID = req.body.restID;
@@ -303,7 +382,7 @@ app.post('/placeorder', function(req,res){
         valuestr = "("+orderid+",'"+item.foodName+"',"+item.qty+")";
         return valuestr;
       });
-      q = 'INSERT INTO FoodInOrder values '+tupleArr.join(',')+';';
+      q = 'INSERT INTO FoodInOrder (orderID,foodName,qty) values '+tupleArr.join(',')+';';
       console.log(q);
       connection.query(q, function(err,results){
         if(err) console.error('insert into foodinorder: '+err);
@@ -394,11 +473,11 @@ app.post('/logincheck', function(req, res) {
                         console.log('the resID is ' + Manager.resID);
                         console.log('name of rest is: ' + Manager.resName);
                         console.log('address:' + Manager.resAddress);
-                        res.redirect('/')
+                        res.redirect('/Home')
                     }
                 });
             } else {
-                res.redirect('/');
+                res.redirect('/Home');
             }
         } else {
             console.log("The email or password is incorrect. Try again.");
@@ -412,7 +491,7 @@ app.post('/logincheck', function(req, res) {
 //Register Page
 app.get('/register', function(req, res) {
     if(signedInUser.email) { // If the user is already signed in and tries to access this page, redirect them
-        res.redirect('/');
+        res.redirect('/Home');
     } else {
         res.render('register');
     }
@@ -476,44 +555,45 @@ app.post('/signout', function(req, res) {
     Manager.pendingUsers = [];
     Manager.orders = [];
     Manager.complaints = [];
-    res.redirect('/');
+    res.redirect('/Home');
 });
 
 //Cook section of the site.
 
 
-app.get("/Account/Cook",function(req, res){
-
-console.log("You made it to your section of the site! ")
-
-    // if(signedInUser.type === "Cook"){
-    //     var resName = res.params.resName;
-    //     var currentMenuName = [];
-    //     var currentMenuDesc = [];
-    //     var currentMenuPrice =[];
-    //     restaurantID = 0;
-    //
-    //     //retrieves the specific restaurantID using the restaurant name.
-    //     var q = "SELECT restaurantID FROM Restaurants WHERE name = '" + resName+"'";
-    //     connection.query(q, function(err, results) {
-    //         if(err) throw err;
-    //         var restaurantID = results[0].restaurantID;
-    //
-    //         //Adds all of the food in a the Menu array from the Menu database
-    //         var k = "SELECT * FROM Menu WHERE restaurantID = " + restaurantID ;
-    //
-    //         connection.query(k, function(err, results) {
-    //             if(err) throw err;
-    //             for(var i = 0; i< results.length; i++){
-    //             currentMenuName.push(results[i].foodName);
-    //             currentMenuDesc.push(results[i].description);
-    //             currentMenuPrice.push(results[i].price);
-    //         }
-    //
-    //         });
-    //     });
-    // }
-});
+// app.get("/Account/Cook",function(req, res){
+//
+// console.log("You made it to your section of the site! ")
+//
+//
+//     // if(signedInUser.type === "Cook"){
+//     //     var resName = res.params.resName;
+//     //     var currentMenuName = [];
+//     //     var currentMenuDesc = [];
+//     //     var currentMenuPrice =[];
+//     //     restaurantID = 0;
+//     //
+//     //     //retrieves the specific restaurantID using the restaurant name.
+//     //     var q = "SELECT restaurantID FROM Restaurants WHERE name = '" + resName+"'";
+//     //     connection.query(q, function(err, results) {
+//     //         if(err) throw err;
+//     //         var restaurantID = results[0].restaurantID;
+//     //
+//     //         //Adds all of the food in a the Menu array from the Menu database
+//     //         var k = "SELECT * FROM Menu WHERE restaurantID = " + restaurantID ;
+//     //
+//     //         connection.query(k, function(err, results) {
+//     //             if(err) throw err;
+//     //             for(var i = 0; i< results.length; i++){
+//     //             currentMenuName.push(results[i].foodName);
+//     //             currentMenuDesc.push(results[i].description);
+//     //             currentMenuPrice.push(results[i].price);
+//     //         }
+//     //
+//     //         });
+//     //     });
+//     // }
+// });
 
 app.get('/MenuCook/',function(req,res){
 
@@ -544,7 +624,7 @@ app.get('/MenuCook/',function(req,res){
    });
 });
 
-//This returns the current Orders in the sysytme
+//This returns the current Orders in the system
 
 app.get('/OrdersCook/',function(req,res){
     console.log('request for the current orders Information ');
@@ -567,6 +647,20 @@ app.get('/OrdersCook/',function(req,res){
      });
 });
 
+<<<<<<< HEAD
+=======
+app.post("/Account/Cook/FoodDone",function(req,res){
+    var OrderID = req.body.FoodOrderID
+    var q = "UPDATE Orders SET status = 1 WHERE orderID = " + OrderID ;
+    connection.query(q,function(err,results){
+        if(err) throw err;
+        console.log("The food has been cooked!");
+    });
+    res.redirect("/Account/Cook");
+
+});
+
+>>>>>>> 124a12ddf391b32f13864a00aae8bafd17fffead
 
 // Add the new button to the Menu
 app.post("/Account/Cook/AddFood", function(req,res){
@@ -627,11 +721,6 @@ app.post("/Account/Cook/RemoveFood",function(req,res){
       res.redirect("/Account/Cook");
     });
 });
-
-
-
-
-
 
 // MANAGER PAGE
 app.get('/Account/Manager', function(req, res) {
@@ -695,7 +784,7 @@ app.get('/pendingUsers', function(req, res) {
 
 // Show Complaints
 app.get('/Complaints', function(req, res) {
-    q = "SELECT complaintID, CONCAT(f_name, ' ', l_name) AS name, complaint, rating, foodName FROM Complaints JOIN RegisteredAccts ON Complaints.userID = RegisteredAccts.userID WHERE Complaints.restaurantID = " + Manager.resID;
+    q = "SELECT complaintID, CONCAT(f_name, ' ', l_name) AS name, complaint, rating, foodName, subject FROM Complaints JOIN RegisteredAccts ON Complaints.userID = RegisteredAccts.userID WHERE Complaints.restaurantID = " + Manager.resID;
     connection.query(q, function(err, results) {
         if(err) throw err;
         Complaints = results;
@@ -717,34 +806,83 @@ app.post('/removeComplaint', function(req,res){
 });
 
 
-// View orders that are ready to be deliver
-// app.get('/Orders', function(res, req) {
-//     var q = "SELECT * FROM Orders JOIN FoodInOrder ON Orders.orderID = FoodInOrder.orderID WHERE Orders.restaurantID =" + Manager.resID;
+//View orders that are ready to be deliver
+// var food = [];
+// app.get('/Orders', function(req, res) {
+//     var q = "SELECT * FROM Orders WHERE restaurantID =" + Manager.resID;
 //     connection.query(q, function(err, results) {
 //         if(err) throw err;
-//         Orders = results;
-//         console.log(Orders);
-//         res.send(JSON.stringify(Orders));
+//         // Orders = results;
+//         var item = {};
+//         for(let i = 0; i < results.length; i++) {
+//             q = "SELECT * FROM FoodInOrder WHERE orderID = " + results[i].orderID;
+//             connection.query(q, function(err, results) {
+//                 item[i] = results[i];
+//                 // food = results;
+//                 // res.send(JSON.stringify(food));
+//                 if(i>0 && results[i].orderID != results[i-1].orderID) {
+//                     food.push(item);
+//                 }
+//             });
+//         }
+//         console.log(food);
+//         res.send(JSON.stringify(food));
 //     });
 //     res.redirect("/Account/Manager");
 // });
 
+// Get orderID for orders that are ready to be delivered
+app.get('/getOrdersID', function(req, res) {
+    console.log('hello from orderID');
+    var q = 'SELECT * from Orders WHERE restaurantID = ' + Manager.resID + ' AND status = 1 AND deliveryID IS NULL;';
+    connection.query(q, function(err, results) {
+        if(err) throw err;
+        Orders = results;
+        console.log('OrderID');
+        console.log(Orders);
+        res.send(JSON.stringify(Orders));
+    })
+})
+
+Foods = {};
+app.get('/getFoodItems', function(req, res) {
+    var orderID = req.query.OrderID
+    console.log('hello from food item');
+    var q = 'Select FoodInOrder.foodName, FoodInOrder.orderID from FoodInOrder JOIN Orders ON FoodInOrder.orderID = Orders.orderID join Managers on Managers.restaurantID = Orders.restaurantID where Orders.status = 1 and Managers.restaurantID =' + Manager.resID;
+    connection.query(q, function(err, results) {
+        if(err) throw err;
+        Foods = results;
+        console.log('Food');
+        console.log(Foods);
+        res.send(JSON.stringify(Foods));
+    })
+})
+
 
 // Apoint Devlivery Person to an order
-// Some form that you can appoint a delivery person to an order (a drop down can appear for the orders next to a delivery person)
-app.post('/restaurant/:resName/manager/delivery', function(req, res) {
-    var order = req.body.orderID;
-    var deliPersonID = req.body.delID;
-    var q = "UPDATE Orders SET userID = " + deliPersonID + " WHERE orderID = " + order;
+app.post('/AppointDelivery', function(req, res) {
+    var orderID = req.body.orderID;
+    var person = req.body.person;
+    console.log('order' + orderID);
+    console.log('deliperson' + person);
+    var q = "UPDATE Orders SET deliveryID =" + person + " WHERE orderID =" + orderID;
     connection.query(q, function(err, results) {
         if(err) throw err;
         console.log("delivery person successfully appointed to this order");
     });
-    res.redirect("/restaurant/" + restaurantName + "/manager");
+    res.redirect("/Account/Manager");
+});
+
+app.post('/CompletedDelivery',function(req,res){
+    var orderID = req.body.order
+    var q = "UPDATE Oders SET status = 2 WHERE orderID = " + orderID;
+    connection.query(q, function(err,results){
+        if(err) throw err;
+    });
 });
 
 // Fire Worker
-app.post('/manager/fire', function(req, res) {
+app.post('/manager/fire' , function(req, res) {
     var workerID = req.body.fire;
     console.log(workerID);
     var q = "SELECT acctType FROM Users WHERE userID = " + workerID;
@@ -833,6 +971,22 @@ app.post('/Manager/changeUserStatus', function(req, res) {
     }
     res.redirect("/Account/Manager");
 });
+
+let Deliveries = {};
+app.get('/getOrder', function(req, res) {
+    console.log('hello from delivery');
+    console.log(signedInUser.userID);
+    var q = 'select Orders.orderID, Orders.subtotal, Orders.tax, Orders.total, Orders.address, Restaurants.latitude, Restaurants.longitude from Orders JOIN Restaurants on Orders.restaurantID = Restaurants.restaurantID JOIN DeliveryPerson on DeliveryPerson.userID = Orders.deliveryID where deliveryID =' + signedInUser.userID + ' AND status = 1';
+    connection.query(q, function(err, results){
+        if(err) throw err;
+        Deliveries = results;
+        console.log(results);
+
+    });
+    res.send(JSON.stringify(Deliveries));
+    res.redirect('/Delivery');
+});
+
 
 
 app.get('*', function(req, res) {

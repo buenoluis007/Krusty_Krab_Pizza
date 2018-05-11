@@ -106,6 +106,30 @@ DELIMITER ;
 
 
 DELIMITER //
+DROP PROCEDURE IF EXISTS dropFood //
+create procedure dropFood(IN food varchar(255), IN restid int)
+
+BEGIN
+  declare rate decimal(2,1);
+  declare amount int;
+
+  SELECT rating, rateNum into rate, amount
+    FROM Menu WHERE foodName=food and restaurantID=restid;
+
+  if (amount >= 3) THEN
+    if (rate < 2.0) THEN
+      DELETE FROM Menu
+        WHERE foodName=food and restaurantID=restid;
+      UPDATE Cooks SET strikes = strikes + 1
+        WHERE restaurantID=restid;
+    end if;
+  end if;
+
+END //
+DELIMITER ;
+
+
+DELIMITER //
 DROP PROCEDURE IF EXISTS rateFood //
 create procedure rateFood(IN food varchar(255), IN restid int, IN rating int)
 
@@ -121,5 +145,7 @@ BEGIN
 
   UPDATE Menu SET rating = (rsum/rnum)
     WHERE foodName=food and restaurantID=restid;
+
+  call dropFood(food,restid);
 END //
 DELIMITER ;
