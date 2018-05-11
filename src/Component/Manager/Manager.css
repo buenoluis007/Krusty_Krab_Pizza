@@ -22,3 +22,11 @@ h1 {
 li {
     list-style-type: none;
 }
+
+table {
+    width: 100%;
+}
+
+th {
+    width: 50px;
+}

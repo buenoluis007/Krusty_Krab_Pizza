@@ -45,6 +45,7 @@ class LogIn extends Component {
         retry = (
           <div>
             <form className="login" action="/logincheck" method="POST">
+                <h2 id='loginTag'>Login</h2>
                 <input type="email" name="email" placeholder="email"/>
                 <br/>
                 <input type="password" name="pass" placeholder="password"/>
@@ -65,7 +66,7 @@ class LogIn extends Component {
             <h1 id="loginStatement">Welcome Back</h1>
             { retry }
             <div id="mission">
-              <p>Hi there! At Krusty Krab Pizza, we aim to make your life easier when it comes to grabbing a slice of pizza.Hi there! At Krusty Krab Pizza, we aim to make your life easier when it comes to grabbing a slice of pizza.Hi there! At Krusty Krab Pizza, we aim to make your life easier when it comes to grabbing a slice of pizza.Hi there! At Krusty Krab Pizza, we aim to make your life easier when it comes to grabbing a slice of pizza.Hi there! At Krusty Krab Pizza, we aim to make your life easier when it comes to grabbing a slice of pizza.</p>
+              <p>Hi there! At Krusty Krab Pizza, we aim to help you find the perfect slice. Not only that, we will deliver that slice to you!</p>
             </div>
           </div>
       )

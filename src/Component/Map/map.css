@@ -1,3 +1,13 @@
-#googlemaps{
-    margin: 0 auto 0 auto;
+.pizzerias{
+    display: inline-block;
+    border: 1px solid rgba(207, 210, 211, .8);
+    background-color: rgba(207, 210, 211, .8);
+    border-radius: 8px;
+    box-shadow: 4px 4px grey;
+    width:300px;
+    height: 100px;
+    text-align: center;
+    padding: 25px;
+    margin: 1.5%;
+    line-height: 30px;
 }
