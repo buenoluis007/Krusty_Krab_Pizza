@@ -55,7 +55,7 @@ class Cook extends Component{
         <form className="Cook" action= "/Account/Cook/FoodDone" method="POST">
             <h1>Done Cooking the Food</h1>
 
-            <input type="text" name="FoodOrderID" placeholder="Food Name"/>
+            <input type="text" name="FoodOrderID" placeholder="Order ID"/>
             <br/>
             <button
               id="enter"
