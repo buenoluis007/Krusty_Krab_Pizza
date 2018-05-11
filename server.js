@@ -310,6 +310,8 @@ app.post('/rateUser',function(req,res){
   let userID = req.body.userID;
   let restID = req.body.restID;
   let rate = req.body.rating;
+  console.log('rating');
+  console.log(userID + restID + rate);
   q = "call rateUser('"+userID+"',"+restID+","+rate+');';
   connection.query(q,function(err,data){
     if(err) return console.error('RATEUSER: '+err);
@@ -828,13 +830,14 @@ app.post('/AppointDelivery', function(req, res) {
     res.redirect("/Account/Manager");
 });
 
-// Rate the user
+// Deliver the order
 app.post('/CompletedDelivery',function(req,res){
-    var orderID = req.body.order
-    var q = "UPDATE Oders SET status = 2 WHERE orderID = " + orderID;
+    var orderID = req.body.done
+    var q = "UPDATE Orders SET status = 2 WHERE orderID = " + orderID;
     connection.query(q, function(err,results){
         if(err) throw err;
     });
+    res.redirect('/Account/Delivery')
 });
 
 // Fire Worker
@@ -932,14 +935,15 @@ let Deliveries = [];
 app.get('/gettingOrder', function(req, res) {
     console.log('hello from delivery');
     console.log(signedInUser.userID);
-    var q = 'select Orders.orderID, Orders.subtotal, Orders.tax, Orders.total, Orders.address, Restaurants.latitude, Restaurants.longitude from Orders JOIN Restaurants on Orders.restaurantID = Restaurants.restaurantID JOIN DeliveryPerson on DeliveryPerson.userID = Orders.deliveryID where deliveryID =' + signedInUser.userID + ' AND status = 1';
+    var q = 'select Orders.userID, Orders.orderID, Orders.subtotal, Orders.tax, Orders.total, Orders.address, Restaurants.latitude, Restaurants.longitude, Restaurants.restaurantID from Orders JOIN Restaurants on Orders.restaurantID = Restaurants.restaurantID JOIN DeliveryPerson on DeliveryPerson.userID = Orders.deliveryID where deliveryID =' + signedInUser.userID + ' AND status = 1';
     connection.query(q, function(err, results){
         if(err) throw err;
-        Deliveries = results;
-        console.log(results);
+        if(results) {
+            Deliveries = results;
+            console.log(results);
+        }
+        res.send(JSON.stringify(Deliveries));
     });
-    res.send(JSON.stringify(Deliveries));
-    res.redirect('/Account/Delivery');
 });
 
 

@@ -163,6 +163,10 @@ class Routes extends Component {
                 accountInfo = (
                     <li><Link to="/Account/Manager">Account</Link></li>
                 )
+            } else if (this.state.Users.type === 'Delivery'){
+                accountInfo = (
+                    <li><Link to="/Account/Delivery">Account</Link></li>
+                )
             } else {
                 accountInfo = (
                     <li><Link to="/Account">Account</Link></li>
