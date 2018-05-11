@@ -1,0 +1,24 @@
+.delTable {
+    margin: 0 auto;
+    border: 1px solid black;
+    background-color: white;
+}
+
+.delTable thead th {
+    border: 1px solid black;
+}
+
+.delTable tbody td {
+    border: 1px solid black;
+}
+
+.delh1 {
+    color: black;
+    -webkit-text-fill-color: white; /* Will override color (regardless of order) */
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
+}
+
+#google{
+    margin: 0 auto;
+}

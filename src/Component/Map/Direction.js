@@ -12,9 +12,9 @@ const {
 const MapWithADirectionsRenderer = compose(
   withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyBPPGOq8mrh_7i1PoC0JutKxr52fGMlPPw&v=3.exp&libraries=geometry,drawing,places",
-    loadingElement: <div style={{ height: '300px', width: '600px' }} />,
+    loadingElement: <div style={{ height: '400px', width: '100%' }} />,
 containerElement: <div style={{ height: '400px' }} />,
-mapElement: <div style={{ height: '300px', width: '600px'}} />,
+mapElement: <div style={{ height: '400px', width: '100%'}} />,
   }),
   withScriptjs,
   withGoogleMap,
@@ -51,12 +51,14 @@ mapElement: <div style={{ height: '300px', width: '600px'}} />,
     }
   })
 )(props =>
-  <GoogleMap
-    defaultZoom={9}
-    defaultCenter={new window.google.maps.LatLng(41.8507300, -87.6512600)}
-  >
-    {props.directions && <DirectionsRenderer directions={props.directions} />}
-  </GoogleMap>
+    <div>
+      <GoogleMap
+        defaultZoom={13}
+        defaultCenter={new window.google.maps.LatLng(41.8507300, -87.6512600)}
+      >
+        {props.directions && <DirectionsRenderer directions={props.directions} />}
+      </GoogleMap>
+  </div>
 );
 
 <MapWithADirectionsRenderer />

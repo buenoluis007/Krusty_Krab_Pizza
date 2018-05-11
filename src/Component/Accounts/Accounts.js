@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Manager from '../Manager/Manager';
 import Cook from '../Cook/Cook';
 import Visitor from '../Visitor/Visitor';
+import Delivery from '../Delivery/Delivery';
 
 class Accounts extends Component {
     constructor() {
@@ -34,6 +35,14 @@ class Accounts extends Component {
                 display = (
                     <div>
                         < Cook />
+                    </div>
+                )
+        }
+        if(this.state.Users.type === 'Delivery'){
+            this.props.history.push('/Account/Delivery')
+                display = (
+                    <div>
+                        < Delivery />
                     </div>
                 )
         }
