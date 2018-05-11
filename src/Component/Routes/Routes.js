@@ -14,6 +14,7 @@ import Menu from '../Menu/Menu';
 import CheckOut from '../CheckOut/CheckOut';
 import Cook from '../Cook/Cook';
 import Visitor from '../Visitor/Visitor';
+import Complain from '../Complain/Complain';
 import ProcessOrder from '../ProcessOrder/ProcessOrder';
 
 class Routes extends Component {
@@ -196,6 +197,7 @@ class Routes extends Component {
               <Route path="/register" exact component={ Register } />
               <Route path="/login" exact component={ LogIn } />
               <Route path="/SignOut" exact component={ SignOut } />
+              <Route path="/complain" exact component={ Complain } />
               <Route path="/menu/:placeID" render={(props) =>{return(
                   <Menu
                     {...props}
