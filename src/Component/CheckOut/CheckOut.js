@@ -100,15 +100,15 @@ class CheckPayment extends Component{
           <table border='0' class='paytable'>
             <tr>
               <td><label>Card Number<br/>
-                <input type="text" name='cardnum' size='26' maxlength='16' value={p.creditNum} onChange={(e)=>this.props.onP(e)}/>
+                <input type="text" name='cardnum' size='26' maxlength='16' defaultValue={p.creditNum} onChange={(e)=>this.props.onP(e)}/>
               </label></td>
               <td><label>Exp Date(mm/yy)<br/>
-                <input type="text" name='exp' size='17' maxlength='5' value={p.expiration} onChange={(e)=>this.props.onP(e)}/>
+                <input type="text" name='exp' size='17' maxlength='5' defaultValue={p.expiration} onChange={(e)=>this.props.onP(e)}/>
               </label></td>
             </tr>
             <tr>
               <td><label>CCV<br/>
-                <input type="text" name='ccv' size='3' maxlength='3' value={p.ccv} onChange={(e)=>this.props.onP(e)}/>
+                <input type="text" name='ccv' size='3' maxlength='3' defaultValue={p.ccv} onChange={(e)=>this.props.onP(e)}/>
               </label></td>
             </tr>
             <tr>

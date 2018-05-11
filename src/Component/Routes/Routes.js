@@ -9,7 +9,6 @@ import SignOut from '../SignOut/SignOut';
 import Home from '../Home/Home';
 import Accounts from '../Accounts/Accounts';
 import Manager from '../Manager/Manager';
-import Restaurant from '../Restaurant/Restaurant';
 import Menu from '../Menu/Menu';
 import CheckOut from '../CheckOut/CheckOut';
 import Cook from '../Cook/Cook';
@@ -71,12 +70,13 @@ class Routes extends Component {
 
     componentDidUpdate(){
       sessionStorage.setItem('savedState', JSON.stringify(this.state.Cart.getItems()));
-      sessionStorage.setItem('savedPrev', JSON.stringify(this.state.PrevRest));
     }
 
     handleSetPrev(currest){
       this.setState({ PrevRest: currest});
+      sessionStorage.setItem('savedPrev', JSON.stringify(this.state.PrevRest));
     }
+
     handleAddItem(item){
        let cart = this.state.Cart;
        cart.addItem(item.foodName,item.qty,item.price);
@@ -132,10 +132,12 @@ class Routes extends Component {
       const t = event.target;
       const value = t.value;
       const name = t.name;
-      var newstate2 = this.state.Pay;
-      newstate2[name] = value;
-      this.setState(newstate2);
+      var newstate = this.state.Pay;
+      newstate[name] = value;
+      this.setState(newstate);
     }
+
+
 
     render () {
       // check if the user is logged in using the info provided by express
