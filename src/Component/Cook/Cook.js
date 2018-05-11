@@ -39,6 +39,8 @@ class Cook extends Component{
             name="button"
             className="Cook">Add Food</button>
         </form>
+        <p> </p>
+        <p> </p>
 
         <form className="Cook" action= "/Account/Cook/RemoveFood" method="POST">
             <h1>Remove a food item from the Menu</h1>
@@ -52,6 +54,8 @@ class Cook extends Component{
               className="Cook">Remove Food</button>
 
         </form>
+        <p> </p>
+        <p> </p>
         <form className="Cook" action= "/Account/Cook/FoodDone" method="POST">
             <h1>Done Cooking the Food</h1>
 
@@ -64,10 +68,10 @@ class Cook extends Component{
               className="Cook">Food is Completed</button>
 
         </form>
-        <h2 className="cookh3"> Menu </h2>
-
+        <p> </p><p> </p>
             <div className='menuDiv'>
                 <table className='menuTable'>
+                <h2 className="cookh3"> Menu </h2>
                     <thead>
                         <th>Food Name</th>
                         <th>Description</th>
@@ -93,10 +97,10 @@ class Cook extends Component{
 
         <br/>
         <br/>
-        <h2 className="cookh3"> Current Orders </h2>
 
             <div>
             <table className='menuTable'>
+            <h2 className="cookh3"> Current Orders </h2>
                 <thead>
                     <th>orderID</th>
                     <th>foodName</th>
