@@ -154,7 +154,7 @@ app.get('/restaurant/:placeID', function(req, res) {
 app.post('/login', function(req, res) {
   console.log(signedInUser.email);
     if(signedInUser.status === true) { // If the user is already signed in and tries to access this page, redirect them
-      req.redirect('/');
+      req.redirect('/Home');
     } else {
         res.render("/login");
     }
@@ -358,11 +358,11 @@ app.post('/logincheck', function(req, res) {
                         console.log('the resID is ' + Manager.resID);
                         console.log('name of rest is: ' + Manager.resName);
                         console.log('address:' + Manager.resAddress);
-                        res.redirect('/')
+                        res.redirect('/Home')
                     }
                 });
             } else {
-                res.redirect('/');
+                res.redirect('/Home');
             }
         } else {
             console.log("The email or password is incorrect. Try again.");
@@ -376,7 +376,7 @@ app.post('/logincheck', function(req, res) {
 //Register Page
 app.get('/register', function(req, res) {
     if(signedInUser.email) { // If the user is already signed in and tries to access this page, redirect them
-        res.redirect('/');
+        res.redirect('/Home');
     } else {
         res.render('register');
     }
@@ -440,7 +440,7 @@ app.post('/signout', function(req, res) {
     Manager.pendingUsers = [];
     Manager.orders = [];
     Manager.complaints = [];
-    res.redirect('/');
+    res.redirect('/Home');
 });
 
 //Cook section of the site.
@@ -539,7 +539,7 @@ app.post("/Account/Cook/FoodDone",function(req,res){
         console.log("The food has been cooked!");
     });
     res.redirect("/Account/Cook");
-    
+
 });
 
 
@@ -665,7 +665,7 @@ app.get('/pendingUsers', function(req, res) {
 
 // Show Complaints
 app.get('/Complaints', function(req, res) {
-    q = "SELECT complaintID, CONCAT(f_name, ' ', l_name) AS name, complaint, rating, foodName FROM Complaints JOIN RegisteredAccts ON Complaints.userID = RegisteredAccts.userID WHERE Complaints.restaurantID = " + Manager.resID;
+    q = "SELECT complaintID, CONCAT(f_name, ' ', l_name) AS name, complaint, rating, foodName, subject FROM Complaints JOIN RegisteredAccts ON Complaints.userID = RegisteredAccts.userID WHERE Complaints.restaurantID = " + Manager.resID;
     connection.query(q, function(err, results) {
         if(err) throw err;
         Complaints = results;
@@ -725,19 +725,19 @@ app.get('/getOrdersID', function(req, res) {
     })
 })
 
-// Foods = {};
-// app.get('/getFoodItems', function(req, res) {
-//     var orderID = req.query.OrderID
-//     console.log('hello from food item');
-//     var q = 'Select FoodInOrder.foodName, FoodInOrder.orderID from FoodInOrder JOIN Orders ON FoodInOrder.orderID = Orders.orderID join Managers on Managers.restaurantID = Orders.restaurantID where Orders.status = 1 and Managers.restaurantID =' + Manager.resID;
-//     connection.query(q, function(err, results) {
-//         if(err) throw err;
-//         Foods = results;
-//         console.log('Food');
-//         console.log(Foods);
-//         res.send(JSON.stringify(Foods));
-//     })
-// })
+Foods = {};
+app.get('/getFoodItems', function(req, res) {
+    var orderID = req.query.OrderID
+    console.log('hello from food item');
+    var q = 'Select FoodInOrder.foodName, FoodInOrder.orderID from FoodInOrder JOIN Orders ON FoodInOrder.orderID = Orders.orderID join Managers on Managers.restaurantID = Orders.restaurantID where Orders.status = 1 and Managers.restaurantID =' + Manager.resID;
+    connection.query(q, function(err, results) {
+        if(err) throw err;
+        Foods = results;
+        console.log('Food');
+        console.log(Foods);
+        res.send(JSON.stringify(Foods));
+    })
+})
 
 
 // Apoint Devlivery Person to an order
@@ -844,6 +844,22 @@ app.post('/Manager/changeUserStatus', function(req, res) {
     }
     res.redirect("/Account/Manager");
 });
+
+let Deliveries = {};
+app.get('/getOrder', function(req, res) {
+    console.log('hello from delivery');
+    console.log(signedInUser.userID);
+    var q = 'select Orders.orderID, Orders.subtotal, Orders.tax, Orders.total, Orders.address, Restaurants.latitude, Restaurants.longitude from Orders JOIN Restaurants on Orders.restaurantID = Restaurants.restaurantID JOIN DeliveryPerson on DeliveryPerson.userID = Orders.deliveryID where deliveryID =' + signedInUser.userID + ' AND status = 1';
+    connection.query(q, function(err, results){
+        if(err) throw err;
+        Deliveries = results;
+        console.log(results);
+
+    });
+    res.send(JSON.stringify(Deliveries));
+    res.redirect('/Delivery');
+});
+
 
 
 app.get('*', function(req, res) {

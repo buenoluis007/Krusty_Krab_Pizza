@@ -23,17 +23,17 @@ class Complaints extends Component {
                 <table className='manager'>
                     <thead>
                         <td>Name</td>
-                        <td>Subject of Complaint</td>
+                        <td>Subject</td>
                         <td>Rating</td>
                         <td>Detail of Complaint</td>
                     </thead>
                     {this.state.Complaints.map((complaint, i) =>
-                        <tbody key={this.state.Complaints[i].userID}>
+                        <tr key={this.state.Complaints[i].userID}>
                             <td>{
                                 this.state.Complaints[i].name}
                             </td>
                             <td>
-                                {this.state.Complaints[i].foodName}
+                                {this.state.Complaints[i].subject}
                             </td>
                             <td>
                                 {this.state.Complaints[i].rating}
@@ -50,7 +50,7 @@ class Complaints extends Component {
                                     </button>
                                 </form>
                             </td>
-                        </tbody>
+                        </tr>
                     )}
                 </table>
             </div>
