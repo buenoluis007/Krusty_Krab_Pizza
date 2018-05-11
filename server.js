@@ -508,7 +508,7 @@ app.get('/MenuCook/',function(req,res){
    });
 });
 
-//This returns the current Orders in the sysytme
+//This returns the current Orders in the system
 
 app.get('/OrdersCook/',function(req,res){
     console.log('request for the current orders Information ');
@@ -539,7 +539,7 @@ app.post("/Account/Cook/FoodDone",function(req,res){
         console.log("The food has been cooked!");
     });
     res.redirect("/Account/Cook");
-    
+
 });
 
 
