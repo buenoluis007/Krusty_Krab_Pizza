@@ -6,13 +6,12 @@ class Delivery extends Component {
         super(props);
         this.state =
         {
-            Delivery: [],
-            resAddress: []
+            Delivery: []
         };
     }
 
     componentDidMount() {
-        fetch('/getOrder')
+        fetch('/gettingOrder')
             .then(res => res.json())
             .then(delivery => this.setState({ Delivery: delivery }))
     }
@@ -21,27 +20,29 @@ class Delivery extends Component {
         console.log(this.state.Delivery);
         return (
             <div>
-                <table>
-                    <tr>
-                        <td>Order #</td>
-                        <td>Address</td>
-                        <td>Subtotal</td>
-                        <td>Tax</td>
-                        <td>Total</td>
-                    </tr>
-                    {this.state.Delivery.map((order, i) =>
-                        <div>
-                        <tr>
-                            <td>{this.state.Delivery[i].orderID}</td>
-                            <td>{this.state.Delivery[i].address}</td>
-                            <td>{this.state.Delivery[i].subtotal}</td>
-                            <td>{this.state.Delivery[i].tax}</td>
-                            <td>{this.state.Delivery[i].total}</td>
-                        </tr>
-                        < Direction origin='' address={this.state.Delivery[i].address} originLat={this.state.Delivery[i].latitude} originLng={this.state.Delivery[i].longitude}/>
-                        </div>
+                {this.state.Delivery.map((order, i) =>
+                    <table>
+                            <tr>
+                                <td>Order #</td>
+                                <td>Address</td>
+                                <td>Subtotal</td>
+                                <td>Tax</td>
+                                <td>Total</td>
+                            </tr>
+                            <div>
+                                <tr>
+                                    <td>{this.state.Delivery[i].orderID}</td>
+                                    <td>{this.state.Delivery[i].address}</td>
+                                    <td>{this.state.Delivery[i].subtotal}</td>
+                                    <td>{this.state.Delivery[i].tax}</td>
+                                    <td>{this.state.Delivery[i].total}</td>
+                                </tr>
+                            </div>
+                            <div>
+                            < Direction origin='' address={this.state.Delivery[i].address} originLat={this.state.Delivery[i].latitude} originLng={this.state.Delivery[i].longitude}/>
+                            </div>
+                        </table>
                     )}
-                </table>
 
             </div>
         )

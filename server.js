@@ -30,10 +30,6 @@ let restinfo = {
   restaurantID: '0'
 };
 
-<<<<<<< HEAD
-let Visitor = {};
-let Pay = {};
-=======
 let ComplaintInfo = {
   userID: 0,
   restaurantID: 0,
@@ -56,7 +52,7 @@ let Pay = {
   ccv: '',
   expiration: ''
 };
->>>>>>> 124a12ddf391b32f13864a00aae8bafd17fffead
+
 
 let Manager = {
     userID: '',
@@ -166,7 +162,7 @@ app.get('/restaurant/:placeID', function(req, res) {
 app.post('/login', function(req, res) {
   console.log(signedInUser.email);
     if(signedInUser.status === true) { // If the user is already signed in and tries to access this page, redirect them
-      req.redirect('/Home');
+      req.redirect('/');
     } else {
         res.render("/login");
     }
@@ -317,7 +313,7 @@ app.post('/rateUser',function(req,res){
   q = "call rateUser('"+userID+"',"+restID+","+rate+');';
   connection.query(q,function(err,data){
     if(err) return console.error('RATEUSER: '+err);
-    res.redirect('/Delivery');
+    res.redirect('/Account/Delivery');
   });
 });
 
@@ -473,11 +469,11 @@ app.post('/logincheck', function(req, res) {
                         console.log('the resID is ' + Manager.resID);
                         console.log('name of rest is: ' + Manager.resName);
                         console.log('address:' + Manager.resAddress);
-                        res.redirect('/Home')
+                        res.redirect('/')
                     }
                 });
             } else {
-                res.redirect('/Home');
+                res.redirect('/');
             }
         } else {
             console.log("The email or password is incorrect. Try again.");
@@ -491,7 +487,7 @@ app.post('/logincheck', function(req, res) {
 //Register Page
 app.get('/register', function(req, res) {
     if(signedInUser.email) { // If the user is already signed in and tries to access this page, redirect them
-        res.redirect('/Home');
+        res.redirect('/');
     } else {
         res.render('register');
     }
@@ -543,7 +539,7 @@ app.post('/registercheck', function(req, res) {
     res.redirect('/login');
 });
 
-// Sign Out
+//Sign Out
 app.post('/signout', function(req, res) {
     signedInUser.email = "";
     signedInUser.type = "";
@@ -555,46 +551,10 @@ app.post('/signout', function(req, res) {
     Manager.pendingUsers = [];
     Manager.orders = [];
     Manager.complaints = [];
-    res.redirect('/Home');
+    res.redirect('/');
 });
 
-//Cook section of the site.
-
-
-// app.get("/Account/Cook",function(req, res){
-//
-// console.log("You made it to your section of the site! ")
-//
-//
-//     // if(signedInUser.type === "Cook"){
-//     //     var resName = res.params.resName;
-//     //     var currentMenuName = [];
-//     //     var currentMenuDesc = [];
-//     //     var currentMenuPrice =[];
-//     //     restaurantID = 0;
-//     //
-//     //     //retrieves the specific restaurantID using the restaurant name.
-//     //     var q = "SELECT restaurantID FROM Restaurants WHERE name = '" + resName+"'";
-//     //     connection.query(q, function(err, results) {
-//     //         if(err) throw err;
-//     //         var restaurantID = results[0].restaurantID;
-//     //
-//     //         //Adds all of the food in a the Menu array from the Menu database
-//     //         var k = "SELECT * FROM Menu WHERE restaurantID = " + restaurantID ;
-//     //
-//     //         connection.query(k, function(err, results) {
-//     //             if(err) throw err;
-//     //             for(var i = 0; i< results.length; i++){
-//     //             currentMenuName.push(results[i].foodName);
-//     //             currentMenuDesc.push(results[i].description);
-//     //             currentMenuPrice.push(results[i].price);
-//     //         }
-//     //
-//     //         });
-//     //     });
-//     // }
-// });
-
+// Cook Section
 app.get('/MenuCook/',function(req,res){
 
   console.log('request the Menu Information ');
@@ -607,7 +567,6 @@ app.get('/MenuCook/',function(req,res){
   console.log(restID);
   var q = "SELECT * FROM Restaurants WHERE restaurantID = " + restID;
   connection.query(q,function(err,results){
-
 
       var googleID = results[0].googleID;
       console.log(googleID);
@@ -625,7 +584,6 @@ app.get('/MenuCook/',function(req,res){
 });
 
 //This returns the current Orders in the system
-
 app.get('/OrdersCook/',function(req,res){
     console.log('request for the current orders Information ');
     var q = "SELECT * FROM Cooks WHERE userID =" + signedInUser.userID;
@@ -647,8 +605,6 @@ app.get('/OrdersCook/',function(req,res){
      });
 });
 
-<<<<<<< HEAD
-=======
 app.post("/Account/Cook/FoodDone",function(req,res){
     var OrderID = req.body.FoodOrderID
     var q = "UPDATE Orders SET status = 1 WHERE orderID = " + OrderID ;
@@ -660,7 +616,6 @@ app.post("/Account/Cook/FoodDone",function(req,res){
 
 });
 
->>>>>>> 124a12ddf391b32f13864a00aae8bafd17fffead
 
 // Add the new button to the Menu
 app.post("/Account/Cook/AddFood", function(req,res){
@@ -873,6 +828,7 @@ app.post('/AppointDelivery', function(req, res) {
     res.redirect("/Account/Manager");
 });
 
+// Rate the user
 app.post('/CompletedDelivery',function(req,res){
     var orderID = req.body.order
     var q = "UPDATE Oders SET status = 2 WHERE orderID = " + orderID;
@@ -972,8 +928,8 @@ app.post('/Manager/changeUserStatus', function(req, res) {
     res.redirect("/Account/Manager");
 });
 
-let Deliveries = {};
-app.get('/getOrder', function(req, res) {
+let Deliveries = [];
+app.get('/gettingOrder', function(req, res) {
     console.log('hello from delivery');
     console.log(signedInUser.userID);
     var q = 'select Orders.orderID, Orders.subtotal, Orders.tax, Orders.total, Orders.address, Restaurants.latitude, Restaurants.longitude from Orders JOIN Restaurants on Orders.restaurantID = Restaurants.restaurantID JOIN DeliveryPerson on DeliveryPerson.userID = Orders.deliveryID where deliveryID =' + signedInUser.userID + ' AND status = 1';
@@ -981,10 +937,9 @@ app.get('/getOrder', function(req, res) {
         if(err) throw err;
         Deliveries = results;
         console.log(results);
-
     });
     res.send(JSON.stringify(Deliveries));
-    res.redirect('/Delivery');
+    res.redirect('/Account/Delivery');
 });
 
 

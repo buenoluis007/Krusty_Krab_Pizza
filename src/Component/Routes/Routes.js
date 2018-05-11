@@ -145,7 +145,6 @@ class Routes extends Component {
       }
 
       // adjust the link accordingly to the log in status of the user
-      let HomePage = (<li><Link to='/' component={ Home }>Home</Link></li>);
       let status = null;
       let registerable = null;
       let accountInfo = null;
@@ -181,18 +180,18 @@ class Routes extends Component {
                           { registerable }
                           { status }
                           { accountInfo }
-                          <li><Link to='/Home' component={ Home }>Home</Link></li>
+                          <li><Link to='/' component={ Home }>Home</Link></li>
                       </ul>
                   </nav>
               </header>
             </div>
             <div className='main'>
 
-              <Route path="/Home" exact component={ Home } />
-              <Route path="/Delivery" exact component={ Delivery } />
+              <Route path="/" exact component={ Home } />
               <Route path="/Account" exact component={ Accounts } />
               <Route path="/Account/Manager" exact component={ Manager } />
               <Route path="/Account/Cook" exact component={ Cook } />
+              <Route path="/Account/Delivery" exact component={ Delivery } />
               <Route path="/Account/Visitor" render={(props) =>{return(
                   <Visitor
                     user={this.state.Users}
