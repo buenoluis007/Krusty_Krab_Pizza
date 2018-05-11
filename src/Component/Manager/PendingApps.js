@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import './Manager.css';
+import './pending.css';
 
 class Pending extends Component {
     constructor(props) {
@@ -21,7 +23,7 @@ class Pending extends Component {
             <div>
                 <h1>Pending Users</h1>
                 <table className='manager'>
-                    <thead>
+                    <thead className='header'>
                         <td>Name</td>
                         <td>Action</td>
                     </thead>
@@ -33,18 +35,22 @@ class Pending extends Component {
                                 </td>
                                 <td>
                                     <form action='/Manager/changeUserStatus' method='POST'>
-                                        <select name='choice'>
-                                            <option
-                                                value='accept'>Accept
-                                            </option>
-                                            <option
-                                                value='decline'>Decline
-                                            </option>
-                                        </select>
-                                        <button
-                                            type='submit'
-                                            name='userID' value={this.state.Apps[i].userID}>
-                                        Submit</button>
+                                        <div className="custom-select">
+                                            <select name='choice'>
+                                                <option
+                                                    value='accept'>Accept
+                                                </option>
+                                                <option
+                                                    value='decline'
+                                                    id='decline'>Decline
+                                                </option>
+                                            </select>
+
+                                            <button
+                                                type='submit'
+                                                name='userID' value={this.state.Apps[i].userID}>
+                                            Submit</button>
+                                        </div>
                                     </form>
                                 </td>
 

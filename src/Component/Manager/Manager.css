@@ -1,8 +1,10 @@
 .manager {
     border-collapse: collapse;
     margin: 0 auto;
-    background: grey;
-    border: 1px solid black;
+    background: rgba(223, 223, 223, .8);
+    border: 1px solid rgba(223, 223, 223, .8);
+    border-radius: 5px;
+    width: 70%;
 }
 
 h1 {
@@ -15,7 +17,7 @@ h1 {
 
 
 .manager + th + td {
-    border: 1px solid black;
+    border-bottom: 1px solid black;
 }
 
 
@@ -23,10 +25,11 @@ li {
     list-style-type: none;
 }
 
-table {
-    width: 100%;
+.header {
+    border-bottom: 3px solid black;
 }
 
-th {
-    width: 50px;
-}
+/* hr {
+    width: 150%;
+    background-color: black;
+} */

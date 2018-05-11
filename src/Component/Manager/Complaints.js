@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './Manager.css';
 
 class Complaints extends Component {
     constructor(props) {
@@ -21,7 +22,7 @@ class Complaints extends Component {
             <div>
                 <h1>Complaints</h1>
                 <table className='manager'>
-                    <thead>
+                    <thead className='header'>
                         <td>Name</td>
                         <td>Subject</td>
                         <td>Rating</td>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './Manager.css';
 
 class DeliveryPerson extends Component {
     constructor(props) {
@@ -30,36 +31,40 @@ class DeliveryPerson extends Component {
             <div>
                 <h1 id="deliveryHeader">Delivery Staff Members:</h1>
                 <table className='manager'>
-                    <thead>
+                    <thead className='header'>
                         <td>Name</td>
                         <td>Salary</td>
                         <td>Rating</td>
                         <td>Action</td>
                     </thead>
                     {this.state.DeliveryPerson.map((person, i) =>
-                        <tbody key={this.state.DeliveryPerson[i].userID}>
-                            <tr>
-                                <td>{this.state.DeliveryPerson[i].name}</td>
-                                <td>
-                                <form action='/manager/changeWage' method='POST'>
-                                    <ul>
-                                        <li><input type="text" name="salary" placeholder={this.state.DeliveryPerson[i].salery}></input></li>
-                                        <li><button type="submit" name="workerID" value={this.state.DeliveryPerson[i].userID}>Update Wage</button></li>
-                                    </ul>
-                                </form>
-                                </td>
-                                <td>{this.state.DeliveryPerson[i].rating}</td>
-                                <td>
-                                    <form action='/manager/fire' method='POST'>
-                                        <button
-                                            type="submit" name='fire'
-                                            value ={this.state.DeliveryPerson[i].userID}
-                                        >Fire
-                                        </button>
+                            <tbody key={this.state.DeliveryPerson[i].userID}>
+                                <tr>
+                                    <td>{this.state.DeliveryPerson[i].name}</td>
+                                    <td>
+                                    <form action='/manager/changeWage' method='POST'>
+                                        <ul>
+                                            <li><input type="text" name="salary" placeholder={this.state.DeliveryPerson[i].salery}></input></li>
+                                            <li><button type="submit" name="workerID" value={this.state.DeliveryPerson[i].userID}
+                                                className='update'>Update Wage</button></li>
+                                        </ul>
                                     </form>
-                                </td>
-                            </tr>
-                        </tbody>
+                                    </td>
+                                    <td>{this.state.DeliveryPerson[i].rating}</td>
+                                    <td>
+                                        <form action='/manager/fire' method='POST'>
+                                            <button
+                                                type="submit" name='fire'
+                                                value ={this.state.DeliveryPerson[i].userID}
+                                                className='fire'
+                                            >Fire
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+
                     )}
                 </table>
             </div>

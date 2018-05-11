@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './Manager.css';
 
 class Cooks extends Component {
     constructor(props) {
@@ -29,7 +30,7 @@ class Cooks extends Component {
             <div className='cookDiv'>
                 <h1>Cooks Staff Members:</h1>
                 <table className='manager'>
-                    <thead>
+                    <thead className='header'>
                         <td>Name</td>
                         <td>Salary</td>
                         <td>Strikes</td>
@@ -43,7 +44,8 @@ class Cooks extends Component {
                                     <form action='/manager/changeWage' method='POST'>
                                         <ul>
                                             <li><input type="text" name="salary" placeholder={this.state.Cook[i].salery}></input></li>
-                                            <li><button type="submit" name="workerID" value={this.state.Cook[i].userID}>Update Wage</button></li>
+                                            <li><button type="submit" name="workerID" value={this.state.Cook[i].userID}
+                                                className='update'>Update Wage</button></li>
                                         </ul>
 
                                     </form>
@@ -55,6 +57,7 @@ class Cooks extends Component {
                                         <button
                                             type="submit" name='fire'
                                             value ={this.state.Cook[i].userID}
+                                            className='fire'
                                         >Fire
                                         </button>
                                     </form>
