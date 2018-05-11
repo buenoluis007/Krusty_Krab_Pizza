@@ -321,14 +321,10 @@ app.post('/rateUser',function(req,res){
   p = "update Orders set urated=1 where orderID="+req.body.orderID+";";
   connection.query(q,function(err,data){
     if(err) return console.error('RATEUSER: '+err);
-<<<<<<< HEAD
     connection.query(p,function(err,data){
       if(err) return console.error('SETRATED: '+err);
     });
-    res.redirect('/Delivery');
-=======
     res.redirect('/Account/Delivery');
->>>>>>> 6c8a09f65ce344e469d02eccd580489c29dcd2c6
   });
 });
 
@@ -984,7 +980,7 @@ let Deliveries = [];
 app.get('/gettingOrder', function(req, res) {
     console.log('hello from delivery');
     console.log(signedInUser.userID);
-    var q = 'select Orders.userID, Orders.orderID, Orders.subtotal, Orders.tax, Orders.total, Orders.address, Restaurants.latitude, Restaurants.longitude, Restaurants.restaurantID from Orders JOIN Restaurants on Orders.restaurantID = Restaurants.restaurantID JOIN DeliveryPerson on DeliveryPerson.userID = Orders.deliveryID where deliveryID =' + signedInUser.userID + ' AND status = 1';
+    var q = 'select Orders.userID, Orders.orderID, Orders.subtotal, Orders.tax, Orders.total, Orders.address, Orders.urated, Restaurants.latitude, Restaurants.longitude, Restaurants.restaurantID from Orders JOIN Restaurants on Orders.restaurantID = Restaurants.restaurantID JOIN DeliveryPerson on DeliveryPerson.userID = Orders.deliveryID where deliveryID =' + signedInUser.userID + ' AND status = 1';
     connection.query(q, function(err, results){
         if(err) throw err;
         if(results) {

@@ -2,6 +2,67 @@ import React, { Component } from 'react';
 import Direction from '../Map/Direction';
 import './Delivery.css';
 
+class DeliveryForm extends Component{
+  render(){
+    var rateform = <td></td>;
+    if(this.props.order.urated==0){
+      rateform=[
+          <td><form action='/rateUser' method='POST'>
+            <input type='hidden'
+             name='restID'
+             value={this.props.order.restaurantID} />
+             <input type='hidden'
+              name='userID'
+              value={this.props.order.userID} />
+              <input type='hidden'
+               name='orderID'
+               value={this.props.order.orderID} />
+            <select name='rating'> Rating
+                <option value='5'>5</option>
+                <option value='4'>4</option>
+                <option value='3'>3</option>
+                <option value='2'>2</option>
+                <option value='1'>1</option>
+            </select>
+            <input type='submit' value='Rate' />
+        </form></td>
+      ];
+    }
+
+    return[
+      <form action='/CompletedDelivery' method='POST'>
+          <table className='delTable'>
+                  <thead>
+                      <th>Order#</th>
+                      <th>Address</th>
+                      <th>Subtotal</th>
+                      <th>Tax</th>
+                      <th>Total</th>
+                      <th>Rate The Customer</th>
+                      <th>Complete Order</th>
+                  </thead>
+
+                      <tbody>
+                          <tr>
+                              <td>{this.props.order.orderID}</td>
+                              <td>{this.props.order.address}</td>
+                              <td>${this.props.order.subtotal}</td>
+                              <td>${this.props.order.tax}</td>
+                              <td>${this.props.order.total}</td>
+                              {rateform}
+                              <td><button type='submit' name='done' value={this.props.order.orderID}>Delivered</button></td>
+                          </tr>
+                      </tbody>
+
+              </table>
+              <div id='google'>
+                  < Direction origin='' address={this.props.order.address} originLat={this.props.order.latitude} originLng={this.props.order.longitude}/>
+              </div>
+          </form>
+    ];
+  }
+}
+
 class Delivery extends Component {
     constructor(props) {
         super(props);
@@ -19,55 +80,11 @@ class Delivery extends Component {
 
     render() {
         console.log(this.state.Delivery);
+
         return (
             <div>
                 <h1 className='delh1'>Orders</h1>
-                {this.state.Delivery.map((order, i) =>
-                    <form action='/CompletedDelivery' method='POST'>
-                        <table className='delTable'>
-                                <thead>
-                                    <th>Order#</th>
-                                    <th>Address</th>
-                                    <th>Subtotal</th>
-                                    <th>Tax</th>
-                                    <th>Total</th>
-                                    <th>Rate The Customer</th>
-                                    <th>Complete Order</th>
-                                </thead>
-
-                                    <tbody>
-                                        <tr>
-                                            <td>{this.state.Delivery[i].orderID}</td>
-                                            <td>{this.state.Delivery[i].address}</td>
-                                            <td>${this.state.Delivery[i].subtotal}</td>
-                                            <td>${this.state.Delivery[i].tax}</td>
-                                            <td>${this.state.Delivery[i].total}</td>
-                                            <td><form action='/rateUser' method='POST'>
-                                                <input type='hidden'
-                                                 name='restID'
-                                                 value={this.state.Delivery[i].restaurantID} />
-                                                 <input type='hidden'
-                                                  name='userID'
-                                                  value={this.state.Delivery[i].userID} />
-                                                <select name='rating'> Rating
-                                                    <option>1</option>
-                                                    <option>2</option>
-                                                    <option>3</option>
-                                                    <option>4</option>
-                                                    <option>5</option>
-                                                </select>
-                                                <input type='submit' value='Rate' />
-                                            </form></td>
-                                            <td><button type='submit' name='done' value={this.state.Delivery[i].orderID}>Delivered</button></td>
-                                        </tr>
-                                    </tbody>
-
-                            </table>
-                            <div id='google'>
-                                < Direction origin='' address={this.state.Delivery[i].address} originLat={this.state.Delivery[i].latitude} originLng={this.state.Delivery[i].longitude}/>
-                            </div>
-                        </form>
-                    )}
+                {this.state.Delivery.map((order, i) => <DeliveryForm order={order}/>)}
 
             </div>
         )
