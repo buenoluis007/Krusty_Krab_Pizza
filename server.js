@@ -30,6 +30,10 @@ let restinfo = {
   restaurantID: '0'
 };
 
+<<<<<<< HEAD
+let Visitor = {};
+let Pay = {};
+=======
 let ComplaintInfo = {
   userID: 0,
   restaurantID: 0,
@@ -52,6 +56,7 @@ let Pay = {
   ccv: '',
   expiration: ''
 };
+>>>>>>> 124a12ddf391b32f13864a00aae8bafd17fffead
 
 let Manager = {
     userID: '',
@@ -161,7 +166,7 @@ app.get('/restaurant/:placeID', function(req, res) {
 app.post('/login', function(req, res) {
   console.log(signedInUser.email);
     if(signedInUser.status === true) { // If the user is already signed in and tries to access this page, redirect them
-      req.redirect('/');
+      req.redirect('/Home');
     } else {
         res.render("/login");
     }
@@ -387,6 +392,55 @@ app.post('/placeorder', function(req,res){
   });
 });
 
+let orderHistoryData = [];
+
+app.get('/Account/ViewOrderHistory', function(req, res) {
+
+    console.log(signedInUser.userID);
+    var q = "SELECT orderID, deliveryID, name, orderDate, total FROM Orders JOIN Restaurants ON Orders.restaurantID = Restaurants.restaurantID WHERE userID = " + signedInUser.userID + " ORDER BY orderID DESC LIMIT 3";
+    connection.query(q, function(err, data) {
+        if(err) throw err;
+        orderHistoryData.push(data);
+        // res.send(JSON.stringify(data));
+        q = "SELECT foodName, Orders.orderID FROM FoodInOrder JOIN Orders ON FoodInOrder.orderID = Orders.orderID WHERE userID = " + signedInUser.userID + " ORDER BY FoodInOrder.orderID";
+        let food = {};
+        let currentfood = [];
+        connection.query(q, function(err, results) {
+            if(err) throw err;
+            console.log("===========================");
+            // console.log(results.length-1);
+            for(var i = 0; i < results.length; i++) {
+                if(i>0 && results[i].orderID !== results[i-1].orderID) {
+                    food[results[i-1].orderID] = currentfood;
+                    currentfood = [];
+                    currentfood.push(results[i].foodName);
+                    // console.log(food);
+                } else if(i == (results.length-1)) {
+                    console.log("WE MADE IT");
+                    currentfood.push(results[i].foodName);
+                    food[results[i].orderID] = currentfood;
+                    // continue;
+                } else {
+                    currentfood.push(results[i].foodName);
+                    // console.log(currentfood);
+                }
+                console.log(i);
+                console.log(results.length-1);
+                console.log(results[i]);
+            }
+            console.log("==============================");
+            console.log(food);
+            orderHistoryData.push(results);
+            // console.log(orderHistoryData);
+            res.send(JSON.stringify(data));
+        });
+    });
+
+
+    var q = "SELECT * FROM FoodInOrder JOIN Orders ON FoodInOrder.orderID = Orders.orderID WHERE Orders.restaurantID = " + signedInUser.userID + " AND status = 0 ORDER BY FoodInOrder.orderID";
+
+});
+
 // check the crediental provided
 app.post('/logincheck', function(req, res) {
     var email = req.body.email;
@@ -419,11 +473,11 @@ app.post('/logincheck', function(req, res) {
                         console.log('the resID is ' + Manager.resID);
                         console.log('name of rest is: ' + Manager.resName);
                         console.log('address:' + Manager.resAddress);
-                        res.redirect('/')
+                        res.redirect('/Home')
                     }
                 });
             } else {
-                res.redirect('/');
+                res.redirect('/Home');
             }
         } else {
             console.log("The email or password is incorrect. Try again.");
@@ -437,7 +491,7 @@ app.post('/logincheck', function(req, res) {
 //Register Page
 app.get('/register', function(req, res) {
     if(signedInUser.email) { // If the user is already signed in and tries to access this page, redirect them
-        res.redirect('/');
+        res.redirect('/Home');
     } else {
         res.render('register');
     }
@@ -501,7 +555,7 @@ app.post('/signout', function(req, res) {
     Manager.pendingUsers = [];
     Manager.orders = [];
     Manager.complaints = [];
-    res.redirect('/');
+    res.redirect('/Home');
 });
 
 //Cook section of the site.
@@ -593,6 +647,8 @@ app.get('/OrdersCook/',function(req,res){
      });
 });
 
+<<<<<<< HEAD
+=======
 app.post("/Account/Cook/FoodDone",function(req,res){
     var OrderID = req.body.FoodOrderID
     var q = "UPDATE Orders SET status = 1 WHERE orderID = " + OrderID ;
@@ -604,6 +660,7 @@ app.post("/Account/Cook/FoodDone",function(req,res){
 
 });
 
+>>>>>>> 124a12ddf391b32f13864a00aae8bafd17fffead
 
 // Add the new button to the Menu
 app.post("/Account/Cook/AddFood", function(req,res){
@@ -636,7 +693,7 @@ connection.query(q, function(err, results) {
 
           connection.query("INSERT INTO Menu SET ?", Food, function(err, results) {
               if(err) throw err;
-              console.log("It worked");
+              console.log("It eorke");
           });
 
           res.redirect("/Account/Cook");
@@ -727,7 +784,7 @@ app.get('/pendingUsers', function(req, res) {
 
 // Show Complaints
 app.get('/Complaints', function(req, res) {
-    q = "SELECT complaintID, CONCAT(f_name, ' ', l_name) AS name, complaint, rating, foodName FROM Complaints JOIN RegisteredAccts ON Complaints.userID = RegisteredAccts.userID WHERE Complaints.restaurantID = " + Manager.resID;
+    q = "SELECT complaintID, CONCAT(f_name, ' ', l_name) AS name, complaint, rating, foodName, subject FROM Complaints JOIN RegisteredAccts ON Complaints.userID = RegisteredAccts.userID WHERE Complaints.restaurantID = " + Manager.resID;
     connection.query(q, function(err, results) {
         if(err) throw err;
         Complaints = results;
@@ -787,19 +844,19 @@ app.get('/getOrdersID', function(req, res) {
     })
 })
 
-// Foods = {};
-// app.get('/getFoodItems', function(req, res) {
-//     var orderID = req.query.OrderID
-//     console.log('hello from food item');
-//     var q = 'Select FoodInOrder.foodName, FoodInOrder.orderID from FoodInOrder JOIN Orders ON FoodInOrder.orderID = Orders.orderID join Managers on Managers.restaurantID = Orders.restaurantID where Orders.status = 1 and Managers.restaurantID =' + Manager.resID;
-//     connection.query(q, function(err, results) {
-//         if(err) throw err;
-//         Foods = results;
-//         console.log('Food');
-//         console.log(Foods);
-//         res.send(JSON.stringify(Foods));
-//     })
-// })
+Foods = {};
+app.get('/getFoodItems', function(req, res) {
+    var orderID = req.query.OrderID
+    console.log('hello from food item');
+    var q = 'Select FoodInOrder.foodName, FoodInOrder.orderID from FoodInOrder JOIN Orders ON FoodInOrder.orderID = Orders.orderID join Managers on Managers.restaurantID = Orders.restaurantID where Orders.status = 1 and Managers.restaurantID =' + Manager.resID;
+    connection.query(q, function(err, results) {
+        if(err) throw err;
+        Foods = results;
+        console.log('Food');
+        console.log(Foods);
+        res.send(JSON.stringify(Foods));
+    })
+})
 
 
 // Apoint Devlivery Person to an order
@@ -914,6 +971,22 @@ app.post('/Manager/changeUserStatus', function(req, res) {
     }
     res.redirect("/Account/Manager");
 });
+
+let Deliveries = {};
+app.get('/getOrder', function(req, res) {
+    console.log('hello from delivery');
+    console.log(signedInUser.userID);
+    var q = 'select Orders.orderID, Orders.subtotal, Orders.tax, Orders.total, Orders.address, Restaurants.latitude, Restaurants.longitude from Orders JOIN Restaurants on Orders.restaurantID = Restaurants.restaurantID JOIN DeliveryPerson on DeliveryPerson.userID = Orders.deliveryID where deliveryID =' + signedInUser.userID + ' AND status = 1';
+    connection.query(q, function(err, results){
+        if(err) throw err;
+        Deliveries = results;
+        console.log(results);
+
+    });
+    res.send(JSON.stringify(Deliveries));
+    res.redirect('/Delivery');
+});
+
 
 
 app.get('*', function(req, res) {

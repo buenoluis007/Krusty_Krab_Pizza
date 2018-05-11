@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import FoodItem from './Foods';
+import './Manager.css';
 
 class Orders extends Component {
     constructor(props) {
@@ -27,7 +28,7 @@ class Orders extends Component {
         return (
             <div>
                 <h1>Current Orders</h1>
-                <table>
+                <table className='manager'>
                     <thead>
                         <td>Order Number</td>
                         <td>Address</td>
@@ -39,11 +40,11 @@ class Orders extends Component {
                 {this.state.Orders.map((order, i) =>
                     <form action='/AppointDelivery' method='POST'>
                         <tr>
-                            <td>Order Number: {this.state.Orders[i].orderID}</td>
-                            <td>Address: {this.state.Orders[i].address}</td>
-                            <td>Subtotal: {this.state.Orders[i].subtotal}</td>
-                            <td>Tax: {this.state.Orders[i].tax}</td>
-                            <td>Total: {this.state.Orders[i].total}</td>
+                            <td>{this.state.Orders[i].orderID}</td>
+                            <td>{this.state.Orders[i].address}</td>
+                            <td>{this.state.Orders[i].subtotal}</td>
+                            <td>{this.state.Orders[i].tax}</td>
+                            <td>{this.state.Orders[i].total}</td>
                             <select name='person'>
                                 {this.state.DeliveryPerson.map((person, i) =>
                                     <option value={this.state.DeliveryPerson[i].userID}>

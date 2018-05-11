@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <style media="screen">
+        .viewcontainer{
+          background-color: rgba(240, 240, 240, 0.9);
+          border: 1px solid rgba(252, 250, 250, 0.8);
+          border-radius: 5px;
+          display: grid;
+          //justify-content: center;
+          grid-template-columns: auto;
+          text-align: center;
+          grid-gap: 10px;
+          padding: 25px;
+          padding-left: 80px;
+          padding-top: 40px;
+          width: 620px;
+        }
+
+        .resHeadForm {
+            border-bottom: 1px solid black;
+        }
+
+        </style>
+    </head>
+    <body>
+
+        <div class='viewcontainer'>
+            <div>
+                <form class="resHeadForm" action="/Account/RateRestaurant" method="POST">
+                    <table>
+                        <thead>
+                            <th>Restaurant Name</th>
+                            <th>
+                                <select name="rating">
+                                    <option selected>5</option>
+                                    <option>4</option>
+                                    <option>3</option>
+                                    <option>2</option>
+                                    <option>1</option>
+                                </select>
+                            </th>
+                            <th> <button type="submit" name="CHANGE">Rate</button> </th>
+                        </thead>
+                    </table>
+                </form>
+                <table>
+                    <thead>
+                        <th>OrderID: <span>55</span></th>
+                        <th>Date: <span>5/10/2018</span></th>
+                        <th>Total: <span>$100.97</span></th>
+                    </thead>
+                </table>
+                <form class="" action="/Account/RateDeliveryPerson" method="POST">
+                    <table>
+                        <thead>
+                            <th>DeliveryPerson Name</th>
+                            <th>
+                                <select name="rating">
+                                    <option selected>5</option>
+                                    <option>4</option>
+                                    <option>3</option>
+                                    <option>2</option>
+                                    <option>1</option>
+                                </select>
+                            </th>
+                            <th> <button type="submit" name="CHANGE">Rate</button> </th>
+                        </thead>
+                    </table>    
+                </form>
+                <form class="" action="/Account/RateFood" method="POST">
+                    <table>
+                        <thead>
+                            <th>Food Ordered</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Rating</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Peperoni Pizza</td>
+                                <td>$10.00</td>
+                                <td>1</td>
+                                <td>
+                                    <div>
+                                        <select name="rating">
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option selected>5</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </form>
+
+            </div>
+
+
+        </div>
+    </body>
+</html>
+
+<!--
+{this.state.Orders.map((order, i) =>
+
+)} -->
