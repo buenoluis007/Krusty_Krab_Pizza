@@ -818,7 +818,7 @@ app.post('/AppointDelivery', function(req, res) {
 
 app.post('/CompletedDelivery',function(req,res){
     var orderID = req.body.order
-    var q = "UPDATE Oders SET status = 2"
+    var q = "UPDATE Oders SET status = 2 WHERE orderID = " + orderID;
     connection.query(q, function(err,results){
         if(err) throw err;
     });
