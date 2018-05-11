@@ -1,19 +1,6 @@
 import React, { Component } from 'react';
 
 class ViewProfile extends Component {
-    constructor(props) {
-        super(props);
-        this.state =
-        {
-
-        };
-    }
-
-    componentDidMount() {
-
-    }
-
-
     render() {
         let v = this.props.visitor;
         let p = this.props.pay;
