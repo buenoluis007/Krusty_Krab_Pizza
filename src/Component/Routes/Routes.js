@@ -122,14 +122,18 @@ class Routes extends Component {
       const t = event.target;
       const value = t.value;
       const name = t.name;
-      this.setState({ Visitor: { [name]: value } });
+      var newstate = this.state.Visitor;
+      newstate[name] = value;
+      this.setState(newstate);
     }
 
     handlePayChange(event){
       const t = event.target;
       const value = t.value;
       const name = t.name;
-      this.setState({ Pay: { [name]: value } });
+      var newstate = this.state.Visitor;
+      newstate[name] = value;
+      this.setState(newstate);
     }
 
     render () {
