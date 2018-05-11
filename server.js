@@ -30,6 +30,13 @@ let restinfo = {
   restaurantID: '0'
 };
 
+let ComplaintInfo = {
+  userID: 0,
+  restaurantID: 0,
+  subject: '',
+  rating: 0
+}
+
 let Visitor = {
   userID: 0,
   address: '',
@@ -173,37 +180,10 @@ app.post('/checkRest', function(req, res) {
     }
   })
 });
-/*
-app.post('/checkRest', function(req, res) {
-    var id = req.body.linkbtn;
-    var q = "SELECT * FROM Restaurants WHERE restaurantID=" + id;
-    connection.query(q, function(err, results) {
-        if(err) throw err;
-        // console.log(results);
-        if(results[0]) {
-            restaurant.name = results[0].name;
-            restaurant.address = results[0].address;
-            restaurant.phoneNum = results[0].phoneNum;
-            console.log("ass" + restaurant);
-        }
-    });
-});
-*/
 
-// app.post('/checkRest', function(req, res) {
-//     var id = req.body.linkbtn;
-//     var q = "SELECT * FROM Restaurants WHERE restaurantID=" + id;
-//     connection.query(q, function(err, results) {
-//         if(err) throw err;
-//         // console.log(results);
-//         if(results[0]) {
-//             restaurant.name = results[0].name;
-//             restaurant.address = results[0].address;
-//             restaurant.phoneNum = results[0].phoneNum;
-//             console.log("ass" + restaurant);
-//         }
-//     });
-// });
+app.get('/complaintInfo',function(req,res){
+  res.send(JSON.stringify(ComplaintInfo));
+});
 
 app.get('/currRest',function(req,res){
   console.log('RESTINFO: '+ JSON.stringify(restinfo));
@@ -270,6 +250,16 @@ app.get('/getCooks',function(req,res){
   })
 });
 
+app.post('/complain',function(req,res){
+  let q = 'insert into Complaints (userID,restaurantID,rating,subject,complaint) values('
+    + ComplaintInfo.userID+','+ComplaintInfo.restaurantID+','+ComplaintInfo.rating+",'"+ComplaintInfo.subject+"','"+req.body.complaint+"');";
+  connection.query(q,function(err,data){
+    if (err) return console.error('SUBMIT COMPLAINT: '+err);
+  });
+  res.redirect('/Account/Visitor');
+});
+
+
 app.post('/editprofile',function(req,res){
   let q = 'Replace into RegisteredAccts (userID,f_name,l_name,address,phoneNum) values('
     + signedInUser.userID +",'"+req.body.f_name+"','"+req.body.l_name+"','"+req.body.address+"','"+req.body.phoneNum+"');";
@@ -295,6 +285,77 @@ app.post('/apply',function(req,res){
   res.redirect(req.get('referer'));
 });
 
+app.post('/rateFood',function(req,res){
+  let foodName = req.body.foodName;
+  let restID = req.body.restID;
+  let rate = req.body.rating;
+  q = "call rateFood('"+foodName+"',"+restID+","+rate+');';
+  connection.query(q,function(err,data){
+    if(err) return console.error('RATEFOOD: '+err);
+    if(rating<3){
+      ComplaintInfo={
+        userID: signedInUser.userID,
+        restaurantID: restID,
+        subject: foodName,
+        rating: rate
+      };
+      res.redirect('/complain');
+    }
+    res.redirect('/Account/Visitor');
+  });
+});
+
+app.post('/rateUser',function(req,res){
+  let userID = req.body.userID;
+  let restID = req.body.restID;
+  let rate = req.body.rating;
+  q = "call rateUser('"+userID+"',"+restID+","+rate+');';
+  connection.query(q,function(err,data){
+    if(err) return console.error('RATEUSER: '+err);
+    res.redirect('/Delivery');
+  });
+});
+
+app.post('/rateRestaurant',function(req,res){
+  let restID = req.body.restID;
+  let restName = req.body.restName;
+  let rate = req.body.rating;
+  q = "call rateRestaurant("+restID+","+rate+');';
+  connection.query(q,function(err,data){
+    if(err) return console.error('RATEREST: '+err);
+    if(rating<3){
+      ComplaintInfo={
+        userID: signedInUser.userID,
+        restaurantID: restID,
+        subject: 'Restaurant - '+restName,
+        rating: rate
+      };
+      res.redirect('/complain');
+    }
+    res.redirect('/Account/Visitor');
+  });
+});
+
+app.post('/rateDelivery',function(req,res){
+  let deliveryID = req.body.deliveryID;
+  let restID = req.body.restID;
+  let rate = req.body.rating;
+  q = "call rateDelivery("+deliveryID+","+rate+');';
+  connection.query(q,function(err,data){
+    if(err) return console.error('RATEDELIV: '+err);
+    if(rating<3){
+      ComplaintInfo={
+        userID: signedInUser.userID,
+        restaurantID: restID,
+        subject: 'Delivery ID - '+deliveryID,
+        rating: rate
+      };
+      res.redirect('/complain');
+    }
+    res.redirect('/Account/Visitor');
+  });
+});
+
 app.post('/placeorder', function(req,res){
   var user = req.body.user;
   var restID = req.body.restID;
@@ -316,7 +377,7 @@ app.post('/placeorder', function(req,res){
         valuestr = "("+orderid+",'"+item.foodName+"',"+item.qty+")";
         return valuestr;
       });
-      q = 'INSERT INTO FoodInOrder values '+tupleArr.join(',')+';';
+      q = 'INSERT INTO FoodInOrder (orderID,foodName,qty) values '+tupleArr.join(',')+';';
       console.log(q);
       connection.query(q, function(err,results){
         if(err) console.error('insert into foodinorder: '+err);
