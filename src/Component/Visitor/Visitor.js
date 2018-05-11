@@ -43,7 +43,7 @@ class Visitor extends Component {
 
         return [
           <div>
-          <table border='0' align='center'>
+          <table border='0' align='center' className='tablecont'>
             <tr>
               <td valign='top'>
                 <div className='container leftpanel'>

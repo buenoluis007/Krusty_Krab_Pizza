@@ -5,7 +5,7 @@
 <p>Authors:</p>
 <ol>
   <li>Andy Wang</li>
-  <li>Brain Mo</li>
+  <li>Brian Mo</li>
   <li>Luis Bueno</li>
   <li>Evan Vasquez</li>
 </ol>
