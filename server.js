@@ -377,7 +377,7 @@ app.post('/placeorder', function(req,res){
         valuestr = "("+orderid+",'"+item.foodName+"',"+item.qty+")";
         return valuestr;
       });
-      q = 'INSERT INTO FoodInOrder values '+tupleArr.join(',')+';';
+      q = 'INSERT INTO FoodInOrder (orderID,foodName,qty) values '+tupleArr.join(',')+';';
       console.log(q);
       connection.query(q, function(err,results){
         if(err) console.error('insert into foodinorder: '+err);
