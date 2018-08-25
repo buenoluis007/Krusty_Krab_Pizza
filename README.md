@@ -1,7 +1,6 @@
-# CSc32200_SemesterProject
+# Krusty Krab Pizza Ordering System
 <p>Spring 2018</p>
 <p>Software Engineering Project</p>
-<p>Krusty Krab Pizza System</p>
 <p>Authors:</p>
 <ol>
   <li>Andy Wang</li>
@@ -9,6 +8,7 @@
   <li>Luis Bueno</li>
   <li>Evan Vasquez</li>
 </ol>
+<p> Welcome to the Krusty Krab Pizza Ordering System for Midtown Manhattan ! </p>
 
 <h3> Getting the Code to Work: </h3>
 <ol>
