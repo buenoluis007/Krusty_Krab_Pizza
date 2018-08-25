@@ -1,4 +1,7 @@
 # Krusty Krab Pizza Ordering System
+<p> Welcome to the Krusty Krab Pizza Ordering System for Midtown Manhattan ! </p>
+
+
 <p>Spring 2018</p>
 <p>Software Engineering Project</p>
 <p>Authors:</p>
@@ -8,7 +11,6 @@
   <li>Luis Bueno</li>
   <li>Evan Vasquez</li>
 </ol>
-<p> Welcome to the Krusty Krab Pizza Ordering System for Midtown Manhattan ! </p>
 
 <h3> Getting the Code to Work: </h3>
 <ol>
